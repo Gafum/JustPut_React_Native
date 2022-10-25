@@ -39,6 +39,7 @@ export default function Editor({ navigation, route }) {
 
   /* add to List new Element */
   if (route.params) {
+    positions.value = addPositionValue(positions.value) // add element to positions
     let { element } = route.params
     setList([
       ...List,
@@ -48,7 +49,6 @@ export default function Editor({ navigation, route }) {
         parameter: ListOfElements[element].standartParameter
       }
     ])
-    positions.value = addPositionValue(positions.value) // add element to positions
     route.params = "" //clean the chenges
   }
 

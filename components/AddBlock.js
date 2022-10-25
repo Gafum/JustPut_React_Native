@@ -12,7 +12,7 @@ const DataObjects = [{ id: 1, text: "Create Text using HTML", idOfELement: 0 }]
 const DataControl = [{ id: 1, text: "Crete Function", idOfELement: 1 }]
 
 export default function AddBlock({ navigation, route }) {
-  let { whatColor, whatElements } = route.params // import Color, Element, function of adder of Clocks
+  let { whatColor, whatElements } = route.params // import Color, Element
 
   /*it is here because we use background color*/
   let styles = StyleSheet.create({
@@ -36,7 +36,7 @@ export default function AddBlock({ navigation, route }) {
     return (
       <TouchableOpacity
         style={styles.block}
-				onPress={() => {
+        onPress={() => {
           navigation.navigate("Editor", { element: item.idOfELement })
         }}
       >
