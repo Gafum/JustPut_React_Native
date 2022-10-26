@@ -1,5 +1,10 @@
 import React, { useState } from "react"
-import { useWindowDimensions } from "react-native"
+import {
+  useWindowDimensions,
+  TouchableOpacity,
+  Image,
+  Alert
+} from "react-native"
 import {
   SafeAreaProvider,
   useSafeAreaInsets
@@ -68,7 +73,8 @@ function MovableElement({
   scrollY,
   Count,
   colorText,
-  chenger
+  chenger,
+  deleteELementList
 }) {
   const dimensions = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -134,7 +140,7 @@ function MovableElement({
     }
   })
 
-  chenger(positions.value)
+  chenger()
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -153,8 +159,44 @@ function MovableElement({
     <Animated.View style={animatedStyle}>
       <BlurView intensity={moving ? 100 : 0} tint="light">
         <PanGestureHandler onGestureEvent={gestureHandler}>
-          <Animated.View style={{ maxWidth: "60%" }}>
+          <Animated.View
+            style={{
+              maxWidth: "60%",
+              position: "relative"
+            }}
+          >
             <Element title={title} colorText={colorText} />
+            <TouchableOpacity
+              style={{
+                position: "absolute",
+                right: -120,
+                top: ELEMENT_HEIGHT / 2,
+                transform: [{ translateY: -15 }]
+              }}
+              onLongPress={() => {
+                Alert.alert(
+                  "Delete!!!",
+                  title,
+                  [
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                    { text: "OK", onPress: () => deleteELementList(id) }
+                  ],
+                  { cancelable: true }
+                )
+              }}
+            >
+              <Image
+                style={{
+                  width: 30,
+                  height: 30
+                }}
+                source={require("../../assets/delete.png")}
+              />
+            </TouchableOpacity>
           </Animated.View>
         </PanGestureHandler>
       </BlurView>
@@ -164,7 +206,12 @@ function MovableElement({
 
 ///////////////RENDER/////////////////
 
-export default function RenderItem({ list, chenger, positions }) {
+export default function RenderItem({
+  list,
+  chenger,
+  positions,
+  deleteELementList
+}) {
   const scrollY = useSharedValue(0)
   const scrollViewRef = useAnimatedRef()
 
@@ -205,6 +252,7 @@ export default function RenderItem({ list, chenger, positions }) {
                 Count={list.length}
                 colorText={element.color}
                 chenger={chenger}
+                deleteELementList={deleteELementList}
               />
             )
           })}

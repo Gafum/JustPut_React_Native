@@ -8,7 +8,7 @@ const MyTheme = {
   dark: false,
   colors: {
     primary: "balck",
-    background: "#28374d",
+    background: "white",
     card: "black",
     text: "#999"
   }

@@ -13,23 +13,7 @@ import {
 let resultList = []
 
 export default function Editor({ navigation, route }) {
-  const [List, setList] = useState([
-    {
-      id: 0,
-      idOfELement: 0,
-      parameter: ["Text"]
-    },
-    {
-      id: 1,
-      idOfELement: 1,
-      parameter: ["name"]
-    },
-    {
-      id: 2,
-      idOfELement: 0,
-      parameter: ["Hi"]
-    }
-  ])
+  const [List, setList] = useState([])
   const positions = useSharedValue({})
 
   if (Object.keys(positions.value).length == 0) {
@@ -39,21 +23,23 @@ export default function Editor({ navigation, route }) {
 
   /* add to List new Element */
   if (route.params) {
-    positions.value = addPositionValue(positions.value) // add element to positions
     let { element } = route.params
+    let key = Math.random().toString(32).slice(2)
     setList([
       ...List,
       {
-        id: List.length,
+        id: key,
         idOfELement: ListOfElements[element].id,
         parameter: ListOfElements[element].standartParameter
       }
     ])
+    positions.value = addPositionValue(positions.value, "add", key) // add element to positions
     route.params = "" //clean the chenges
   }
 
   /* Start View scene */
   function codeCreator() {
+    chenger()
     let c = []
     resultList.sort((a, b) => {
       if (a.position > b.position) {
@@ -66,10 +52,11 @@ export default function Editor({ navigation, route }) {
     })
 
     resultList.forEach((i) => {
-      c.push(List[+i.id])
+      c.push(List[i.realPosition])
     })
 
     let createdCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
+    console.log(c)
     if (c.length > 0 && c) {
       createdCode = c.reduce(
         (a, b) =>
@@ -84,17 +71,33 @@ export default function Editor({ navigation, route }) {
   }
 
   /* set list of chenger */
-  function chenger(array) {
+  function chenger() {
     let chengerList = []
-    Object.keys(array).forEach((i) =>
-      chengerList.push({ id: i, position: array[i] })
+    /* ID of Element, Chended Position, Real Index */
+    Object.keys(positions.value).forEach((i, index) =>
+      chengerList.push({
+        id: i,
+        position: positions.value[i],
+        realPosition: index
+      })
     )
     resultList = [...chengerList]
   }
 
+  /* Delete Element from List and Positions */
+  function deleteELementList(id) {
+    positions.value = addPositionValue(positions.value, "delete", id)
+    setList(List.filter((element) => element.id !== id))
+  }
+
   return (
     <View style={{ flex: 1 }}>
-      <RenderItem list={List} chenger={chenger} positions={positions} />
+      <RenderItem
+        list={List}
+        chenger={chenger}
+        positions={positions}
+        deleteELementList={deleteELementList}
+      />
       <BtnPlus start={navigation} createCode={codeCreator} list={List} />
     </View>
   )

@@ -8,15 +8,17 @@ export function Element({ title, colorText }) {
     <View
       style={{
         flexDirection: "row",
-        alignItems: "center",
+        justifyContent: "space-between",
         height: ELEMENT_HEIGHT,
         width: 300,
-        padding: 10
+        padding: 10,
+        alignItems: "center",
+        position: "relative"
       }}
     >
       <View
         style={{
-          marginLeft: 10
+          marginHorizontal: 10
         }}
       >
         <Text
