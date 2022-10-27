@@ -10,6 +10,8 @@ import {
 /* list of blocks */
 const DataObjects = [{ id: 1, text: "Create Text using HTML", idOfELement: 0 }]
 const DataControl = [{ id: 1, text: "Crete Function", idOfELement: 1 }]
+const DataProperties = [{ id: 1, text: "My Code", idOfELement: 2 }]
+const DataData = [{ id: 1, text: "Set variable", idOfELement: 3 }]
 
 export default function AddBlock({ navigation, route }) {
   let { whatColor, whatElements } = route.params // import Color, Element
@@ -49,11 +51,18 @@ export default function AddBlock({ navigation, route }) {
 
   // set list of elements
   function whatData(a) {
-    if (a == 2) return DataObjects
-
-    if (a == 1) return DataControl
-
-    console.log("no data")
+    switch (a) {
+      case 3:
+        return DataData
+      case 2:
+        return DataObjects
+      case 1:
+        return DataControl
+      case 0:
+        return DataProperties
+      default:
+        console.log("no data")
+    }
   }
 
   return (

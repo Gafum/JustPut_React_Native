@@ -20,7 +20,7 @@ export default function BtnPlus(props) {
         else
           props.start.navigate("AddBlock", {
             whatColor: actions[name.charAt(name.length - 1)].color, // export color of button
-            whatElements: name.charAt(name.length - 1) // which of the elements
+            whatElements: +name.charAt(name.length - 1) // which of the elements
           })
       }}
     />

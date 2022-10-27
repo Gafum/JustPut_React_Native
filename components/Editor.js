@@ -14,10 +14,11 @@ let resultList = []
 
 export default function Editor({ navigation, route }) {
   const [List, setList] = useState([])
-  const positions = useSharedValue({})
+	const positions = useSharedValue({})
+	const scrollY = useSharedValue(0)
 
   if (Object.keys(positions.value).length == 0) {
-    // if Possition is empty we add new parameters
+    // if Possition array is empty, we add new parameters
     positions.value = listToObject(List)
   }
 
@@ -33,7 +34,7 @@ export default function Editor({ navigation, route }) {
         parameter: ListOfElements[element].standartParameter
       }
     ])
-    positions.value = addPositionValue(positions.value, "add", key) // add element to positions
+    positions.value = addPositionValue(positions.value, "add", key, scrollY) // add element to positions
     route.params = "" //clean the chenges
   }
 
@@ -86,6 +87,7 @@ export default function Editor({ navigation, route }) {
 
   /* Delete Element from List and Positions */
   function deleteELementList(id) {
+    chenger()
     positions.value = addPositionValue(positions.value, "delete", id)
     setList(List.filter((element) => element.id !== id))
   }
@@ -97,6 +99,7 @@ export default function Editor({ navigation, route }) {
         chenger={chenger}
         positions={positions}
         deleteELementList={deleteELementList}
+				scrollY={scrollY}
       />
       <BtnPlus start={navigation} createCode={codeCreator} list={List} />
     </View>

@@ -20,7 +20,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming
+  withTiming,
+  Easing
 } from "react-native-reanimated"
 import {
   PanGestureHandler,
@@ -102,22 +103,29 @@ function MovableElement({
 
       if (positionY <= scrollY.value + SCROLL_HEIGHT_THRESHOLD) {
         // Scroll up
-        scrollY.value = withTiming(0, { duration: 1500 })
+        scrollY.value = withTiming(0, {
+          duration: 400,
+          easing: Easing.linear
+        })
       } else if (
         positionY >=
-        scrollY.value + dimensions.height - SCROLL_HEIGHT_THRESHOLD
+        scrollY.value + dimensions.height - SCROLL_HEIGHT_THRESHOLD + 60
       ) {
         // Scroll down
         const contentHeight = Count * ELEMENT_HEIGHT
         const containerHeight = dimensions.height - insets.top - insets.bottom
         const maxScroll = contentHeight - containerHeight
-        scrollY.value = withTiming(maxScroll, { duration: 1500 })
+        scrollY.value = withTiming(maxScroll + 120, {
+          duration: 400,
+          easing: Easing.linear
+        })
       } else {
         cancelAnimation(scrollY)
       }
 
       top.value = withTiming(positionY - ELEMENT_HEIGHT, {
-        duration: 16
+        duration: 16,
+        easing: Easing.linear
       })
 
       const newPosition = clamp(
@@ -157,7 +165,17 @@ function MovableElement({
 
   return (
     <Animated.View style={animatedStyle}>
-      <BlurView intensity={moving ? 100 : 0} tint="light">
+      <BlurView
+        intensity={moving ? 100 : 0}
+        tint="light"
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginRight: 10
+        }}
+      >
         <PanGestureHandler onGestureEvent={gestureHandler}>
           <Animated.View
             style={{
@@ -166,39 +184,34 @@ function MovableElement({
             }}
           >
             <Element title={title} colorText={colorText} />
-            <TouchableOpacity
-              style={{
-                position: "absolute",
-                right: -120,
-                top: ELEMENT_HEIGHT / 2,
-                transform: [{ translateY: -15 }]
-              }}
-              onLongPress={() => {
-                Alert.alert(
-                  "Delete!!!",
-                  title,
-                  [
-                    {
-                      text: "Cancel",
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "cancel"
-                    },
-                    { text: "OK", onPress: () => deleteELementList(id) }
-                  ],
-                  { cancelable: true }
-                )
-              }}
-            >
-              <Image
-                style={{
-                  width: 30,
-                  height: 30
-                }}
-                source={require("../../assets/delete.png")}
-              />
-            </TouchableOpacity>
           </Animated.View>
         </PanGestureHandler>
+        <TouchableOpacity
+          style={{}}
+          onPress={() => {
+            Alert.alert(
+              "Delete!!!",
+              title,
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                },
+                { text: "OK", onPress: () => deleteELementList(id) }
+              ],
+              { cancelable: true }
+            )
+          }}
+        >
+          <Image
+            style={{
+              width: 25,
+              height: 25
+            }}
+            source={require("../../assets/delete.png")}
+          />
+        </TouchableOpacity>
       </BlurView>
     </Animated.View>
   )
@@ -210,9 +223,9 @@ export default function RenderItem({
   list,
   chenger,
   positions,
-  deleteELementList
+  deleteELementList,
+  scrollY
 }) {
-  const scrollY = useSharedValue(0)
   const scrollViewRef = useAnimatedRef()
 
   useAnimatedReaction(
@@ -230,14 +243,14 @@ export default function RenderItem({
         <Animated.ScrollView
           ref={scrollViewRef}
           onScroll={handleScroll}
-          scrollEventThrottle={16}
+          scrollEventThrottle={30}
           style={{
             flex: 1,
             position: "relative",
             backgroundColor: "white"
           }}
           contentContainerStyle={{
-            height: list.length * ELEMENT_HEIGHT
+            height: list.length * ELEMENT_HEIGHT + 60
           }}
         >
           {list.map((i) => {
