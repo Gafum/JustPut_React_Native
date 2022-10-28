@@ -1,11 +1,16 @@
 import React from "react"
 
+const objectColor = "#913e5f"
+const controlColor = "#f59073"
+const propertiesColor = "#96b38e"
+const dataColor = "#eb4464"
+
 export const ListOfElements = [
   {
     id: 0, // OBJECT
     code: "element.innerHTML=element.innerHTML+`<p>Text</p>`",
     text: "create Text by HTML",
-    color: "#913e5f",
+    color: objectColor,
     listChengers: ["Text"],
     standartParameter: ["Text"]
   },
@@ -13,24 +18,32 @@ export const ListOfElements = [
     id: 1, // CONTROL
     code: "element.innerHTML=element.innerHTML+`<p>creator of function</p>`",
     text: "create function by HTML",
-    color: "#f59073",
+    color: controlColor,
     listChengers: ["Text"],
     standartParameter: ["name"]
   },
   {
     id: 2, // PROPERTIES
-    code: "//code",
-    text: "my code",
-    color: "#96b38e",
-    listChengers: ["//code"],
-    standartParameter: ["//code"]
+    code: "//coment",
+    text: "coment",
+    color: propertiesColor,
+    listChengers: ["coment"],
+    standartParameter: ["coment"]
   },
   {
     id: 3, // DATA
-    code: "let a = 0",
+    code: "//a = 0",
     text: "Set variable",
-    color: "#eb4464",
-    listChengers: ["let", "a", "0"],
-    standartParameter: ["let", "a", "0"]
+    color: dataColor,
+    listChengers: ["//a", "0"],
+    standartParameter: ["//a", "0"]
+  },
+  {
+    id: 4, // CONTROL
+    code: "//code",
+    text: "my code",
+    color: controlColor,
+    listChengers: ["//code"],
+    standartParameter: ["//code"]
   }
 ]

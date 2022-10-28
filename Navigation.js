@@ -7,7 +7,6 @@ import {
 /* ================ import screens ============*/
 import ViewResult from "./components/ViewResult"
 import Editor from "./components/Editor"
-import AddBlock from "./components/AddBlock"
 
 const Stack = createStackNavigator()
 
@@ -30,12 +29,6 @@ export default function MyStack() {
         name="Result"
         component={ViewResult}
         options={{ title: "View" }}
-      />
-
-      <Stack.Screen /* create Create Block */
-        name="AddBlock"
-        component={AddBlock}
-        options={{ title: "Create Block" }}
       />
     </Stack.Navigator>
   )

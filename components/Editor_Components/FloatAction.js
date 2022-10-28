@@ -12,16 +12,15 @@ export default function BtnPlus(props) {
       distanceToEdge={{ vertical: 10, horizontal: 10 }}
       onPressItem={(name) => {
         console.log(`selected button: ${name}`)
-        if (name == "bt_start4") {
+        if (name == "bt_start5") {
           // Open WebView
           props.start.navigate("Result", { code: props.createCode(0) })
         }
         // Open AddBlock
-        else
-          props.start.navigate("AddBlock", {
-            whatColor: actions[name.charAt(name.length - 1)].color, // export color of button
-            whatElements: +name.charAt(name.length - 1) // which of the elements
-          })
+        else {
+          props.setAddBlockVisible(true)
+          props.setWhichBtn(+name.charAt(name.length - 1))
+        }
       }}
     />
   )
