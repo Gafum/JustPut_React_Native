@@ -1,3 +1,9 @@
+const TextStyle = {
+  fontFamily: "calibri-regular",
+  fontSize: 16,
+  lineHeight: 18
+}
+
 /* List of Buttons that will show in the float action */
 export const actions = [
   {
@@ -7,7 +13,7 @@ export const actions = [
     position: 0,
     color: "#96b38e",
     textColor: "#888",
-    textStyle: { fontSize: 16, lineHeight: 17 }
+    textStyle: TextStyle
   },
   {
     text: "Control",
@@ -16,7 +22,7 @@ export const actions = [
     position: 1,
     color: "#f59073",
     textColor: "#888",
-    textStyle: { fontSize: 16, lineHeight: 17 }
+    textStyle: TextStyle
   },
   {
     text: "Object",
@@ -25,7 +31,7 @@ export const actions = [
     position: 2,
     color: "#913e5f",
     textColor: "#888",
-    textStyle: { fontSize: 16, lineHeight: 17 }
+    textStyle: TextStyle
   },
   {
     text: "Data",
@@ -34,7 +40,7 @@ export const actions = [
     position: 3,
     color: "#eb4464",
     textColor: "#888",
-    textStyle: { fontSize: 16, lineHeight: 17 }
+    textStyle: TextStyle
   },
   {
     text: "Start",
@@ -43,7 +49,7 @@ export const actions = [
     position: 4,
     color: "#3db05a",
     textColor: "#888",
-    textStyle: { fontSize: 16, lineHeight: 17 },
+    textStyle: TextStyle,
     textElevation: 15
   }
 ]

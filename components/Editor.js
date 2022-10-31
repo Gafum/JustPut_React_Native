@@ -13,7 +13,7 @@ import AddBlock from "./Editor_Components/AddBlock"
 
 let resultList = []
 
-export default function Editor({ navigation, route }) {
+export default function Editor({ navigation }) {
   const [List, setList] = useState([])
   const positions = useSharedValue({})
   const scrollY = useSharedValue(0)
@@ -59,7 +59,6 @@ export default function Editor({ navigation, route }) {
     })
 
     let createdCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
-    console.log(c)
     if (c.length > 0 && c) {
       createdCode = c.reduce(
         (a, b) =>
@@ -107,6 +106,9 @@ export default function Editor({ navigation, route }) {
         animationType="slide"
         transparent={false}
         visible={addBlockVisible}
+        onBackButtonPress={() => {
+          setAddBlockVisible(false)
+        }}
       >
         <AddBlock
           navigation={navigation}

@@ -16,13 +16,10 @@ export function Element({ title, colorText }) {
         position: "relative"
       }}
     >
-      <View
-        style={{
-          marginHorizontal: 10
-        }}
-      >
+      <View>
         <Text
           style={{
+            fontFamily: "calibri-bold",
             fontSize: 16,
             color: colorText,
             marginBottom: 4

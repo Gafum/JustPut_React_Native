@@ -15,6 +15,9 @@ export default function MyStack() {
   return (
     <Stack.Navigator
       screenOptions={{
+        headerTitleStyle: {
+          fontFamily: "calibri-regular"
+        },
         /* transition from right like on IOS */
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
       }}

@@ -25,6 +25,7 @@ export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
       backgroundColor: whatData(whichBtn)[1]
     },
     what: {
+      fontFamily: "calibri-bold",
       textAlign: "center",
       color: "white",
       fontSize: 19
@@ -74,7 +75,14 @@ export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
           paddingHorizontal: 15
         }}
       >
-        <Text style={{ color: "#999", fontSize: 30, lineHeight: 37 }}>
+        <Text
+          style={{
+            fontFamily: "calibri-regular",
+            color: "#999",
+            fontSize: 30,
+            lineHeight: 37
+          }}
+        >
           {whatData(whichBtn)[2]}
         </Text>
         <TouchableOpacity

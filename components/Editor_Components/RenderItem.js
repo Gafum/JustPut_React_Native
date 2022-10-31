@@ -3,7 +3,8 @@ import {
   useWindowDimensions,
   TouchableOpacity,
   Image,
-  Alert
+  Alert,
+  View
 } from "react-native"
 import {
   SafeAreaProvider,
@@ -81,6 +82,7 @@ function MovableElement({
   const insets = useSafeAreaInsets()
   const [moving, setMoving] = useState(false)
   const top = useSharedValue(positions.value[id] * ELEMENT_HEIGHT)
+  const [showDeteils, setShowDeteils] = useState(false)
 
   useAnimatedReaction(
     () => positions.value[id],
@@ -163,31 +165,11 @@ function MovableElement({
     }
   }, [moving])
 
-  return (
-    <Animated.View style={animatedStyle}>
-      <BlurView
-        intensity={moving ? 100 : 0}
-        tint="light"
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginRight: 10
-        }}
-      >
-        <PanGestureHandler onGestureEvent={gestureHandler}>
-          <Animated.View
-            style={{
-              maxWidth: "60%",
-              position: "relative"
-            }}
-          >
-            <Element title={title} colorText={colorText} />
-          </Animated.View>
-        </PanGestureHandler>
-        <TouchableOpacity
-          style={{}}
+  function Details({ show }) {
+    //Btns Delete, Copy
+    function Buttons() {
+      return (
+        <TouchableOpacity /*Delete*/
           onPress={() => {
             Alert.alert(
               "Delete!!!",
@@ -212,6 +194,72 @@ function MovableElement({
             source={require("../../assets/delete.png")}
           />
         </TouchableOpacity>
+      )
+    }
+    return show ? <Buttons /> : ""
+  }
+
+  return (
+    <Animated.View style={animatedStyle}>
+      <BlurView
+        intensity={moving ? 5 : 0}
+        tint="dark"
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginRight: 10
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            minWidth: "70%"
+          }}
+        >
+          <PanGestureHandler
+            /* Chenge Position */ onGestureEvent={gestureHandler}
+          >
+            <Animated.View
+              style={{
+                minWidth: "5%",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => setShowDeteils(showDeteils ? false : true)}
+              >
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginLeft: 10
+                  }}
+                  source={require("../../assets/menu.png")}
+                />
+              </TouchableOpacity>
+            </Animated.View>
+          </PanGestureHandler>
+          <Details show={showDeteils} />
+          <Element title={title} colorText={colorText} />
+        </View>
+        <View>
+          <TouchableOpacity /*Edit*/>
+            <Image
+              style={{
+                width: 30,
+                height: 30
+              }}
+              source={require("../../assets/editBtn.png")}
+            />
+          </TouchableOpacity>
+        </View>
       </BlurView>
     </Animated.View>
   )
