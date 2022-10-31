@@ -7,11 +7,9 @@ import { useSharedValue } from "react-native-reanimated" // Value Controler for 
 import {
   StringB,
   addPositionValue,
-  listToObject
+  createListPosition
 } from "./Editor_Components/FunctionForEditor" // function that have return
 import AddBlock from "./Editor_Components/AddBlock"
-
-let resultList = []
 
 export default function Editor({ navigation }) {
   const [List, setList] = useState([])
@@ -22,7 +20,7 @@ export default function Editor({ navigation }) {
 
   if (Object.keys(positions.value).length == 0) {
     // if Possition array is empty, we add new parameters
-    positions.value = listToObject(List)
+    positions.value = createListPosition(List)
   }
 
   /* add to List new Element */
@@ -42,20 +40,11 @@ export default function Editor({ navigation }) {
 
   /* Start View scene */
   function codeCreator() {
-    chenger()
     let c = []
-    resultList.sort((a, b) => {
-      if (a.position > b.position) {
-        return 1
-      }
-      if (a.position < b.position) {
-        return -1
-      }
-      return 0
-    })
-
-    resultList.forEach((i) => {
-      c.push(List[i.realPosition])
+    let a = 0
+    positions.value.forEach((i) => {
+      a = List.find(({ id }) => id === i)
+      c.push(a)
     })
 
     let createdCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
@@ -72,23 +61,8 @@ export default function Editor({ navigation }) {
     return createdCode
   }
 
-  /* set list of chenger */
-  function chenger() {
-    let chengerList = []
-    /* ID of Element, Chended Position, Real Index */
-    Object.keys(positions.value).forEach((i, index) =>
-      chengerList.push({
-        id: i,
-        position: positions.value[i],
-        realPosition: index
-      })
-    )
-    resultList = [...chengerList]
-  }
-
   /* Delete Element from List and Positions */
   function deleteELementList(id) {
-    chenger()
     positions.value = addPositionValue(positions.value, "delete", id)
     setList(List.filter((element) => element.id !== id))
   }
@@ -97,7 +71,6 @@ export default function Editor({ navigation }) {
     <View style={{ flex: 1 }}>
       <RenderItem
         list={List}
-        chenger={chenger}
         positions={positions}
         deleteELementList={deleteELementList}
         scrollY={scrollY}
@@ -106,7 +79,7 @@ export default function Editor({ navigation }) {
         animationType="slide"
         transparent={false}
         visible={addBlockVisible}
-        onBackButtonPress={() => {
+        onRequestClose={() => {
           setAddBlockVisible(false)
         }}
       >

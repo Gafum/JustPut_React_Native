@@ -31,6 +31,7 @@ import {
 import { BlurView } from "expo-blur"
 import { ListOfElements } from "../Lists/ListOfElements" //list of all elements
 import { Element } from "./Element" //render of element
+import { runOnUI } from "react-native-reanimated/lib/reanimated2/core"
 
 const ELEMENT_HEIGHT = 80
 
@@ -41,29 +42,11 @@ function clamp(value, lowerBound, upperBound) {
 
 function objectMove(object, from, to) {
   "worklet"
-  const newObject = Object.assign({}, object)
-
-  for (const id in object) {
-    if (object[id] === from) {
-      newObject[id] = to
-    }
-
-    if (object[id] === to) {
-      newObject[id] = from
-    }
-  }
-
-  return newObject
-}
-
-function listToObject(list) {
-  const values = Object.values(list)
-  const object = {}
-
-  for (let i = 0; i < values.length; i++) {
-    object[values[i].id] = i
-  }
-  return object
+  const result = JSON.parse(JSON.stringify(object))
+  const newElemement = result[to]
+  result[to] = result[from]
+  result[from] = newElemement
+  return result
 }
 
 const SCROLL_HEIGHT_THRESHOLD = ELEMENT_HEIGHT
@@ -75,17 +58,16 @@ function MovableElement({
   scrollY,
   Count,
   colorText,
-  chenger,
   deleteELementList
 }) {
   const dimensions = useWindowDimensions()
   const insets = useSafeAreaInsets()
   const [moving, setMoving] = useState(false)
-  const top = useSharedValue(positions.value[id] * ELEMENT_HEIGHT)
+  const top = useSharedValue(positions.value.indexOf(id) * ELEMENT_HEIGHT)
   const [showDeteils, setShowDeteils] = useState(false)
 
   useAnimatedReaction(
-    () => positions.value[id],
+    () => positions.value.indexOf(id),
     (currentPosition, previousPosition) => {
       if (currentPosition !== previousPosition) {
         if (!moving) {
@@ -136,21 +118,19 @@ function MovableElement({
         Count - 1
       )
 
-      if (newPosition !== positions.value[id]) {
+      if (newPosition !== positions.value.indexOf(id)) {
         positions.value = objectMove(
           positions.value,
-          positions.value[id],
+          positions.value.indexOf(id),
           newPosition
         )
       }
     },
     onFinish() {
-      top.value = positions.value[id] * ELEMENT_HEIGHT
+      top.value = positions.value.indexOf(id) * ELEMENT_HEIGHT
       runOnJS(setMoving)(false)
     }
   })
-
-  chenger()
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -232,9 +212,7 @@ function MovableElement({
                 alignItems: "center"
               }}
             >
-              <TouchableOpacity
-                onPress={() => setShowDeteils(showDeteils ? false : true)}
-              >
+              <TouchableOpacity onPress={() => setShowDeteils(!showDeteils)}>
                 <Image
                   style={{
                     width: 30,
@@ -269,7 +247,6 @@ function MovableElement({
 
 export default function RenderItem({
   list,
-  chenger,
   positions,
   deleteELementList,
   scrollY
@@ -312,7 +289,6 @@ export default function RenderItem({
                 scrollY={scrollY}
                 Count={list.length}
                 colorText={element.color}
-                chenger={chenger}
                 deleteELementList={deleteELementList}
               />
             )
