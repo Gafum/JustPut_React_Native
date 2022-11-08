@@ -7,7 +7,8 @@ const screenHeight = Dimensions.get("window").height
 export function StringB(element, chenger) {
   let result = element.code
   for (let i = 0; i < element.listChengers.length; i++) {
-    result = String(element.code.replace(element.listChengers[i], chenger[i]))
+    let realChenge = chenger[i].reduce((a, b) => a + b)
+    result = String(element.code.replace(element.listChengers[i], realChenge))
   }
   return result
 }

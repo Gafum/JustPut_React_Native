@@ -8,6 +8,18 @@ export default function Html(a) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<title>View</title>
+	<style>
+		*{
+			margin: 0%;
+			padding: 0%;
+			box-sizing: border-box;
+			border: 0;
+		}
+		body{
+			height: 100%;
+			width: 100%;
+		}
+	</style>
 </head>
 <body>
 	<div id="main"></div>

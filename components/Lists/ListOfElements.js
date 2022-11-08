@@ -12,15 +12,15 @@ export const ListOfElements = [
     text: "create Text by HTML",
     color: objectColor,
     listChengers: ["Text"],
-    standartParameter: ["Text"]
+    standartParameter: [["Text"]]
   },
   {
     id: 1, // CONTROL
-    code: "element.innerHTML=element.innerHTML+`<p>creator of function</p>`",
+    code: "element.innerHTML=element.innerHTML+`<p>function</p>`",
     text: "create function by HTML",
     color: controlColor,
-    listChengers: ["Text"],
-    standartParameter: ["name"]
+    listChengers: ["function"],
+    standartParameter: [["name"]]
   },
   {
     id: 2, // PROPERTIES
@@ -28,15 +28,15 @@ export const ListOfElements = [
     text: "coment",
     color: propertiesColor,
     listChengers: ["coment"],
-    standartParameter: ["coment"]
+    standartParameter: [["coment"]]
   },
   {
     id: 3, // DATA
     code: "//a = 0",
     text: "Set variable",
     color: dataColor,
-    listChengers: ["//a", "0"],
-    standartParameter: ["//a", "0"]
+    listChengers: [["//a"], ["0"]],
+    standartParameter: [["//a"], ["0"]]
   },
   {
     id: 4, // CONTROL
@@ -44,6 +44,6 @@ export const ListOfElements = [
     text: "my code",
     color: controlColor,
     listChengers: ["//code"],
-    standartParameter: ["//code"]
+    standartParameter: [["//code"]]
   }
 ]

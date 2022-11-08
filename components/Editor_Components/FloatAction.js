@@ -11,15 +11,14 @@ export default function BtnPlus(props) {
       actionsPaddingTopBottom={3}
       distanceToEdge={{ vertical: 10, horizontal: 10 }}
       onPressItem={(name) => {
-        console.log(`selected button: ${name}`)
         if (name == "bt_start5") {
           // Open WebView
           props.start.navigate("Result", { code: props.createCode(0) })
         }
         // Open AddBlock
         else {
-          props.setAddBlockVisible(true)
           props.setWhichBtn(+name.charAt(name.length - 1))
+          props.setAddBlockVisible(true)
         }
       }}
     />

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Modal, View } from "react-native" // Modal for add block screen
+import { Modal, View, Text } from "react-native" // Modal for add block screen
 import BtnPlus from "./Editor_Components/FloatAction" // btns:start, plus...
 import RenderItem from "./Editor_Components/RenderItem" // render of elements
 import { ListOfElements } from "./Lists/ListOfElements" // List of all Elemets
@@ -9,14 +9,18 @@ import {
   addPositionValue,
   createListPosition
 } from "./Editor_Components/FunctionForEditor" // function that have return
-import AddBlock from "./Editor_Components/AddBlock"
+import AddBlock from "./Editor_Components/AddBlock" // Element AddBlock
+import EditParams from "./Editor_Components/EditParams"
+import CodeforModals from "./Editor_Components/Secondary_Edition_Component/CodeforModals"
 
 export default function Editor({ navigation }) {
   const [List, setList] = useState([])
   const positions = useSharedValue({})
   const scrollY = useSharedValue(0)
-  const [addBlockVisible, setAddBlockVisible] = useState(false)
   const [whichBtn, setWhichBtn] = useState(0)
+  const [whichEdit, setWhichEdit] = useState(0)
+  const [editParams, setEditParams] = useState(false)
+  const [addBlockVisible, setAddBlockVisible] = useState(false)
 
   if (Object.keys(positions.value).length == 0) {
     // if Possition array is empty, we add new parameters
@@ -61,10 +65,16 @@ export default function Editor({ navigation }) {
     return createdCode
   }
 
+  function ChengeParams(data) {
+    let result = JSON.parse(JSON.stringify(List))
+    result[whichEdit].parameter[0] = data
+    setList(result)
+  }
+
   /* Delete Element from List and Positions */
   function deleteELementList(id) {
-    positions.value = addPositionValue(positions.value, "delete", id)
     setList(List.filter((element) => element.id !== id))
+    positions.value = addPositionValue(positions.value, "delete", id)
   }
 
   return (
@@ -74,8 +84,10 @@ export default function Editor({ navigation }) {
         positions={positions}
         deleteELementList={deleteELementList}
         scrollY={scrollY}
+        setEditParams={setEditParams}
+        setWhichEdit={setWhichEdit}
       />
-      <Modal
+      <Modal /* AddBLock */
         animationType="slide"
         transparent={false}
         visible={addBlockVisible}
@@ -83,11 +95,38 @@ export default function Editor({ navigation }) {
           setAddBlockVisible(false)
         }}
       >
-        <AddBlock
-          navigation={navigation}
+        <CodeforModals
+          setEditParams={setEditParams}
           setAddBlockVisible={setAddBlockVisible}
-          addBlock={addBlock}
-          whichBtn={whichBtn}
+          whichName={whichBtn}
+          element={
+            <AddBlock
+              setAddBlockVisible={setAddBlockVisible}
+              addBlock={addBlock}
+              whichBtn={whichBtn}
+            />
+          }
+        />
+      </Modal>
+      <Modal /* EditParamsOfElement */
+        animationType="slide"
+        transparent={false}
+        visible={editParams}
+        onRequestClose={() => {
+          setEditParams(false)
+        }}
+      >
+        <CodeforModals
+          setEditParams={setEditParams}
+          setAddBlockVisible={setAddBlockVisible}
+          whichName={5}
+          element={
+            <EditParams
+              ChengeParams={ChengeParams}
+              setEditParams={setEditParams}
+              parameter={List[whichEdit] ? List[whichEdit].parameter : ""}
+            />
+          }
         />
       </Modal>
       <BtnPlus

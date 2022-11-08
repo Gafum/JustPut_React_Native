@@ -30,7 +30,7 @@ import {
 } from "react-native-gesture-handler"
 import { BlurView } from "expo-blur"
 import { ListOfElements } from "../Lists/ListOfElements" //list of all elements
-import { Element } from "./Element" //render of element
+import { Element } from "./Secondary_Edition_Component/Element" //render of element
 import { runOnUI } from "react-native-reanimated/lib/reanimated2/core"
 
 const ELEMENT_HEIGHT = 80
@@ -58,7 +58,9 @@ function MovableElement({
   scrollY,
   Count,
   colorText,
-  deleteELementList
+  deleteELementList,
+  setEditParams,
+  setWhichEdit
 }) {
   const dimensions = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -228,7 +230,12 @@ function MovableElement({
           <Element title={title} colorText={colorText} />
         </View>
         <View>
-          <TouchableOpacity /*Edit*/>
+          <TouchableOpacity
+            /*Edit*/ onPress={() => {
+              setEditParams(true)
+              setWhichEdit()
+            }}
+          >
             <Image
               style={{
                 width: 30,
@@ -249,7 +256,9 @@ export default function RenderItem({
   list,
   positions,
   deleteELementList,
-  scrollY
+  scrollY,
+  setEditParams,
+  setWhichEdit
 }) {
   const scrollViewRef = useAnimatedRef()
 
@@ -278,7 +287,7 @@ export default function RenderItem({
             height: list.length * ELEMENT_HEIGHT + 60
           }}
         >
-          {list.map((i) => {
+          {list.map((i, index) => {
             let element = ListOfElements[i.idOfELement]
             return (
               <MovableElement
@@ -290,6 +299,8 @@ export default function RenderItem({
                 Count={list.length}
                 colorText={element.color}
                 deleteELementList={deleteELementList}
+                setEditParams={setEditParams}
+                setWhichEdit={() => setWhichEdit(index)}
               />
             )
           })}
