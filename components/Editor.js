@@ -21,6 +21,7 @@ export default function Editor({ navigation }) {
   const [whichEdit, setWhichEdit] = useState(0)
   const [editParams, setEditParams] = useState(false)
   const [addBlockVisible, setAddBlockVisible] = useState(false)
+  const [newElement, setNewElement] = useState(-1)
 
   if (Object.keys(positions.value).length == 0) {
     // if Possition array is empty, we add new parameters
@@ -39,6 +40,7 @@ export default function Editor({ navigation }) {
         parameter: ListOfElements[element].standartParameter
       }
     ])
+    setNewElement(key)
     positions.value = addPositionValue(positions.value, "add", key, scrollY) // add element to positions
   }
 
@@ -86,6 +88,8 @@ export default function Editor({ navigation }) {
         scrollY={scrollY}
         setEditParams={setEditParams}
         setWhichEdit={setWhichEdit}
+        newElement={newElement}
+        setNewElement={setNewElement}
       />
       <Modal /* AddBLock */
         animationType="slide"

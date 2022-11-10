@@ -60,7 +60,9 @@ function MovableElement({
   colorText,
   deleteELementList,
   setEditParams,
-  setWhichEdit
+  setWhichEdit,
+  newElement,
+  setNewElement
 }) {
   const dimensions = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -188,63 +190,76 @@ function MovableElement({
         tint="dark"
         style={{
           flex: 1,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
           marginRight: 10
         }}
       >
-        <View
+        <TouchableOpacity
+          activeOpacity={0.7}
           style={{
-            flex: 1,
             flexDirection: "row",
             justifyContent: "space-between",
-            alignItems: "center",
-            minWidth: "70%"
+            alignItems: "center"
           }}
+          onPressIn={() => (newElement == id ? setNewElement(-1) : "")}
         >
-          <PanGestureHandler
-            /* Chenge Position */ onGestureEvent={gestureHandler}
-          >
-            <Animated.View
-              style={{
-                minWidth: "5%",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <TouchableOpacity onPress={() => setShowDeteils(!showDeteils)}>
-                <Image
-                  style={{
-                    width: 30,
-                    height: 30,
-                    marginLeft: 10
-                  }}
-                  source={require("../../assets/menu.png")}
-                />
-              </TouchableOpacity>
-            </Animated.View>
-          </PanGestureHandler>
-          <Details show={showDeteils} />
-          <Element title={title} colorText={colorText} />
-        </View>
-        <View>
-          <TouchableOpacity
-            /*Edit*/ onPress={() => {
-              setEditParams(true)
-              setWhichEdit()
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              minWidth: "70%",
+              backgroundColor: newElement == id ? colorText : "white",
+              borderBottomRightRadius: 24,
+              borderTopRightRadius: 24
             }}
           >
-            <Image
-              style={{
-                width: 30,
-                height: 30
-              }}
-              source={require("../../assets/editBtn.png")}
+            <PanGestureHandler
+              /* Chenge Position */ onGestureEvent={gestureHandler}
+            >
+              <Animated.View
+                style={{
+                  minWidth: "5%",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <TouchableOpacity onPress={() => setShowDeteils(!showDeteils)}>
+                  <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginLeft: 10
+                    }}
+                    source={require("../../assets/menu.png")}
+                  />
+                </TouchableOpacity>
+              </Animated.View>
+            </PanGestureHandler>
+            <Details show={showDeteils} />
+            <Element
+              title={title}
+              colorText={newElement == id ? "black" : colorText}
             />
-          </TouchableOpacity>
-        </View>
+          </View>
+          <View>
+            <TouchableOpacity
+              /*Edit*/ onPress={() => {
+                setEditParams(true)
+                setWhichEdit()
+              }}
+            >
+              <Image
+                style={{
+                  width: 30,
+                  height: 30
+                }}
+                source={require("../../assets/editBtn.png")}
+              />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </BlurView>
     </Animated.View>
   )
@@ -258,7 +273,9 @@ export default function RenderItem({
   deleteELementList,
   scrollY,
   setEditParams,
-  setWhichEdit
+  setWhichEdit,
+  newElement,
+  setNewElement
 }) {
   const scrollViewRef = useAnimatedRef()
 
@@ -301,6 +318,8 @@ export default function RenderItem({
                 deleteELementList={deleteELementList}
                 setEditParams={setEditParams}
                 setWhichEdit={() => setWhichEdit(index)}
+                newElement={newElement}
+                setNewElement={setNewElement}
               />
             )
           })}
