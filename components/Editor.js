@@ -37,7 +37,8 @@ export default function Editor({ navigation }) {
       {
         id: key,
         idOfELement: ListOfElements[element].id,
-        parameter: ListOfElements[element].standartParameter
+        parameter: ListOfElements[element].standartParameter,
+        text: ListOfElements[element].text
       }
     ])
     setNewElement(key)
@@ -82,9 +83,10 @@ export default function Editor({ navigation }) {
     return createdCode
   }
 
-  function ChengeParams(data, newData) {
+  function ChengeParams(data, newData, newText) {
     let result = JSON.parse(JSON.stringify(List))
     result[whichEdit].parameter = data
+    result[whichEdit].text = newText
     result[0].listOfData = newData
     setList(result)
   }

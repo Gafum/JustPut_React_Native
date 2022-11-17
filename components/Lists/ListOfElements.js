@@ -33,7 +33,7 @@ export const ListOfElements = [
   {
     id: 3, // DATA
     code: "//a = 2",
-    text: "Set //a 2 ",
+    text: "Set //a to 2 ",
     color: dataColor,
     listChengers: [["//a"], ["2"]],
     standartParameter: [[" //a"], ["2"]]

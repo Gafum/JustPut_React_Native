@@ -304,16 +304,15 @@ export default function RenderItem({
           }}
         >
           {list.map((i, index) => {
-            let element = ListOfElements[i.idOfELement]
             return (
               <MovableElement
                 key={i.id}
                 id={i.id}
-                title={element.text}
+                title={i.text}
                 positions={positions}
                 scrollY={scrollY}
                 Count={list.length}
-                colorText={element.color}
+                colorText={ListOfElements[i.idOfELement].color}
                 deleteELementList={deleteELementList}
                 setEditParams={setEditParams}
                 setWhichEdit={() => setWhichEdit(index)}

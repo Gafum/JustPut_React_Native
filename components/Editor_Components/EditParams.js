@@ -42,7 +42,7 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		padding: 20px 10px;
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 6px;
+		gap: 5px;
 		justify-items: center;
 		width: 100%;
 		height: 60vh;
@@ -83,11 +83,12 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		grid-row-end: 7;
 		display: grid;
 		grid-template-row: repeat(6, 1fr);
-		gap: 6px;
+		gap: 5px;
 		justify-items: center;
-		width: 100px;
+		width: 100%;
+		min-width: 90px;
 		max-height: 60vh;
-		overflow-Y: scroll;
+		overflow-y: scroll;
 	}
 	.formuls>li{
 		width: 100%;
@@ -112,6 +113,8 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		text-align:center;
 		color: black;
 		margin-bottom: 4px;
+		width: 100%;
+		font-size: 14px;
 	}
 	</style>
 </head>
@@ -164,17 +167,17 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 					<li onclick="tapOfFunctionBtn(1, 'Math.max', '(', ')');">max</li>
 					<li onclick="tapOfFunctionBtn(1, 'Math.min', '(', ')');">min</li>
 					<li onclick="tapOfFunctionBtn(1, 'Math.abs', '(', ')');">abs</li>
+					<li onclick="tapOfFunctionBtn(1, 'Math.sign', '(', ')');">sign</li>
 					<li onclick="tapOfFunctionBtn(1, 'Math.ceil', '(', ')');">ceil</li>
 					<li onclick="tapOfFunctionBtn(1, 'Math.floor', '(', ')');">floor</li>
 					<li onclick="tapOfFunctionBtn(1, 'Math.round', '(', ')');">round</li>
 					<li onclick="tapOfFunctionBtn(1, 'Math.trunc', '(', ')');">trunc</li>
-					<li onclick="tapOfFunctionBtn(1, 'Math.sign', '(', ')');">sign</li>
 					<li onclick="tapOfFunctionBtn(1, 'Math.log', '(', ')');">log</li>
 					<li onclick="tapOfFunctionBtn(1, 'Math.log10', '(', ')');">log10</li>
 					<li onclick="tapOfFunctionBtn(0, 'Math.PI');">PI</li>
 				</ul>
 			</li>
-			<li>Properties
+			<li style="font-size: 14px;">Properties
 				<ul hidden>
 					<li>x</li>
 					<li>y</li>
@@ -182,14 +185,32 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 					<li>height</li>
 				</ul>
 			</li>
-			<li>Logic</li>
+			<li>Logic
+				<ul hidden>
+					<li onclick="tapofbtn('==');">==</li>
+					<li onclick="tapofbtn('!==');">!==</li>
+					<li onclick="tapofbtn('===');">===</li>
+					<li onclick="tapofbtn('>');">></li>
+					<li onclick="tapofbtn('<');"><</li>
+					<li onclick="tapofbtn('>=');">>=</li>
+					<li onclick="tapofbtn('<=');"><=</li>
+					<li onclick="tapofbtn('&&');">and</li>
+					<li onclick="tapofbtn('||');">or</li>
+					<li onclick="tapofbtn('!');">no</li>
+					<li onclick="tapofbtn('true');">true</li>
+					<li onclick="tapofbtn('false');">false</li>
+				</ul>
+			</li>
 			<li>Function</li>
 			<li>...
 				<ul hidden>
 					<li onclick="tapOfFunctionBtn(1,'\${','}');">CodeInHTML</li>
-					<li onclick="tapOfFunctionBtn(2,' ? ',' : ');">ternary</li>
+					<li onclick="tapOfFunctionBtn(1,' ? ',' : ');">ternary</li>
+					<li onclick="tapOfFunctionBtn(0, '%');">module</li>
 					<li onclick="tapofbtn('[');">[</li>
 					<li onclick="tapofbtn(']');">]</li>
+					<li onclick="tapofbtn('{');">{</li>
+					<li onclick="tapofbtn('}');">}</li>
 				</ul>
 			</li>
 		</ul>
@@ -230,7 +251,7 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 			let resultat = prompt('Create Data')
 			if(!resultat) return
 			if(listOfData.includes(resultat)) return
-			listOfData.push(String(resultat))
+			listOfData.push(String(resultat).slice(0, 9))
 			chengeDataList()
 		}
 
@@ -248,7 +269,7 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 				if(List[i].length>0){
 					realChenge.push(List[i].reduce((a, b) => a + b))
 				}else{
-					realChenge.push('')
+					realChenge.push('⠀⠀')
 				}
 			}
 			where.innerHTML = resultat
@@ -273,6 +294,7 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 			} else {
 				result.textContent ='|'
 			}
+			
 			List[whichPosition] = listOfParams
 			setTextInWhere()
 			return textFromList
@@ -350,7 +372,12 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 					}
 					break
 				case "Ok":
-					window.ReactNativeWebView.postMessage(JSON.stringify([[...List], [...listOfData]]))
+					let resultat = TextInWhereOnStart
+					for (let i = 0; i < listOfChageParams.length; i++) {
+						let realChenge = List[i].reduce((a, b) => a + b)
+						resultat = resultat.replace(listOfChageParams[i], realChenge)
+					}
+					window.ReactNativeWebView.postMessage(JSON.stringify([[...List], [...listOfData], resultat]))
 					break
 				default:
 					listOfParams.splice(position, 0, text)
@@ -391,7 +418,7 @@ export default function EditParams({
       source={{ html }}
       onMessage={(event) => {
         let resultat = JSON.parse(event.nativeEvent.data)
-        ChengeParams(resultat[0], resultat[1])
+        ChengeParams(resultat[0], resultat[1], resultat[2])
         setEditParams(false)
       }}
     />
