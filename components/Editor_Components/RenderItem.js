@@ -31,7 +31,6 @@ import {
 import { BlurView } from "expo-blur"
 import { ListOfElements } from "../Lists/ListOfElements" //list of all elements
 import { Element } from "./Secondary_Edition_Component/Element" //render of element
-import { runOnUI } from "react-native-reanimated/lib/reanimated2/core"
 
 const ELEMENT_HEIGHT = 80
 

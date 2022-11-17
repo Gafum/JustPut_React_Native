@@ -17,7 +17,7 @@ export const ListOfElements = [
   {
     id: 1, // CONTROL
     code: "element.innerHTML=element.innerHTML+`<p>function</p>`",
-    text: "create function by HTML",
+    text: "create function(parameters)",
     color: controlColor,
     listChengers: ["function"],
     standartParameter: [["name"]]
@@ -32,11 +32,11 @@ export const ListOfElements = [
   },
   {
     id: 3, // DATA
-    code: "//a = 0",
-    text: "Set variable",
+    code: "//a = 2",
+    text: "Set //a 2 ",
     color: dataColor,
-    listChengers: [["//a"], ["0"]],
-    standartParameter: [["//a"], ["0"]]
+    listChengers: [["//a"], ["2"]],
+    standartParameter: [[" //a"], ["2"]]
   },
   {
     id: 4, // CONTROL
@@ -44,6 +44,6 @@ export const ListOfElements = [
     text: "my code",
     color: controlColor,
     listChengers: ["//code"],
-    standartParameter: [["//code"]]
+    standartParameter: [[" //code"]]
   }
 ]

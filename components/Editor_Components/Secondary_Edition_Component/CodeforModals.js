@@ -1,5 +1,6 @@
-import React, { useState } from "react"
+import React from "react"
 import { Text, View, TouchableOpacity } from "react-native"
+import { ListOfElements } from "../../Lists/ListOfElements"
 
 export default function CodeforModals({
   element,
@@ -9,8 +10,6 @@ export default function CodeforModals({
 }) {
   function whatName(a) {
     switch (a) {
-      case 5:
-        return "Edit Formul"
       case 4:
         return "Data"
       case 3:
@@ -20,9 +19,18 @@ export default function CodeforModals({
       case 1:
         return "Properties"
       default:
-        return "Select"
+        return "Edit Paramater"
     }
   }
+
+  let backgroundColorOfSelecter = "black"
+  let colorOfTextInSelecter = "#999"
+
+  if (typeof whichName === "object") {
+    backgroundColorOfSelecter = ListOfElements[whichName.idOfELement].color
+    colorOfTextInSelecter = "black"
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -31,14 +39,14 @@ export default function CodeforModals({
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: "black",
+          backgroundColor: backgroundColorOfSelecter,
           paddingHorizontal: 15
         }}
       >
         <Text
           style={{
             fontFamily: "calibri-regular",
-            color: "#999",
+            color: colorOfTextInSelecter,
             fontSize: 30,
             lineHeight: 37
           }}
@@ -59,7 +67,7 @@ export default function CodeforModals({
         >
           <Text
             style={{
-              color: "white",
+              color: colorOfTextInSelecter,
               fontSize: 30,
               lineHeight: 39,
               fontFamily: "calibri-bold"

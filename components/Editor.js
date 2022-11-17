@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Modal, View, Text } from "react-native" // Modal for add block screen
+import { Modal, View, ToastAndroid } from "react-native" // Modal for add block screen
 import BtnPlus from "./Editor_Components/FloatAction" // btns:start, plus...
 import RenderItem from "./Editor_Components/RenderItem" // render of elements
 import { ListOfElements } from "./Lists/ListOfElements" // List of all Elemets
@@ -51,7 +51,21 @@ export default function Editor({ navigation }) {
     positions.value.forEach((i) => {
       a = List.find(({ id }) => id === i)
       c.push(a)
-    })
+    }) // create list with rigth positions
+
+    if (List[0].listOfData && List[0].listOfData != c[0].listOfData) {
+      c[0].listOfData = List[0].listOfData
+    } // create data
+
+    let fisrtStrCode = ""
+    if (List[0].listOfData) {
+      fisrtStrCode = List[0].listOfData.reduce((a, b, index) => {
+        if (index === List[0].listOfData.length - 1) {
+          return a + b
+        }
+        return a + b + ","
+      }, "let ")
+    } // create data in html code
 
     let createdCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
     if (c.length > 0 && c) {
@@ -61,22 +75,47 @@ export default function Editor({ navigation }) {
           `
 ` +
           StringB(ListOfElements[b.idOfELement], b.parameter),
-        ""
+        String(fisrtStrCode)
       )
-    }
+    } // create code
+
     return createdCode
   }
 
-  function ChengeParams(data) {
+  function ChengeParams(data, newData) {
     let result = JSON.parse(JSON.stringify(List))
-    result[whichEdit].parameter[0] = data
+    result[whichEdit].parameter = data
+    result[0].listOfData = newData
     setList(result)
   }
 
   /* Delete Element from List and Positions */
   function deleteELementList(id) {
+    if (
+      List[0].listOfData &&
+      List.findIndex((element) => element.id == id) == 0
+    ) {
+      if (List[1]) {
+        List[1].listOfData = List[0].listOfData
+      } else {
+        ToastAndroid.showWithGravityAndOffset(
+          "Data deleted",
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM,
+          25,
+          27
+        )
+      }
+    } // chenge the position of safed data
+
     setList(List.filter((element) => element.id !== id))
     positions.value = addPositionValue(positions.value, "delete", id)
+  }
+
+  function findData() {
+    if (List.length <= 0) return []
+    if (!List[0].listOfData) return []
+    return List[0].listOfData
   }
 
   return (
@@ -123,12 +162,13 @@ export default function Editor({ navigation }) {
         <CodeforModals
           setEditParams={setEditParams}
           setAddBlockVisible={setAddBlockVisible}
-          whichName={5}
+          whichName={List[whichEdit] ? List[whichEdit] : ""}
           element={
             <EditParams
               ChengeParams={ChengeParams}
               setEditParams={setEditParams}
-              parameter={List[whichEdit] ? List[whichEdit].parameter : ""}
+              listOfData={findData()}
+              element={List[whichEdit] ? List[whichEdit] : ""}
             />
           }
         />
