@@ -20,7 +20,7 @@ export function createListPosition(list) {
 }
 
 /* Add and Delete element to Position */
-export function addPositionValue(object, func, key, scrollY) {
+export function addPositionValue({ object, func, key, scrollY, count }) {
   let result = JSON.parse(JSON.stringify(object)) // render Positions
   if (func == "add") {
     if (object.length * 80 > screenHeight - 100) {
@@ -32,13 +32,20 @@ export function addPositionValue(object, func, key, scrollY) {
           object.length - 1
         )
       ) // central position where element should spawn
-      result.splice(positionOfNewElement, 0, key) // add new Element
+      for (let i = 0; i < count; i++) {
+        result.splice(positionOfNewElement + i, 0, key[i])
+      }
+      // add new Element
     } else {
-      result.push(key) // add element in the end of List
+      for (let i = 0; i < count; i++) {
+        result.push(key[i]) // add element in the end of List
+      }
     }
   } else if (func == "delete") {
     //delete Element
-    result.splice(result.indexOf(key), 1)
+    key.forEach((id) => {
+      result.splice(result.indexOf(id), 1)
+    })
   }
   return result
 }

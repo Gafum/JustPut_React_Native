@@ -73,9 +73,11 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		outline: none;
 		border-radius: 5px;
 		max-width: 60px;
+		min-width: 27px;
 		background-color: #e3e3e3;
 		overflow-X: scroll;
 		scroll-behavior: smooth;
+		white-space: pre;
 	}
 	.formuls{
 		grid-column-start: 5;
@@ -248,7 +250,7 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 
 
 		function createVarieble(){
-			let resultat = prompt('Create Data')
+			let resultat = prompt('⠀⠀Create Data').replace(/ /g,'')
 			if(!resultat) return
 			if(listOfData.includes(resultat)) return
 			listOfData.push(String(resultat).slice(0, 9))
@@ -269,7 +271,7 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 				if(List[i].length>0){
 					realChenge.push(List[i].reduce((a, b) => a + b))
 				}else{
-					realChenge.push('⠀⠀')
+					realChenge.push('⠀')
 				}
 			}
 			where.innerHTML = resultat
@@ -372,12 +374,12 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 					}
 					break
 				case "Ok":
-					let resultat = TextInWhereOnStart
+					let textInEditor = TextInWhereOnStart
 					for (let i = 0; i < listOfChageParams.length; i++) {
-						let realChenge = List[i].reduce((a, b) => a + b)
-						resultat = resultat.replace(listOfChageParams[i], realChenge)
+						let realChenge = List[i].reduce((a, b) => a + b).slice(0, 7)
+						textInEditor = textInEditor.replace(listOfChageParams[i], realChenge)
 					}
-					window.ReactNativeWebView.postMessage(JSON.stringify([[...List], [...listOfData], resultat]))
+					window.ReactNativeWebView.postMessage(JSON.stringify([[...List], [...listOfData], textInEditor]))
 					break
 				default:
 					listOfParams.splice(position, 0, text)

@@ -1,17 +1,6 @@
 import React from "react"
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList
-} from "react-native"
-import {
-  DataData,
-  DataObjects,
-  DataControl,
-  DataProperties
-} from "../Lists/ListButInAddBLock"
+import { Text, StyleSheet, TouchableOpacity, FlatList } from "react-native"
+import { ListOfElements } from "../Lists/ListOfElements"
 
 export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
   const styles = StyleSheet.create({
@@ -21,7 +10,7 @@ export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: whatData(whichBtn)[1]
+      backgroundColor: whatData(whichBtn)[0].color
     },
     what: {
       fontFamily: "calibri-bold",
@@ -38,7 +27,11 @@ export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
         style={styles.block}
         onPress={() => {
           setAddBlockVisible(false)
-          addBlock(item.idOfELement)
+          if (item.secondArgument) {
+            addBlock(item.id, item.secondArgument)
+          } else {
+            addBlock(item.id)
+          }
         }}
       >
         <Text style={styles.what}>{item.text}</Text>
@@ -50,13 +43,13 @@ export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
   function whatData(a) {
     switch (a) {
       case 4:
-        return [DataData, "#eb4464"]
+        return ListOfElements.filter((element) => element.color == "#eb4464")
       case 3:
-        return [DataObjects, "#913e5f"]
+        return ListOfElements.filter((element) => element.color == "#913e5f")
       case 2:
-        return [DataControl, "#f59073"]
+        return ListOfElements.filter((element) => element.color == "#f59073")
       case 1:
-        return [DataProperties, "#96b38e"]
+        return ListOfElements.filter((element) => element.color == "#96b38e")
       default:
         console.log("no data")
     }
@@ -65,7 +58,7 @@ export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
   return (
     <FlatList
       style={{ paddingVertical: 5 }}
-      data={whatData(whichBtn)[0]}
+      data={whatData(whichBtn)}
       initialNumToRender
       renderItem={Item}
     />

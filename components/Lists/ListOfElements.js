@@ -9,26 +9,27 @@ export const ListOfElements = [
   {
     id: 0, // OBJECT
     code: "element.innerHTML=element.innerHTML+`<p>Text</p>`",
-    text: "create Text by HTML",
+    text: "Create Text by HTML",
     color: objectColor,
     listChengers: ["Text"],
     standartParameter: [["Text"]]
   },
   {
     id: 1, // CONTROL
-    code: "element.innerHTML=element.innerHTML+`<p>function</p>`",
-    text: "create function(parameters)",
+    code: "function name(params){",
+    text: "Function name(params)",
     color: controlColor,
-    listChengers: ["function"],
-    standartParameter: [["name"]]
+    listChengers: ["name", "params"],
+    standartParameter: [["name"], ["params"]],
+    secondArgument: { code: "}", text: "End" }
   },
   {
     id: 2, // PROPERTIES
-    code: "//coment",
-    text: "coment",
+    code: "//Coment",
+    text: "Coment",
     color: propertiesColor,
-    listChengers: ["coment"],
-    standartParameter: [["coment"]]
+    listChengers: ["Coment"],
+    standartParameter: [["Coment"]]
   },
   {
     id: 3, // DATA
@@ -41,9 +42,17 @@ export const ListOfElements = [
   {
     id: 4, // CONTROL
     code: "//code",
-    text: "my code",
+    text: "Code: //code",
     color: controlColor,
     listChengers: ["//code"],
     standartParameter: [[" //code"]]
+  },
+  {
+    id: 5, // CONTROL
+    code: "//name('a')",
+    text: "Call //name('a')",
+    color: controlColor,
+    listChengers: ["//name", "'a'"],
+    standartParameter: [["//name"], ["'a'"]]
   }
 ]

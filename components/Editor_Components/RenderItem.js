@@ -61,7 +61,8 @@ function MovableElement({
   setEditParams,
   setWhichEdit,
   newElement,
-  setNewElement
+  setNewElement,
+  isElement
 }) {
   const dimensions = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -224,7 +225,9 @@ function MovableElement({
                   alignItems: "center"
                 }}
               >
-                <TouchableOpacity onPress={() => setShowDeteils(!showDeteils)}>
+                <TouchableOpacity
+                  onPress={() => isElement && setShowDeteils(!showDeteils)}
+                >
                   <Image
                     style={{
                       width: 30,
@@ -242,21 +245,29 @@ function MovableElement({
               colorText={newElement == id ? "black" : colorText}
             />
           </View>
-          <View>
-            <TouchableOpacity
-              /*Edit*/ onPress={() => {
-                setEditParams(true)
-                setWhichEdit()
-              }}
-            >
-              <Image
-                style={{
-                  width: 30,
-                  height: 30
+
+          <View
+            style={{
+              width: 30,
+              height: 30
+            }}
+          >
+            {isElement && (
+              <TouchableOpacity
+                /*Edit*/ onPress={() => {
+                  setEditParams(true)
+                  setWhichEdit()
                 }}
-                source={require("../../assets/editBtn.png")}
-              />
-            </TouchableOpacity>
+              >
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30
+                  }}
+                  source={require("../../assets/editBtn.png")}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </TouchableOpacity>
       </BlurView>
@@ -312,12 +323,17 @@ export default function RenderItem({
                 positions={positions}
                 scrollY={scrollY}
                 Count={list.length}
-                colorText={ListOfElements[i.idOfELement].color}
+                colorText={
+                  i.idOfELement == "A"
+                    ? i.color
+                    : ListOfElements[i.idOfELement].color
+                }
                 deleteELementList={deleteELementList}
                 setEditParams={setEditParams}
                 setWhichEdit={() => setWhichEdit(index)}
                 newElement={newElement}
                 setNewElement={setNewElement}
+                isElement={i.idOfELement == "A" ? false : true}
               />
             )
           })}

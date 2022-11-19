@@ -29,20 +29,45 @@ export default function Editor({ navigation }) {
   }
 
   /* add to List new Element */
-  function addBlock(element) {
+  function addBlock(element, ...params) {
     setWhichBtn(0)
     let key = Math.random().toString(32).slice(2)
-    setList([
-      ...List,
+    let newPositionsInList = [key]
+    let lengthOfElemnt = 1
+    let newElementInList = [
       {
         id: key,
         idOfELement: ListOfElements[element].id,
         parameter: ListOfElements[element].standartParameter,
         text: ListOfElements[element].text
       }
-    ])
+    ] // crete new Element
+
+    if (params.length > 0 /* add second params */) {
+      newElementInList[0].adderParams = []
+      params.forEach((a, index) => {
+        let adderKey = key + "adderParams" + index
+        newElementInList.push({
+          id: adderKey,
+          idOfELement: "A",
+          code: a.code,
+          color: ListOfElements[element].color,
+          text: a.text
+        })
+        lengthOfElemnt++
+        newElementInList[0].adderParams.push(adderKey)
+        newPositionsInList.push(adderKey)
+      })
+    }
+    positions.value = addPositionValue({
+      object: positions.value,
+      func: "add",
+      key: newPositionsInList,
+      scrollY,
+      count: lengthOfElemnt
+    }) // add element to positions
+    setList([...List, ...newElementInList])
     setNewElement(key)
-    positions.value = addPositionValue(positions.value, "add", key, scrollY) // add element to positions
   }
 
   /* Start View scene */
@@ -59,7 +84,7 @@ export default function Editor({ navigation }) {
     } // create data
 
     let fisrtStrCode = ""
-    if (List[0].listOfData) {
+    if (List[0].listOfData && List[0].listOfData.length > 0) {
       fisrtStrCode = List[0].listOfData.reduce((a, b, index) => {
         if (index === List[0].listOfData.length - 1) {
           return a + b
@@ -70,14 +95,18 @@ export default function Editor({ navigation }) {
 
     let createdCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
     if (c.length > 0 && c) {
-      createdCode = c.reduce(
-        (a, b) =>
+      createdCode = c.reduce((a, b) => {
+        let thisStrb =
+          b.idOfELement == "A"
+            ? b.code
+            : StringB(ListOfElements[b.idOfELement], b.parameter)
+        return (
           String(a) +
           `
 ` +
-          StringB(ListOfElements[b.idOfELement], b.parameter),
-        String(fisrtStrCode)
-      )
+          thisStrb
+        )
+      }, String(fisrtStrCode))
     } // create code
 
     return createdCode
@@ -93,12 +122,26 @@ export default function Editor({ navigation }) {
 
   /* Delete Element from List and Positions */
   function deleteELementList(id) {
+    let result = JSON.parse(JSON.stringify(List))
+
+    let idsOfElemnts = [id]
+    let adderParams = result.find((element) => element.id === id).adderParams
+
+    /* Delete adder Element */
+    if (adderParams && adderParams.length) {
+      adderParams.forEach((i) => {
+        idsOfElemnts.push(i)
+        result = result.filter((element) => element.id !== i)
+      })
+    }
+
+    /*chenge the position of safed data*/
     if (
       List[0].listOfData &&
       List.findIndex((element) => element.id == id) == 0
     ) {
-      if (List[1]) {
-        List[1].listOfData = List[0].listOfData
+      if (result[1]) {
+        result[1].listOfData = List[0].listOfData
       } else {
         ToastAndroid.showWithGravityAndOffset(
           "Data deleted",
@@ -108,10 +151,16 @@ export default function Editor({ navigation }) {
           27
         )
       }
-    } // chenge the position of safed data
+    }
 
-    setList(List.filter((element) => element.id !== id))
-    positions.value = addPositionValue(positions.value, "delete", id)
+    result = result.filter((element) => element.id !== id)
+
+    setList(result)
+    positions.value = addPositionValue({
+      object: positions.value,
+      func: "delete",
+      key: idsOfElemnts
+    })
   }
 
   function findData() {
