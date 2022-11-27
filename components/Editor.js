@@ -1,9 +1,10 @@
-import React, { useState } from "react"
-import { Modal, View, ToastAndroid } from "react-native" // Modal for add block screen
+import React, { useState, useEffect } from "react"
+import { Modal, View, ToastAndroid, ActivityIndicator } from "react-native" // Modal for add block screen
 import BtnPlus from "./Editor_Components/FloatAction" // btns:start, plus...
 import RenderItem from "./Editor_Components/RenderItem" // render of elements
 import { ListOfElements } from "./Lists/ListOfElements" // List of all Elemets
 import { useSharedValue } from "react-native-reanimated" // Value Controler for Position
+import AsyncStorage from "@react-native-async-storage/async-storage" // save / read data
 import {
   StringB,
   addPositionValue,
@@ -13,7 +14,7 @@ import AddBlock from "./Editor_Components/AddBlock" // Element AddBlock
 import EditParams from "./Editor_Components/EditParams"
 import CodeforModals from "./Editor_Components/Secondary_Edition_Component/CodeforModals"
 
-export default function Editor({ navigation }) {
+export default function Editor({ navigation, route }) {
   const [List, setList] = useState([])
   const positions = useSharedValue({})
   const scrollY = useSharedValue(0)
@@ -22,6 +23,33 @@ export default function Editor({ navigation }) {
   const [editParams, setEditParams] = useState(false)
   const [addBlockVisible, setAddBlockVisible] = useState(false)
   const [newElement, setNewElement] = useState(-1)
+  const [copyElement, setCopyElement] = useState({})
+  const [isLoading, setIsLoading] = useState(true)
+  let { idOfProject } = route.params
+
+  /* save data  */
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem(idOfProject, value)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  /* read data */
+  useEffect(() => {
+    getData()
+  }, [])
+  /* function for read data */
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(idOfProject)
+      setList(jsonValue ? JSON.parse(jsonValue) : [])
+      setIsLoading(false)
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   if (Object.keys(positions.value).length == 0) {
     // if Possition array is empty, we add new parameters
@@ -29,7 +57,7 @@ export default function Editor({ navigation }) {
   }
 
   /* add to List new Element */
-  function addBlock(element, ...params) {
+  function addBlock(element) {
     setWhichBtn(0)
     let key = Math.random().toString(32).slice(2)
     let newPositionsInList = [key]
@@ -42,8 +70,12 @@ export default function Editor({ navigation }) {
         text: ListOfElements[element].text
       }
     ] // crete new Element
-
-    if (params.length > 0 /* add second params */) {
+    let params = ListOfElements[element].secondArgument
+    if (
+      /* add second params */
+      params &&
+      params.length > 0
+    ) {
       newElementInList[0].adderParams = []
       params.forEach((a, index) => {
         let adderKey = key + "adderParams" + index
@@ -59,6 +91,7 @@ export default function Editor({ navigation }) {
         newPositionsInList.push(adderKey)
       })
     }
+
     positions.value = addPositionValue({
       object: positions.value,
       func: "add",
@@ -70,6 +103,45 @@ export default function Editor({ navigation }) {
     setNewElement(key)
   }
 
+  /* paste block (it work like addBlock but for enother parameters) */
+  function pasteBlock(element, position) {
+    let key = Math.random().toString(32).slice(2)
+    let newListOfPositions = JSON.parse(JSON.stringify(positions.value))
+    newListOfPositions.splice(position + 1, 0, key)
+    let newElementInList = [
+      {
+        id: key,
+        idOfELement: element.idOfELement,
+        parameter: element.parameter,
+        text: element.text
+      }
+    ] // crete new Element
+
+    let params = ListOfElements[element.idOfELement].secondArgument
+    if (
+      /* add second params */
+      params &&
+      params.length > 0
+    ) {
+      newElementInList[0].adderParams = []
+      params.forEach((a, index) => {
+        let adderKey = key + "adderParams" + index
+        newElementInList.push({
+          id: adderKey,
+          idOfELement: "A",
+          code: a.code,
+          color: ListOfElements[element.idOfELement].color,
+          text: a.text
+        })
+        newElementInList[0].adderParams.push(adderKey)
+        newListOfPositions.splice(position + 2 + index, 0, adderKey)
+      })
+    }
+
+    positions.value = newListOfPositions
+    setList([...List, ...newElementInList])
+  }
+
   /* Start View scene */
   function codeCreator() {
     let c = []
@@ -78,21 +150,24 @@ export default function Editor({ navigation }) {
       a = List.find(({ id }) => id === i)
       c.push(a)
     }) // create list with rigth positions
-
-    if (List[0].listOfData && List[0].listOfData != c[0].listOfData) {
-      c[0].listOfData = List[0].listOfData
-    } // create data
-
     let fisrtStrCode = ""
-    if (List[0].listOfData && List[0].listOfData.length > 0) {
-      fisrtStrCode = List[0].listOfData.reduce((a, b, index) => {
-        if (index === List[0].listOfData.length - 1) {
-          return a + b
-        }
-        return a + b + ","
-      }, "let ")
-    } // create data in html code
 
+    if (List.lenth > 0 && List[0].listOfData) {
+      if (List[0].listOfData != c[0].listOfData) {
+        c[0].listOfData = List[0].listOfData
+        c[0].listOfFunct = List[0].listOfFunct
+      } // create data
+
+      if (List[0].listOfData.length > 0) {
+        fisrtStrCode = List[0].listOfData.reduce((a, b, index) => {
+          if (index === List[0].listOfData.length - 1) {
+            return a + b
+          }
+          return a + b + ","
+        }, "let ")
+      } // create data in html code
+    }
+    storeData(JSON.stringify(c))
     let createdCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
     if (c.length > 0 && c) {
       createdCode = c.reduce((a, b) => {
@@ -112,11 +187,13 @@ export default function Editor({ navigation }) {
     return createdCode
   }
 
-  function ChengeParams(data, newData, newText) {
+  /* Change the paramters of Element */
+  function ChengeParams(data, newData, newText, newFunct) {
     let result = JSON.parse(JSON.stringify(List))
     result[whichEdit].parameter = data
     result[whichEdit].text = newText
     result[0].listOfData = newData
+    result[0].listOfFunct = newFunct
     setList(result)
   }
 
@@ -142,6 +219,7 @@ export default function Editor({ navigation }) {
     ) {
       if (result[1]) {
         result[1].listOfData = List[0].listOfData
+        result[1].listOfFunct = List[0].listOfFunct
       } else {
         ToastAndroid.showWithGravityAndOffset(
           "Data deleted",
@@ -163,10 +241,27 @@ export default function Editor({ navigation }) {
     })
   }
 
+  /* give data for editParameter scene */
   function findData() {
     if (List.length <= 0) return []
     if (!List[0].listOfData) return []
     return List[0].listOfData
+  }
+
+  /* give list of custom Function for editParameter scene */
+  function findFunction() {
+    if (List.length <= 0) return []
+    if (!List[0].listOfFunct) return []
+    return List[0].listOfFunct
+  }
+
+  /* Loading Of elements */
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#eb4464" />
+      </View>
+    )
   }
 
   return (
@@ -180,6 +275,9 @@ export default function Editor({ navigation }) {
         setWhichEdit={setWhichEdit}
         newElement={newElement}
         setNewElement={setNewElement}
+        copyElement={copyElement}
+        setCopyElement={setCopyElement}
+        pasteBlock={pasteBlock}
       />
       <Modal /* AddBLock */
         animationType="slide"
@@ -219,6 +317,7 @@ export default function Editor({ navigation }) {
               ChengeParams={ChengeParams}
               setEditParams={setEditParams}
               listOfData={findData()}
+              listOfFunct={findFunction()}
               element={List[whichEdit] ? List[whichEdit] : ""}
             />
           }

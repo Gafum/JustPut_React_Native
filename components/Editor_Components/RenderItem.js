@@ -62,7 +62,10 @@ function MovableElement({
   setWhichEdit,
   newElement,
   setNewElement,
-  isElement
+  isElement,
+  copyElement,
+  setCopyElement,
+  pasteBlock
 }) {
   const dimensions = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -150,34 +153,69 @@ function MovableElement({
   }, [moving])
 
   function Details({ show }) {
-    //Btns Delete, Copy
+    //Btns Delete, Copy, Paste
     function Buttons() {
       return (
-        <TouchableOpacity /*Delete*/
-          onPress={() => {
-            Alert.alert(
-              "Delete!!!",
-              title,
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel"
-                },
-                { text: "OK", onPress: () => deleteELementList(id) }
-              ],
-              { cancelable: true }
-            )
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            maxWidth: 80
           }}
         >
-          <Image
-            style={{
-              width: 25,
-              height: 25
+          <TouchableOpacity /*Delete*/
+            onPress={() => {
+              Alert.alert(
+                "Delete!!!",
+                title,
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                  },
+                  { text: "OK", onPress: () => deleteELementList(id) }
+                ],
+                { cancelable: true }
+              )
             }}
-            source={require("../../assets/delete.png")}
-          />
-        </TouchableOpacity>
+          >
+            <Image
+              style={{
+                width: 25,
+                height: 25,
+                marginRight: 5
+              }}
+              source={require("../../assets/delete.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity /*Delete*/ onPress={() => setCopyElement()}>
+            <Image
+              style={{
+                width: 25,
+                height: 25,
+                marginRight: 5
+              }}
+              source={require("../../assets/copy.png")}
+            />
+          </TouchableOpacity>
+          {Object.keys(copyElement).length > 0 && (
+            <TouchableOpacity /*Delete*/
+              onPress={() => {
+                pasteBlock(copyElement, positions.value.indexOf(id))
+              }}
+            >
+              <Image
+                style={{
+                  width: 25,
+                  height: 25
+                }}
+                source={require("../../assets/paste.png")}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       )
     }
     return show ? <Buttons /> : ""
@@ -206,12 +244,13 @@ function MovableElement({
             style={{
               flex: 1,
               flexDirection: "row",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
               alignItems: "center",
               minWidth: "70%",
               backgroundColor: newElement == id ? colorText : "white",
               borderBottomRightRadius: 24,
-              borderTopRightRadius: 24
+              borderTopRightRadius: 24,
+              overflow: "hidden"
             }}
           >
             <PanGestureHandler
@@ -285,7 +324,10 @@ export default function RenderItem({
   setEditParams,
   setWhichEdit,
   newElement,
-  setNewElement
+  setNewElement,
+  copyElement,
+  setCopyElement,
+  pasteBlock
 }) {
   const scrollViewRef = useAnimatedRef()
 
@@ -334,6 +376,9 @@ export default function RenderItem({
                 newElement={newElement}
                 setNewElement={setNewElement}
                 isElement={i.idOfELement == "A" ? false : true}
+                copyElement={copyElement}
+                setCopyElement={() => setCopyElement(i)}
+                pasteBlock={pasteBlock}
               />
             )
           })}

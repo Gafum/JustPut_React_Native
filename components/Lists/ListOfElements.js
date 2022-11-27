@@ -21,7 +21,7 @@ export const ListOfElements = [
     color: controlColor,
     listChengers: ["name", "params"],
     standartParameter: [["name"], ["params"]],
-    secondArgument: { code: "}", text: "End" }
+    secondArgument: [{ code: "}", text: "End" }]
   },
   {
     id: 2, // PROPERTIES
@@ -54,5 +54,26 @@ export const ListOfElements = [
     color: controlColor,
     listChengers: ["//name", "'a'"],
     standartParameter: [["//name"], ["'a'"]]
+  },
+  {
+    id: 6, // CONTROL
+    code: "if(condition){",
+    text: "If condition (else)",
+    color: controlColor,
+    listChengers: ["condition"],
+    standartParameter: [[[1], [">"], [0]]],
+    secondArgument: [{ code: "}", text: "End" }]
+  },
+  {
+    id: 7, // CONTROL
+    code: "if(condition){",
+    text: "If condition (else)",
+    color: controlColor,
+    listChengers: ["condition"],
+    standartParameter: [[[1], [">"], [0]]],
+    secondArgument: [
+      { code: "}else{", text: "Else" },
+      { code: "}", text: "End" }
+    ]
   }
 ]

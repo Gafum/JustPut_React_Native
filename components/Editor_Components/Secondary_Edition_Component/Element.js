@@ -10,7 +10,7 @@ export function Element({ title, colorText }) {
         flexDirection: "row",
         justifyContent: "space-between",
         height: ELEMENT_HEIGHT,
-        width: 300,
+        width: "100%",
         padding: 10,
         alignItems: "center",
         position: "relative"

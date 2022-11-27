@@ -2,7 +2,7 @@ import React from "react"
 import { WebView } from "react-native-webview"
 import { ListOfElements } from "../Lists/ListOfElements"
 
-function CodeOfEditFormula(parameter, element, listOfData) {
+function CodeOfEditFormula(parameter, element, listOfData, listOfFunct) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,47 +19,65 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		padding: 0%;
 		font-family: 'Cuprum', sans-serif;
 		box-sizing: border-box;
+		user-select: none;
 	}
+
 	body{
 		height: 100%;
 		width: 100%;
 	}
-	#btn button{
+
+	#btn{
+		padding: 0 10px;
+		display: flex;
+		gap: 5px;
+		width: 100vw;
+		height: 60vh;
+	}
+
+	.mainBtn{
+		padding: 5px 0;
 		width: 100%;
-		padding: 7px;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		justify-items: center;
+		gap:5px;
+		height: fit-content;
+	}
+
+	.mainBtn>button{
+		min-width: 50px;
+		width: 100%;
+		padding: 4px 7px;
 		font-size: 16px;
 		border-radius: 17px;
 		border: none;
 		background-color: #191919;
 		color: white;
-		height: 100%;
 		text-align: center;
+		overflow: hidden;
+		aspect-ratio: 1 / 1;
+		transition: all .5s;
 	}
-	#btn>button:active{
+
+	.mainBtn>button:active{
 		background-color: #888;
 	}
-	#btn{
-		padding: 20px 10px;
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 5px;
-		justify-items: center;
-		width: 100%;
-		height: 60vh;
-	}
+
 	#result{
 		overflow-y: scroll;
 		width: 100%;
-		height: 30vh;
+		height: 28vh;
 		overflow-wrap: break-word;
 		background-color: #191919;
 		padding: 15px 10px;
 		color: white;
 		font-size: 18px;
 	}
+
 	#where{
 		width: 100%;
-		height: 10vh;
+		height: fit-content;
 		background-color: ${element.color};
 		padding: 15px;
 		display: flex;
@@ -67,6 +85,7 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		gap: 5px;
 		alignItems: center;
 	}
+
 	#where>button{
 		padding: 3px;
 		border:none;
@@ -78,21 +97,25 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		overflow-X: scroll;
 		scroll-behavior: smooth;
 		white-space: pre;
+		height: fit-content;
 	}
+
 	.formuls{
-		grid-column-start: 5;
-		grid-row-start: 1;
-		grid-row-end: 7;
-		display: grid;
-		grid-template-row: repeat(6, 1fr);
-		gap: 5px;
-		justify-items: center;
+		padding: 5px 0;
+		display: flex;
+		flex-direction: column;
 		width: 100%;
-		min-width: 90px;
-		max-height: 60vh;
+		max-width: 60%;
+		gap: 5px;
+		max-height: 69vh;
 		overflow-y: scroll;
 	}
-	.formuls>li{
+
+	.mainLi{
+		display: flex;
+		justify-content: flex-start;
+		alignItems: center;
+		flex-direction: column;
 		width: 100%;
 		font-size: 16px;
 		border-radius: 17px;
@@ -104,19 +127,49 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		text-align: center;
 		padding: 7px 0 3px;
 	}
-	li>ul{
+
+	.LiAfterTap{
+		height: fit-content;
+	}
+
+	.mainLi>ul{
+		pointer-events: none;
 		background-color: #e3e3e3;
 		border-bottom-left-radius: 17px;
 		border-bottom-right-radius: 17px;
+		margin-top: 0;
+		padding: 0;
+		transition: none;
 		width: 100%;
-		margin-top: 10px;
+		opacity: 0;
+		height: 0;
+		visibility:0;
+		translate: scaleX(0);
 	}
-	li>ul>li{
-		text-align:center;
+
+	.mainLi>.showenUl{
+		pointer-events: auto;
+		margin-top: 15px;
+		padding: 6px;
+		opacity: 1;
+		height: 100%;
+		visibility: 1;
+		translate: scaleX(1);
+		transition: all .2s;
+	}
+	
+	.mainLi>ul>li{
+		font-size: 0px;
+	}
+
+	.mainLi>.showenUl>li{
+		min-height: 17px;
+		text-align: center;
 		color: black;
 		margin-bottom: 4px;
 		width: 100%;
 		font-size: 14px;
+		list-style: none;
 	}
 	</style>
 </head>
@@ -124,38 +177,40 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 	<div id="where"></div>
 	<div id="result"></div>
 	<div id="btn">
-		<button onclick="tapofbtn('Code');">Code</button>
-		<button onclick="tapofbtn('(');">(</button>
-		<button onclick="tapofbtn(')');">)</button>
-		<button onclick="tapofbtn('delete');">⌫</button>
-		<button onclick="tapofbtn('1');">1</button>
-		<button onclick="tapofbtn('2');">2</button>
-		<button onclick="tapofbtn('3');">3</button>
-		<button onclick="tapofbtn('+');">+</button>
-		<button onclick="tapofbtn('4');">4</button>
-		<button onclick="tapofbtn('5');">5</button>
-		<button onclick="tapofbtn('6');">6</button>
-		<button onclick="tapofbtn('-');">-</button>
-		<button onclick="tapofbtn('7');">7</button>
-		<button onclick="tapofbtn('8');">8</button>
-		<button onclick="tapofbtn('9');">9</button>
-		<button onclick="tapofbtn('*');">*</button>
-		<button onclick="tapofbtn('.');">.</button>
-		<button onclick="tapofbtn('0');">0</button>
-		<button onclick="tapofbtn(',');">,</button>
-		<button onclick="tapofbtn('/');">/</button>
-		<button onclick="tapofbtn('Text');">Text</button>
-		<button onclick="tapofbtn('left');"><-</button>
-		<button onclick="tapofbtn('right');">-></button>
-		<button onclick="tapofbtn('Ok');">Ok</button>
+		<div class="mainBtn">
+			<button onclick="tapofbtn('Code');">Code</button>
+			<button onclick="tapofbtn('(');">(</button>
+			<button onclick="tapofbtn(')');">)</button>
+			<button onclick="tapofbtn('delete');">⌫</button>
+			<button onclick="tapofbtn('1');">1</button>
+			<button onclick="tapofbtn('2');">2</button>
+			<button onclick="tapofbtn('3');">3</button>
+			<button onclick="tapofbtn('+');">+</button>
+			<button onclick="tapofbtn('4');">4</button>
+			<button onclick="tapofbtn('5');">5</button>
+			<button onclick="tapofbtn('6');">6</button>
+			<button onclick="tapofbtn('-');">-</button>
+			<button onclick="tapofbtn('7');">7</button>
+			<button onclick="tapofbtn('8');">8</button>
+			<button onclick="tapofbtn('9');">9</button>
+			<button onclick="tapofbtn('*');">*</button>
+			<button onclick="tapofbtn('.');">.</button>
+			<button onclick="tapofbtn('0');">0</button>
+			<button onclick="tapofbtn(',');">,</button>
+			<button onclick="tapofbtn('/');">/</button>
+			<button onclick="tapofbtn('Text');">Text</button>
+			<button onclick="tapofbtn('left');"><-</button>
+			<button onclick="tapofbtn('right');">-></button>
+			<button onclick="tapofbtn('Ok');">Ok</button>
+		</div>
 		<ul class="formuls" id="tree">
-			<li>Data
-				<ul hidden id="dataList">
-					<li style="color: #777" onclick="createVarieble()">+Create</li>
+			<li class="mainLi">Data
+				<ul id="dataList">
+					<li style="color: #777" onclick="createVarieble(true)">+Create</li>
 				</ul>
 			</li>
-			<li>Math
-				<ul hidden>
+			<li class="mainLi">Math
+				<ul>
 					<li onclick="tapOfFunctionBtn(2, 'Math.pow', '(', ',', ')');">pow</li>
 					<li onclick="tapOfFunctionBtn(0,'Math.random()');">random</li>
 					<li onclick="tapOfFunctionBtn(1,'Math.sqrt', '(', ')');">sqrt</li>
@@ -179,16 +234,16 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 					<li onclick="tapOfFunctionBtn(0, 'Math.PI');">PI</li>
 				</ul>
 			</li>
-			<li style="font-size: 14px;">Properties
-				<ul hidden>
+			<li style="font-size: 14px;" class="mainLi">Properties
+				<ul>
 					<li>x</li>
 					<li>y</li>
 					<li>width</li>
 					<li>height</li>
 				</ul>
 			</li>
-			<li>Logic
-				<ul hidden>
+			<li class="mainLi">Logic
+				<ul>
 					<li onclick="tapofbtn('==');">==</li>
 					<li onclick="tapofbtn('!==');">!==</li>
 					<li onclick="tapofbtn('===');">===</li>
@@ -203,9 +258,14 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 					<li onclick="tapofbtn('false');">false</li>
 				</ul>
 			</li>
-			<li>Function</li>
-			<li>...
-				<ul hidden>
+			<li class="mainLi">Function</li>
+			<li class="mainLi">My func
+				<ul id="functList">
+					<li style="color: #777" onclick="createVarieble(false)">+Create</li>
+				</ul>
+			</li>
+			<li class="mainLi">...
+				<ul>
 					<li onclick="tapOfFunctionBtn(1,'\${','}');">CodeInHTML</li>
 					<li onclick="tapOfFunctionBtn(1,' ? ',' : ');">ternary</li>
 					<li onclick="tapOfFunctionBtn(0, '%');">module</li>
@@ -222,23 +282,27 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 	<script>
 
 		/* ============================================ Code */
-		const tree = document.querySelector('#tree')
+
 		const where = document.querySelector('#where')
 		const result = document.querySelector('#result')
+		const dataList = document.querySelector('#dataList')
+		const functList = document.querySelector('#functList')
 
-		tree.onclick = function(event) {
-      let childrenContainer = event.target.querySelector('ul');
-      if (!childrenContainer) return;
-      childrenContainer.hidden = !childrenContainer.hidden;
+		document.querySelector('#tree').onclick = (event) => {
+      let childrenContainer = event.target.querySelector("ul")
+      if (!childrenContainer||event.target==document.querySelector('#tree')) return
+			event.target.classList.toggle("LiAfterTap")
+      childrenContainer.classList.toggle("showenUl")
     }
+
 		// Create variable =============================>
 		
-
 		const TextInWhereOnStart = "${element.text}"
 		const listOfChageParams = ${JSON.stringify(element.listChengers)}
 
 		let List = ${parameter}
 		let listOfData = ${JSON.stringify(listOfData)}
+		let ListOfFunct = ${JSON.stringify(listOfFunct)}
 		let listOfParams = {}
 		let position = 0
 		let whichPosition = 0 //which Parameter
@@ -248,20 +312,29 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		// Different Function ===================>
 		
 
-
-		function createVarieble(){
-			let resultat = prompt('⠀⠀Create Data').replace(/ /g,'')
+		function createVarieble(isData){
+			let resultat = prompt(isData?'⠀⠀Create Data':'⠀⠀Create Function').replace(/ /g,'')
 			if(!resultat) return
 			if(listOfData.includes(resultat)) return
-			listOfData.push(String(resultat).slice(0, 9))
-			chengeDataList()
+			if(isData){
+				listOfData.push(String(resultat).slice(0, 9))
+				chengeDataList(listOfData, true)
+			}else{
+				ListOfFunct.push(String(resultat).slice(0, 9))
+				chengeDataList(ListOfFunct, false)
+			}
 		}
 
-		function chengeDataList(){
-			let resultat = listOfData.reduce((a,b)=> {return a + \`<li onclick="tapofbtn('\${b}');">\${b}</li>\`}, '')
-			resultat+='<li style="color: #777" onclick="createVarieble()">+Create</li>'
-			dataList.innerHTML = resultat
-		} 
+		function chengeDataList(whatList, isData){
+			let resultat = whatList.reduce((a,b)=> {return a + \`<li onclick="tapofbtn('\${b}');">\${b}</li>\`}, '')
+			if(isData){
+				resultat+='<li style="color: #777" onclick="createVarieble(true)">+Create</li>'
+				dataList.innerHTML = resultat
+			}else{
+				resultat+='<li style="color: #777" onclick="createVarieble(false)">+Create</li>'
+				functList.innerHTML = resultat
+			}
+		}
 
 		function setTextInWhere(){
 			let resultat = TextInWhereOnStart
@@ -271,7 +344,7 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 				if(List[i].length>0){
 					realChenge.push(List[i].reduce((a, b) => a + b))
 				}else{
-					realChenge.push('⠀')
+					realChenge.push(' ')
 				}
 			}
 			where.innerHTML = resultat
@@ -376,10 +449,11 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 				case "Ok":
 					let textInEditor = TextInWhereOnStart
 					for (let i = 0; i < listOfChageParams.length; i++) {
-						let realChenge = List[i].reduce((a, b) => a + b).slice(0, 7)
+						let maxTextWidth = Math.floor((window.screen.availWidth - TextInWhereOnStart.length * 10) / 17)
+						let realChenge = List[i].reduce((a, b) => a + b).slice(0, maxTextWidth)
 						textInEditor = textInEditor.replace(listOfChageParams[i], realChenge)
 					}
-					window.ReactNativeWebView.postMessage(JSON.stringify([[...List], [...listOfData], textInEditor]))
+					window.ReactNativeWebView.postMessage(JSON.stringify([[...List], [...listOfData], textInEditor, [...ListOfFunct]]))
 					break
 				default:
 					listOfParams.splice(position, 0, text)
@@ -392,7 +466,8 @@ function CodeOfEditFormula(parameter, element, listOfData) {
 		function onStart(){
 			listOfParams = List[whichPosition]
 			position = listOfParams.length
-			chengeDataList()
+			chengeDataList(listOfData, true)
+			chengeDataList(ListOfFunct, false)
 			changeText()
 		}
 		
@@ -405,14 +480,16 @@ export default function EditParams({
   ChengeParams,
   setEditParams,
   element,
-  listOfData
+  listOfData,
+  listOfFunct
 }) {
   let theElement = ListOfElements[element.idOfELement] //Element in Global List
   //element - element in project
   let html = CodeOfEditFormula(
     JSON.stringify(element.parameter),
     theElement,
-    listOfData
+    listOfData,
+    listOfFunct
   ) // set code to html
   return (
     <WebView
@@ -420,7 +497,7 @@ export default function EditParams({
       source={{ html }}
       onMessage={(event) => {
         let resultat = JSON.parse(event.nativeEvent.data)
-        ChengeParams(resultat[0], resultat[1], resultat[2])
+        ChengeParams(resultat[0], resultat[1], resultat[2], resultat[3])
         setEditParams(false)
       }}
     />

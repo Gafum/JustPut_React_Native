@@ -1,6 +1,7 @@
 import React from "react"
-import { Text, StyleSheet, TouchableOpacity, FlatList } from "react-native"
+import { Text, StyleSheet, TouchableOpacity } from "react-native"
 import { ListOfElements } from "../Lists/ListOfElements"
+import { FlashList } from "@shopify/flash-list"
 
 export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
   const styles = StyleSheet.create({
@@ -24,14 +25,11 @@ export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
   function Item({ item }) {
     return (
       <TouchableOpacity
+        opacity={0.7}
         style={styles.block}
         onPress={() => {
           setAddBlockVisible(false)
-          if (item.secondArgument) {
-            addBlock(item.id, item.secondArgument)
-          } else {
-            addBlock(item.id)
-          }
+          addBlock(item.id)
         }}
       >
         <Text style={styles.what}>{item.text}</Text>
@@ -56,10 +54,9 @@ export default function AddBlock({ setAddBlockVisible, addBlock, whichBtn }) {
   }
 
   return (
-    <FlatList
-      style={{ paddingVertical: 5 }}
+    <FlashList
+      estimatedItemSize={15}
       data={whatData(whichBtn)}
-      initialNumToRender
       renderItem={Item}
     />
   )

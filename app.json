@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "JustPut",
+    "name": "Just Put",
     "slug": "JustPut",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,6 +21,7 @@
       "supportsTablet": true
     },
     "android": {
+			"package": "gafum.justput",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

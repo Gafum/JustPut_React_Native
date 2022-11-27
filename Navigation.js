@@ -7,6 +7,7 @@ import {
 /* ================ import screens ============*/
 import ViewResult from "./components/ViewResult"
 import Editor from "./components/Editor"
+import HomePage from "./components/HomePage"
 
 const Stack = createStackNavigator()
 
@@ -22,6 +23,11 @@ export default function MyStack() {
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
       }}
     >
+      <Stack.Screen /* create Editor */
+        name="HomePage"
+        component={HomePage}
+        options={{ title: "Projects" }}
+      />
       <Stack.Screen /* create Editor */
         name="Editor"
         component={Editor}
