@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.3.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg viewBox="0 0 524.6 554">
+<style type="text/css">
+	.crt0{fill:none;stroke:#000000;stroke-width:28;stroke-miterlimit:10;}
+	.crt1{fill:none;stroke:#000000;stroke-width:28;stroke-linecap:round;stroke-miterlimit:10;}
+	.crt2{fill:none;stroke:#000000;stroke-width:45;stroke-linecap:round;stroke-miterlimit:10;}
+	.crt3{fill:none;stroke:#000000;stroke-width:38;stroke-linecap:round;stroke-miterlimit:10;}
+</style>
+	<path class="crt0" d="M281.6,261l57,31l-57,31c-13.1,7.1-28.9,6.9-41.8-0.7L187.9,292l51.9-30.4C252.7,254.1,268.5,253.9,281.6,261z
+		"/>
+	<path class="crt1" d="M328.2,289.8h99.7c4.7,0,8.5,3.8,8.5,8.5v39.4"/>
+	<path class="crt1" d="M198.6,290.8H98.5c-4.7,0-8.5,3.8-8.5,8.5v39.4"/>
+	<line class="crt1" x1="263.3" y1="252.3" x2="263.3" y2="159.6"/>
+	<path class="crt1" d="M743.1,332"/>
+	<circle cx="263.3" cy="68.5" r="59.1"/>
+	<line class="crt2" x1="33.3" y1="403.2" x2="146.7" y2="525.2"/>
+	<line class="crt2" x1="146.7" y1="403.2" x2="33.3" y2="525.2"/>
+	<line class="crt3" x1="436.5" y1="525.5" x2="499.6" y2="402.9"/>
+	<line class="crt3" x1="436.5" y1="525.5" x2="373.2" y2="459.8"/>
+</svg>

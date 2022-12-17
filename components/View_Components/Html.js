@@ -23,7 +23,7 @@ export default function Html(a) {
 </head>
 <body>
 	<div id="main"></div>
-	<canvas style="display: block;" width="10" height="10"></canvas>
+	<canvas style="display: block;" width="720" height="1280"></canvas>
 	<script>
 	const element = document.querySelector('#main')
 		${a}
