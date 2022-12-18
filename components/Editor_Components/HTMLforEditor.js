@@ -216,6 +216,12 @@ export default function Html(data) {
         width: max-content;
       }
 
+			.options li>span{
+				background-color: white;
+				border-radius: 6px;
+				padding: 2px;
+			}
+
       .options .iconbutton {
         width: 36px;
         height: 36px;
@@ -344,15 +350,26 @@ export default function Html(data) {
         align-items: center;
       }
 
-      #inner-where,
-      #where-addblock {
-        width: 100%;
+      #inner-where {
         height: fit-content;
         padding: 15px;
         display: flex;
         justify-content: flex-start;
         gap: 5px;
         align-items: center;
+				width: calc(100% - 50px);
+				white-space: nowrap;
+				overflow-x: scroll;
+      }
+
+      #where-addblock {
+        height: fit-content;
+        padding: 15px;
+        display: flex;
+        justify-content: flex-start;
+        gap: 5px;
+        align-items: center;
+				width: 100%;
       }
 
       #where button,
@@ -894,15 +911,20 @@ export default function Html(data) {
           <li style="font-size: 14px" class="mainLi">
             Properties
             <ul>
-              <li>x</li>
-              <li>y</li>
-              <li>width</li>
-              <li>height</li>
+							<li onclick="tapofbtn('.x');">x</li>
+							<li onclick="tapofbtn('.y');">y</li>
+							<li onclick="tapofbtn('.width');">width</li>
+							<li onclick="tapofbtn('.height');">height</li>
+							<li onclick="tapofbtn('.color');">color</li>
+							<li onclick="tapofbtn('.radius');">radius</li>
+							<li onclick="tapofbtn('.startAngle');">startAngle</li>
+							<li onclick="tapofbtn('.endAngle');">endAngle</li>
             </ul>
           </li>
           <li class="mainLi">
             Logic
             <ul>
+              <li onclick="tapofbtn('=');">SET</li>
               <li onclick="tapofbtn('==');">==</li>
               <li onclick="tapofbtn('!==');">!==</li>
               <li onclick="tapofbtn('===');">===</li>
@@ -921,6 +943,9 @@ export default function Html(data) {
 						<ul>
 							<li onclick="tapOfFunctionBtn(1,'prompt(',')');">prompt</li>
 							<li onclick="tapOfFunctionBtn(1,'confirm(',')');">confirm</li>
+							<li onclick="tapOfFunctionBtn(2,'joinStrings(',',',')');">joinStrings</li>
+							<li onclick="tapOfFunctionBtn(1,'degToRadian(',')');">degToRadian</li>
+							<li onclick="tapOfFunctionBtn(2,'randomInteger(',',',')');">randomInteger</li>
 						</ul>
 					</li>
           <li class="mainLi">
@@ -1032,7 +1057,77 @@ export default function Html(data) {
           color: objectColor,
           listChengers: ['"Text"'],
           standartParameter: [['"Text"']]
-        }
+        },
+				{
+          id: 9, // OBJECT
+          code: \`canva.width = W
+canva.height = H\`,
+          text: 'scene W×H',
+          color: objectColor,
+          listChengers: ['W', 'H'],
+          standartParameter: [['3','6','0'], ['7','2','0']]
+        },
+				{
+          id: 10, // OBJECT
+          code: 'myName = new rect({ x: myX, y: myY, width: myW, height: myH, color: myColor, shape: "cub" })',
+          text: 'Create Square myName',
+          color: objectColor,
+          listChengers: ["myName", "myX", "myY", "myW", "myH", "myColor"],
+          standartParameter: [["myName"],["1","0","0"],["4","0"],["3","0"], ["5","0"],['"#000"']],
+					textInWhere: 'myName: x: myX, y: myY, width: myW, height: myH, color: myColor'
+        },
+				{
+          id: 11, // OBJECT
+          code: 'myName = new rect({ x: myX, y: myY, radius: myR, startAngle:myS, endAngle: myE, counterclockwise: myC, color: myColor, shape: "circle" })',
+          text: 'Create Circle myName',
+          color: objectColor,
+          listChengers: ["myName", "myX", "myY", "myR", "myS", "myE", "myC", "myColor"],
+          standartParameter: [["myName"],["1","0","0"],["4","0"], ["3","0"], ["0"], ["degToRadian(","3","6","0",")"], ["true"], ['"#000"']],
+					textInWhere: 'myName: x: myX, y: myY, radius: myR, startAngle(rad): myS, endAngle(rad): myE, counterclockwise: myC, color: myColor'
+        },
+				{
+          id: 12, // CONTROL
+          code: \`let toClean = true
+draw()
+function draw() {
+if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}\`,
+          text: "Drawing cycle",
+          color: controlColor,
+          listChengers: ["true"],
+          standartParameter: [["true"]],
+          secondArgument: [{ code: "requestAnimationFrame(draw)}", text: "End Drawing" }],
+					textInWhere: "Drawing cycle(Clean? true)"
+        },
+				{
+          id: 13, // OBJECT
+          code: "//Object.draw(true)",
+          text: "Draw //Object Fill: true",
+          color: objectColor,
+          listChengers: ["//Object", "true"],
+          standartParameter: [["//Object"],["true"]]
+        },
+				{
+          id: 14, // CONTROL
+          code: \`document.onclick=(event)=>{
+						//code
+					}\`,
+          text: "onClick(//code)",
+          color: controlColor,
+          listChengers: ["//code"],
+          standartParameter: [['confirm(','"You tap"',')']],
+					textInWhere: "onClick(//code) *You can get event parameter"
+        },
+				{
+          id: 15, // OBJECT
+          code: \`ctx.fillStyle = myColor
+ctx.font = mySt
+ctx.fillText(text, myX, myY)\`,
+          text: 'Draw Text: text',
+          color: objectColor,
+          listChengers: ["text", "myX", "myY", "mySt", "myColor"],
+          standartParameter: [['"Hi gafum"'], ["1","0","0"], ["4","0"], ['"48px serif"'], ['"#000"']],
+					textInWhere: 'text: x: myX, y: myY, fontStyle: mySt, color: myColor'
+        },
       ]
 
       let listOfData = []
@@ -2375,7 +2470,7 @@ export default function Html(data) {
                 P(Z, "height", e.height),
                 P(Z, "opacity", "0.8"),
                 P(Z, "position", Ot ? "fixed" : "fixed"),
-                P(Z, "zIndex", "100000"),
+                P(Z, "zIndex", "0"),
                 P(Z, "pointerEvents", "none"),
                 (Bt.ghost = Z),
                 t.appendChild(Z),
@@ -4017,6 +4112,10 @@ export default function Html(data) {
       })
     </script>
 
+
+
+
+
     <script>
 
       /* ============================================ Code for Edit Params */
@@ -4033,7 +4132,7 @@ export default function Html(data) {
 
       // Create variable =============================>
 
-      let TextInWhereOnStart = 111
+      let TextInWhereOnStart = "hi"
       let listOfChageParams = []
 
       let List = []
@@ -4041,12 +4140,16 @@ export default function Html(data) {
       let position = 0
       let whichPosition = 0 //which Parameter
       let editingElement = 0 //Element that editing now
+			let idOfElement = 0//Id of editing element
 
 
       function changeparams(event) {
 			editingElement = event.target.closest(".ElementsInEditor").querySelector('.elementText')
-			let idOfElement = event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.id
+			idOfElement = event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.id
 			TextInWhereOnStart = ListOfElements[idOfElement].text
+			if(ListOfElements[idOfElement].textInWhere) {
+				TextInWhereOnStart = ListOfElements[idOfElement].textInWhere
+			}
 			listOfChageParams = ListOfElements[idOfElement].listChengers
 			List = JSON.parse(event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.paramaters)
 			onStart()
@@ -4065,14 +4168,14 @@ export default function Html(data) {
       }
 
       function createVarieble(isData) {
-			event.stopPropagation()
-			let resultat = prompt(isData ? '⠀⠀Create Data' : '⠀⠀Create Function')
-			if (!resultat) return
-			resultat = resultat.replace(/\s/g, '')
-			if (!resultat) return
-			if (listOfData.includes(resultat)) return
-			(isData ? listOfData : listOfFunct).push(String(resultat).slice(0, 9))
-			chengeDataList(isData)
+				event.stopPropagation()
+				let resultat = prompt(isData ? '⠀⠀Create Data' : '⠀⠀Create Function')
+				if (!resultat) return
+				resultat = resultat.replace(/\s/g, '')
+				if (!resultat) return
+				if (listOfData.includes(resultat)) return
+				(isData ? listOfData : listOfFunct).push(String(resultat).slice(0, 9))
+				chengeDataList(isData)
       }
 
       function daleteVarOrFunc(isData, element) {
@@ -4217,9 +4320,9 @@ export default function Html(data) {
 					}
 					break
 				case "@0Ok**":
-					let textInEditor = TextInWhereOnStart
+					let textInEditor = ListOfElements[idOfElement].text
+					let maxTextWidth = Math.floor((window.screen.availWidth - ListOfElements[idOfElement].text.length * 10) / 17)
 					for (let i = 0; i < listOfChageParams.length; i++) {
-						let maxTextWidth = Math.floor((window.screen.availWidth - TextInWhereOnStart.length * 10) / 17)
 						let realChenge = List[i].reduce((a, b) => a + b).slice(0, maxTextWidth)
 						textInEditor = textInEditor.replace(listOfChageParams[i], realChenge)
 					}
