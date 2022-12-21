@@ -37,7 +37,7 @@ export default function MyStack() {
       <Stack.Screen /* create View for Result */
         name="Result"
         component={ViewResult}
-        options={{ title: "View" }}
+        options={{ title: "View", headerShown: false }}
       />
     </Stack.Navigator>
   )

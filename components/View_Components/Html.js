@@ -24,6 +24,8 @@ export default function Html(a) {
 <body>
 	<div id="main"></div>
 	<canvas style="display: block;" width="360" height="720">Error</canvas>
+	<p class="loadTips">Loading</p>
+	<p class="loadTips">will restart the game if you see this text for a long time</p>
 	<script>
 	const element = document.querySelector('#main')
 	class rect {
@@ -65,7 +67,7 @@ export default function Html(a) {
 				if(shape=="circle"){
 					ctx.strokeStyle = this.color
 					ctx.beginPath()
-					ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, this.counterclockwise)
+					ctx.arc( this.x, this.y, this.radius, this.startAngle, this.endAngle, this.counterclockwise)
 					if(isfill){
 						ctx.fill()
 					}else{
@@ -78,16 +80,58 @@ export default function Html(a) {
 
 	const canva = document.querySelector("canvas")
 	const ctx = canva.getContext("2d")
+	setTimeout(()=>{	
+		canva.width =  window.innerWidth
+		canva.height = window.innerHeight
+		document.querySelectorAll(".loadTips").forEach((i)=>i.style.display = "none")
+	}, 300)
 
-	function ColisionBetween(first, second) {
-		if (
-			first.x + first.width > second.x &&
-			second.x + second.width > first.x &&
-			first.y + first.height > second.y &&
-			second.y + second.height > first.y
-		) {
-			return true
+	function getCoordinatOfObjects(first, second){
+		if (first.shape == "cub" && second.shape == "circle") {
+			return { whatcolision: "cubCir", cx: second.x, cy: second.y, radius: second.radius, rx: first.x, ry: first.y, rw: first.width, rh: first.height }
 		}
+		if (first.shape == "circle" && second.shape == "cub") {
+			return { whatcolision: "cubCir", cx: first.x, cy: first.y, radius: first.radius, rx: second.x, ry: second.y, rw: second.width, rh: second.height }
+		}
+		return undefined
+	}
+
+
+	function colisionBetween(first, second) {
+		if(first.shape == second.shape){
+			if(first.shape == "cub"){
+				if (
+					first.x + first.width >= second.x &&
+					second.x + second.width >= first.x &&
+					first.y + first.height >= second.y &&
+					second.y + second.height >= first.y
+				) {
+					return true
+				}
+			}else if(first.shape == "circle"){
+
+			}
+		}
+		else {
+			let {whatcolision, cx, cy, rx, ry, rw, rh, radius} = getCoordinatOfObjects(first, second)
+			if(whatcolision == "cubCir"){
+				let testX = cx, testY = cy
+
+				if (cx < rx)         testX = rx      // test left edge
+				else if (cx > rx+rw) testX = rx+rw   // right edge
+				if (cy < ry)         testY = ry    	 // top edge
+				else if (cy > ry+rh) testY = ry+rh   // bottom edge
+
+				let distX = Math.abs(cx-testX)
+				let distY = Math.abs(cy-testY)
+				let distance = Math.floor(Math.sqrt( (distX*distX) + (distY*distY)))
+
+				if (distance <= radius) {
+					return true
+				}
+			}
+		}
+		return false
 	}
 
 	function joinStrings(a,b){

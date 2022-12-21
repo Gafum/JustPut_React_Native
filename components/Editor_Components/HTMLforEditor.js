@@ -946,6 +946,7 @@ export default function Html(data) {
 							<li onclick="tapOfFunctionBtn(2,'joinStrings(',',',')');">joinStrings</li>
 							<li onclick="tapOfFunctionBtn(1,'degToRadian(',')');">degToRadian</li>
 							<li onclick="tapOfFunctionBtn(2,'randomInteger(',',',')');">randomInteger</li>
+							<li onclick="tapOfFunctionBtn(2,'colisionBetween(',',',')');">colisionBetween</li>
 						</ul>
 					</li>
           <li class="mainLi">
@@ -1016,7 +1017,7 @@ export default function Html(data) {
         {
           id: 4, // CONTROL
           code: "//code",
-          text: "Code: //code",
+          text: "//code",
           color: controlColor,
           listChengers: ["//code"],
           standartParameter: [[" //code"]]
@@ -1035,7 +1036,7 @@ export default function Html(data) {
           text: "If condition",
           color: controlColor,
           listChengers: ["condition"],
-          standartParameter: [[[1], [">"], [0]]],
+          standartParameter: [[1, ">", 0]],
           secondArgument: [{ code: "}", text: "End" }]
         },
         {
@@ -1044,7 +1045,7 @@ export default function Html(data) {
           text: "If condition (else)",
           color: controlColor,
           listChengers: ["condition"],
-          standartParameter: [[[1], [">"], [0]]],
+          standartParameter: [[1, ">", 0]],
           secondArgument: [
             { code: "}else{", text: "Else" },
             { code: "}", text: "End" }
@@ -1078,12 +1079,12 @@ canva.height = H\`,
         },
 				{
           id: 11, // OBJECT
-          code: 'myName = new rect({ x: myX, y: myY, radius: myR, startAngle:myS, endAngle: myE, counterclockwise: myC, color: myColor, shape: "circle" })',
+          code: 'myName = new rect({ x: myX, y: myY, radius: myR, startAngle:myS, endAngle: myE, counterclockwise: myCl, color: myColor, shape: "circle", width: myR*2, height: myR*2})',
           text: 'Create Circle myName',
           color: objectColor,
-          listChengers: ["myName", "myX", "myY", "myR", "myS", "myE", "myC", "myColor"],
+          listChengers: ["myName", "myX", "myY", "myR", "myS", "myE", "myCl", "myColor"],
           standartParameter: [["myName"],["1","0","0"],["4","0"], ["3","0"], ["0"], ["degToRadian(","3","6","0",")"], ["true"], ['"#000"']],
-					textInWhere: 'myName: x: myX, y: myY, radius: myR, startAngle(rad): myS, endAngle(rad): myE, counterclockwise: myC, color: myColor'
+					textInWhere: 'myName: x: myX, y: myY, radius: myR, startAngle(rad): myS, endAngle(rad): myE, counterclockwise: myCl, color: myColor'
         },
 				{
           id: 12, // CONTROL
@@ -1111,7 +1112,7 @@ if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}\`,
           code: \`document.onclick=(event)=>{
 						//code
 					}\`,
-          text: "onClick(//code)",
+          text: "Tap(//code)",
           color: controlColor,
           listChengers: ["//code"],
           standartParameter: [['confirm(','"You tap"',')']],
@@ -4021,7 +4022,7 @@ ctx.fillText(text, myX, myY)\`,
 			let result = String(element.code)
 			for (let i = 0; i < element.listChengers.length; i++) {
 				let realChenge = chenger[i].reduce((a, b) => a + b)
-				result = result.replace(element.listChengers[i], realChenge)
+				result = result.replaceAll(element.listChengers[i], realChenge)
 			}
 			return result
       }
@@ -4144,20 +4145,20 @@ ctx.fillText(text, myX, myY)\`,
 
 
       function changeparams(event) {
-			editingElement = event.target.closest(".ElementsInEditor").querySelector('.elementText')
-			idOfElement = event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.id
-			TextInWhereOnStart = ListOfElements[idOfElement].text
-			if(ListOfElements[idOfElement].textInWhere) {
-				TextInWhereOnStart = ListOfElements[idOfElement].textInWhere
-			}
-			listOfChageParams = ListOfElements[idOfElement].listChengers
-			List = JSON.parse(event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.paramaters)
-			onStart()
-			document.querySelectorAll(".LiAfterTap").forEach((i) => i.classList.remove("LiAfterTap"))
-			editparams.querySelector('#where').style.backgroundColor = ListOfElements[idOfElement].color
-			editparams.classList.add("active")
-			body.classList.add("no-scroll")
-
+				whichPosition = 0
+				editingElement = event.target.closest(".ElementsInEditor").querySelector('.elementText')
+				idOfElement = event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.id
+				TextInWhereOnStart = ListOfElements[idOfElement].text
+				if(ListOfElements[idOfElement].textInWhere) {
+					TextInWhereOnStart = ListOfElements[idOfElement].textInWhere
+				}
+				listOfChageParams = ListOfElements[idOfElement].listChengers
+				List = JSON.parse(event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.paramaters)
+				onStart()
+				document.querySelectorAll(".LiAfterTap").forEach((i) => i.classList.remove("LiAfterTap"))
+				editparams.querySelector('#where').style.backgroundColor = ListOfElements[idOfElement].color
+				editparams.classList.add("active")
+				body.classList.add("no-scroll")
       }
 
       // Different Function ===================>
@@ -4171,7 +4172,7 @@ ctx.fillText(text, myX, myY)\`,
 				event.stopPropagation()
 				let resultat = prompt(isData ? '⠀⠀Create Data' : '⠀⠀Create Function')
 				if (!resultat) return
-				resultat = resultat.replace(/\s/g, '')
+				resultat = resultat.replace(/\\s/g, '')
 				if (!resultat) return
 				if (listOfData.includes(resultat)) return
 				(isData ? listOfData : listOfFunct).push(String(resultat).slice(0, 9))
