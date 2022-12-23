@@ -1,16 +1,7 @@
 import React from "react"
 import { FloatingAction } from "react-native-floating-action"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 
-export default function BtnPlus({ setVisible, setListOfProjects }) {
-  const clearData = async () => {
-    try {
-      await AsyncStorage.setItem("@List_Projects", "")
-      setListOfProjects([])
-    } catch (e) {
-      console.error(e)
-    }
-  }
+export default function BtnPlus({ setVisible }) {
   return (
     <FloatingAction
       color={"#3db05a"}
@@ -29,19 +20,24 @@ export default function BtnPlus({ setVisible, setListOfProjects }) {
           }
         },
         {
-          text: "clean",
+          text: "Settings",
           icon: require("../../assets/delete.png"),
-          name: "clean data",
+          name: "Settings",
           position: 1,
           color: "#3db05a",
-          textColor: "#888"
+          textColor: "#888",
+          textStyle: {
+            fontFamily: "calibri-regular",
+            fontSize: 16,
+            lineHeight: 18
+          }
         }
       ]}
       showBackground={false}
       actionsPaddingTopBottom={3}
       distanceToEdge={{ vertical: 10, horizontal: 10 }}
       onPressItem={(name) =>
-        name == "createProject" ? setVisible(true) : clearData()
+        name == "createProject" ? setVisible(true) : alert("not now(((")
       }
     />
   )

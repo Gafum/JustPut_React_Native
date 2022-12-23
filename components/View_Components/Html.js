@@ -51,28 +51,19 @@ export default function Html(a) {
 			this.endAngle = endAngle
 			this.counterclockwise = counterclockwise
 			this.draw = (isfill=true)=>{
-				if(isfill){
-					ctx.fillStyle = this.color
-				}else{
-					ctx.strokeStyle = this.color
-					ctx.beginPath()
-				}
+				ctx.fillStyle = this.color
+				ctx.strokeStyle = this.color
+				ctx.beginPath()
 				if(shape=="cub"){
-					if(isfill){
-						ctx.fillRect(this.x, this.y, this.width, this.height)
-					}else{
-						ctx.strokeRect(this.x, this.y, this.width, this.height)
-					}
-				}else
-				if(shape=="circle"){
-					ctx.strokeStyle = this.color
-					ctx.beginPath()
-					ctx.arc( this.x, this.y, this.radius, this.startAngle, this.endAngle, this.counterclockwise)
-					if(isfill){
-						ctx.fill()
-					}else{
-						ctx.stroke()
-					}
+					ctx.roundRect(this.x, this.y, this.width, this.height, [this.radius]);
+				}else	if(shape=="circle"){
+						ctx.arc( this.x, this.y, this.radius, this.startAngle, this.endAngle, this.counterclockwise)
+				}
+
+				if(isfill){
+					ctx.fill()
+				}else{
+					ctx.stroke()
 				}
 			}
 		}
@@ -85,6 +76,24 @@ export default function Html(a) {
 		canva.height = window.innerHeight
 		document.querySelectorAll(".loadTips").forEach((i)=>i.style.display = "none")
 	}, 300)
+
+	function objectClick({object, pX, pY}){
+		if(object.shape == "circle"){
+
+			let distance = Math.floor(Math.sqrt(Math.pow(pX - object.x,2)+Math.pow(pY - object.y,2)))
+
+			if (distance <= object.radius) {
+				return true
+			}
+		}else if(object.shape == "cub"){
+			if (pX >= object.x &&
+				pX <= object.x + object.width &&   
+				pY >= object.y &&        
+				pY <= object.y + object.height) {  
+					return true
+			}
+		}
+	}
 
 	function getCoordinatOfObjects(first, second){
 		if (first.shape == "cub" && second.shape == "circle") {
@@ -110,6 +119,11 @@ export default function Html(a) {
 				}
 			}else if(first.shape == "circle"){
 
+				let distance = Math.floor(Math.sqrt(Math.pow(first.x - second.x,2)+Math.pow(first.y - second.y,2)))
+
+				if (distance <= first.radius+second.radius) {
+					return true;
+				}
 			}
 		}
 		else {
@@ -122,9 +136,7 @@ export default function Html(a) {
 				if (cy < ry)         testY = ry    	 // top edge
 				else if (cy > ry+rh) testY = ry+rh   // bottom edge
 
-				let distX = Math.abs(cx-testX)
-				let distY = Math.abs(cy-testY)
-				let distance = Math.floor(Math.sqrt( (distX*distX) + (distY*distY)))
+				let distance =Math.floor(Math.sqrt(Math.pow(cx-testX,2)+Math.pow(cy-testY,2)))
 
 				if (distance <= radius) {
 					return true
@@ -145,6 +157,10 @@ export default function Html(a) {
 	function randomInteger(min, max) {
 		let rand = min + Math.random() * (max + 1 - min)
 		return Math.floor(rand)
+	}
+
+	function getDistanceBetween(first, second){
+		return Math.floor(Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2)))
 	}
 
 	try{

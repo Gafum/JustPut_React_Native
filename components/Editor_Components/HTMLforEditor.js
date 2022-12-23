@@ -290,6 +290,7 @@ export default function Html(data) {
 
       #listAddBlock > li {
         font-size: 20px;
+				height: 40px;
       }
 
       #btn {
@@ -947,6 +948,7 @@ export default function Html(data) {
 							<li onclick="tapOfFunctionBtn(1,'degToRadian(',')');">degToRadian</li>
 							<li onclick="tapOfFunctionBtn(2,'randomInteger(',',',')');">randomInteger</li>
 							<li onclick="tapOfFunctionBtn(2,'colisionBetween(',',',')');">colisionBetween</li>
+							<li onclick="tapOfFunctionBtn(2,'getDistanceBetween(',',',')');">getDistanceBetween</li>
 						</ul>
 					</li>
           <li class="mainLi">
@@ -1070,12 +1072,12 @@ canva.height = H\`,
         },
 				{
           id: 10, // OBJECT
-          code: 'myName = new rect({ x: myX, y: myY, width: myW, height: myH, color: myColor, shape: "cub" })',
+          code: 'myName = new rect({ x: myX, y: myY, width: myW, height: myH, color: myColor, radius: myR, shape: "cub" })',
           text: 'Create Square myName',
           color: objectColor,
-          listChengers: ["myName", "myX", "myY", "myW", "myH", "myColor"],
-          standartParameter: [["myName"],["1","0","0"],["4","0"],["3","0"], ["5","0"],['"#000"']],
-					textInWhere: 'myName: x: myX, y: myY, width: myW, height: myH, color: myColor'
+          listChengers: ["myName", "myX", "myY", "myW", "myH", "myR", "myColor"],
+          standartParameter: [["myName"],["1","0","0"],["4","0"],["3","0"],["5","0"],["0"],['"#000"']],
+					textInWhere: 'myName: x: myX, y: myY, width: myW, height: myH, radius: myR, color: myColor'
         },
 				{
           id: 11, // OBJECT
@@ -1116,7 +1118,7 @@ if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}\`,
           color: controlColor,
           listChengers: ["//code"],
           standartParameter: [['confirm(','"You tap"',')']],
-					textInWhere: "onClick(//code) *You can get event parameter"
+					textInWhere: "Tap(//code)"
         },
 				{
           id: 15, // OBJECT
@@ -1129,6 +1131,66 @@ ctx.fillText(text, myX, myY)\`,
           standartParameter: [['"Hi gafum"'], ["1","0","0"], ["4","0"], ['"48px serif"'], ['"#000"']],
 					textInWhere: 'text: x: myX, y: myY, fontStyle: mySt, color: myColor'
         },
+				{
+          id: 16, // CONTROL
+          code: \`canva.onclick=(event)=>{
+						if(objectClick({object: //Object, pX: event.offsetX, pY: event.offsetY})){
+							//code
+						}
+					}\`,
+          text: "//Object.onClick(//code)",
+          color: controlColor,
+          listChengers: ["//Object", "//code"],
+          standartParameter: [["myName"], ['confirm(','"You tap Object"',')']]
+        },
+        {
+          id: 17, // PROPERTIES
+          code: "//Object.x = 100",
+          text: "Set X of //Object 100",
+          color: propertiesColor,
+          listChengers: ["//Object", "100"],
+          standartParameter: [[" //myName"], ["1","0","0"]]
+        },
+        {
+          id: 18, // PROPERTIES
+          code: "//Object.y = 101",
+          text: "Set Y of //Object 101",
+          color: propertiesColor,
+          listChengers: ["//Object", "101"],
+          standartParameter: [[" //myName"], ["1","0","1"]]
+        },
+        {
+          id: 19, // PROPERTIES
+          code: "//Object.width = 50",
+          text: "Set Width of //Object 50",
+          color: propertiesColor,
+          listChengers: ["//Object", "50"],
+          standartParameter: [[" //myName"], ["5","0"]]
+        },
+        {
+          id: 20, // PROPERTIES
+          code: "//Object.height = 60",
+          text: "Set Height of //Object 60",
+          color: propertiesColor,
+          listChengers: ["//Object", "60"],
+          standartParameter: [[" //myName"], ["6","0"]]
+        },
+        {
+          id: 21, // PROPERTIES
+          code: "//Object.radius = 30",
+          text: "Set Radius of //Object 30",
+          color: propertiesColor,
+          listChengers: ["//Object", "30"],
+          standartParameter: [["//myName"], ["3","0"]]
+        },
+        {
+          id: 22, // PROPERTIES
+          code: "//Object.color = myColor",
+          text: "Set Color of //Object myColor",
+          color: propertiesColor,
+          listChengers: ["//Object", "myColor"],
+          standartParameter: [[" //myName"], ['"#000"']]
+        }
       ]
 
       let listOfData = []
@@ -4128,7 +4190,9 @@ ctx.fillText(text, myX, myY)\`,
 
 
       document.querySelector('#tree').onclick = (event) => {
-			event.target.classList.toggle("LiAfterTap")
+				if(event.target.classList.contains("mainLi")){
+					event.target.classList.toggle("LiAfterTap")
+				}
       }
 
       // Create variable =============================>
@@ -4155,6 +4219,7 @@ ctx.fillText(text, myX, myY)\`,
 				listOfChageParams = ListOfElements[idOfElement].listChengers
 				List = JSON.parse(event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.paramaters)
 				onStart()
+				history.pushState(null, null, window.location)
 				document.querySelectorAll(".LiAfterTap").forEach((i) => i.classList.remove("LiAfterTap"))
 				editparams.querySelector('#where').style.backgroundColor = ListOfElements[idOfElement].color
 				editparams.classList.add("active")
@@ -4164,8 +4229,9 @@ ctx.fillText(text, myX, myY)\`,
       // Different Function ===================>
 
       function closeEditParams() {
-			editparams.classList.remove("active")
-			body.classList.remove("no-scroll")
+				editparams.classList.remove("active")
+				body.classList.remove("no-scroll")
+				history.back()
       }
 
       function createVarieble(isData) {
