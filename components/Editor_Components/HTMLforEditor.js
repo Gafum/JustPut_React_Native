@@ -998,7 +998,8 @@ export default function Html(data) {
           color: controlColor,
           listChengers: ["name", "params"],
           standartParameter: [["name"], ["params"]],
-          secondArgument: [{ code: "}", text: "End" }]
+          secondArgument: [{ code: "}", text: "End" }],
+					isfunction: true
         },
         {
           id: 2, // PROPERTIES
@@ -1085,7 +1086,7 @@ canva.height = H\`,
           text: 'Create Circle myName',
           color: objectColor,
           listChengers: ["myName", "myX", "myY", "myR", "myS", "myE", "myCl", "myColor"],
-          standartParameter: [["myName"],["1","0","0"],["4","0"], ["3","0"], ["0"], ["degToRadian(","3","6","0",")"], ["true"], ['"#000"']],
+          standartParameter: [["myName"],["1","0","0"],["4","0"], ["3","0"], ["0"], ["degToRadian(","3","6","0",")"], ["false"], ['"#000"']],
 					textInWhere: 'myName: x: myX, y: myY, radius: myR, startAngle(rad): myS, endAngle(rad): myE, counterclockwise: myCl, color: myColor'
         },
 				{
@@ -1099,7 +1100,8 @@ if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}\`,
           listChengers: ["true"],
           standartParameter: [["true"]],
           secondArgument: [{ code: "requestAnimationFrame(draw)}", text: "End Drawing" }],
-					textInWhere: "Drawing cycle(Clean? true)"
+					textInWhere: "Drawing cycle(Clean? true)",
+					isfunction: true
         },
 				{
           id: 13, // OBJECT
@@ -1112,13 +1114,13 @@ if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}\`,
 				{
           id: 14, // CONTROL
           code: \`document.onclick=(event)=>{
-						//code
-					}\`,
-          text: "Tap(//code)",
+						\`,
+          text: "Tap(Get event)",
           color: controlColor,
-          listChengers: ["//code"],
-          standartParameter: [['confirm(','"You tap"',')']],
-					textInWhere: "Tap(//code)"
+          listChengers: ["event"],
+          standartParameter: [['event']],
+					secondArgument: [{ code: "}", text: "End of Click" }],
+					isfunction: true
         },
 				{
           id: 15, // OBJECT
@@ -1134,14 +1136,13 @@ ctx.fillText(text, myX, myY)\`,
 				{
           id: 16, // CONTROL
           code: \`canva.onclick=(event)=>{
-						if(objectClick({object: //Object, pX: event.offsetX, pY: event.offsetY})){
-							//code
-						}
-					}\`,
-          text: "//Object.onClick(//code)",
+						if(objectClick({object: //Object, pX: event.offsetX, pY: event.offsetY})){\`,
+          text: "//Object.onClick",
           color: controlColor,
-          listChengers: ["//Object", "//code"],
-          standartParameter: [["myName"], ['confirm(','"You tap Object"',')']]
+          listChengers: ["//Object"],
+          standartParameter: [["myName"]],
+					secondArgument: [{ code: "}}", text: "End of Click" }],
+					isfunction: true
         },
         {
           id: 17, // PROPERTIES
@@ -4001,178 +4002,238 @@ ctx.fillText(text, myX, myY)\`,
 			}
       })
 
-      function addBlock(element) {
-			let nameOfElement = "A" + Date.now() + Math.random().toString(32).slice(4)
-			ListInEditor.innerHTML += \`
-				<li class="ElementsInEditor \${nameOfElement}">
-					<div class="innerOfElement">
-						<div class="my-handle" onclick="showBtnElement(event);"><span></span></div>
-						<div class="btn-in-element">
-							<div class="btn-delete" onclick="deleteElement(event);">
-								<svg class="icon-delete-editor">
-									<use xlink:href="#icon-delete"></use>
-								</svg>
-							</div>
-						</div>
-					<span style="color:\${ListOfElements[element].color}" class="elementText" data-id="\${element}" data-paramaters='\${JSON.stringify(ListOfElements[element].standartParameter)}'>
-						\${ListOfElements[element].text}
-					</span>
-					</div >
-					<span class="EditParameterBtn" onclick="changeparams(event);">
-						<svg class="icon-delete-editor">
-							<use xlink:href="#icon-edit"></use>
-						</svg>
-					</span>
-				</li >\`
-			if (ListOfElements[element].secondArgument) {
-				ListOfElements[element].secondArgument.forEach((i) => {
-					ListInEditor.innerHTML += \`
-						<li class="ElementsInEditor \${nameOfElement}">
-							<div class="innerOfElement">
-								<div class="my-handle" onclick="showBtnElement(event);"><span></span></div>
-								<span style="margin-left: 28px; color:\${ListOfElements[element].color};" class="elementText" data-id="A\${element}" data-paramaters='"\${i.code}"'>
-									\${i.text}
-								</span>
-							</div >
-						</li >\`
-				})
-			}
-			saveData()
-			addblocks.classList.remove("active")
-			body.classList.remove("no-scroll")
-      }
-
-      function closeAddBlockParams() {
-			ListAddBlock.innerHTML = ""
-			addblocks.classList.remove("active")
-			body.classList.remove("no-scroll")
-      }
-
-      function deleteElement(event) {
-			document.querySelectorAll("." + event.target.closest('li').classList[1]).forEach(i => i.remove())
-			saveData()
-      }
-
-      function showBtnElement(event) {
-			let element = event.target.closest(".innerOfElement").querySelector(".btn-in-element")
-			if (element) {
-				element.classList.toggle("active")
-			}
-      }
-
-      function saveData() {
-			let a = []
-			a.push({
-				data: [...listOfData],
-				functions: [...listOfFunct]
-			})
-			for (let i = 0; i < ListInEditor.children.length; i++) {
-				a.push({
-					text: ListInEditor.children[i].querySelector(".elementText").innerText,
-					id: ListInEditor.children[i].querySelector(".elementText").dataset.id,
-					parameter: JSON.parse(ListInEditor.children[i].querySelector(".elementText").dataset.paramaters),
-					nameOfElement: ListInEditor.children[i].classList[1]
-				})
-			}
-
-			window.ReactNativeWebView.postMessage(JSON.stringify(a))
-      }
-
-
-      /* Function that create code "The B(second in reduce) string" */
-      function StringB(element, chenger) {
-			let result = String(element.code)
-			for (let i = 0; i < element.listChengers.length; i++) {
-				let realChenge = chenger[i].reduce((a, b) => a + b)
-				result = result.replaceAll(element.listChengers[i], realChenge)
-			}
-			return result
-      }
-
-      function codeCreator() {
-			let fisrtStrCode = ""
-			if (listOfData.length > 0) {
-				fisrtStrCode = "let " + String(listOfData.reduce((a, b) => a + ", " + b))
-			}
-			let createdCode = "element.innerHTML=\`<h1>Made by Gafum</h1>\`"
-			if (ListInEditor.children.length > 0 && ListInEditor.children) {
-				createdCode = Array.from(ListInEditor.children).reduce((a, b) => {
-					let element = b.querySelector(".elementText").dataset
-					let thisStrb =
-						element.id[0] == "A"
-							? JSON.parse(element.paramaters)
-							: StringB(ListOfElements[element.id], JSON.parse(element.paramaters))
-					return (
-						String(a) +
-						\`
-\`+ thisStrb
-					)
-				}, String(fisrtStrCode))
-			} // create code
-
-			window.ReactNativeWebView.postMessage(JSON.stringify(createdCode))
-      }
-
-
-      let sortable = Sortable.create(ListInEditor, {
-			delay: 70,
-			handle: '.my-handle',
-			animation: 150,
-			filter: '.filtered',
-			forceFallback: true,
-			store: {
-				get: function (sortable) {
-					/*  Get the data of elements. Called once during initialization. */
-					let result = ${data}
-					if (!result) return
-					if (result[0]) {
-						listOfData = [...result[0].data]
-						listOfFunct = [...result[0].functions]
-					}
-					result.shift()
-					result.forEach((i) => {
-						if (i.id[0] == 'A') {
-							ListInEditor.innerHTML += \`
-								<li class="ElementsInEditor \${i.nameOfElement}">
-									<div class="innerOfElement">
-										<div class="my-handle" onclick="showBtnElement(event);"><span></span></div>
-										<span style="margin-left: 28px; color:\${ListOfElements[i.id.slice(1)].color};" class="elementText" data-id="\${i.id}" data-paramaters='"\${i.parameter}"'>
-											\${i.text}
-										</span>
-									</div >
-								</li >\`
-							return
-						}
-						ListInEditor.innerHTML += \`
-							<li class="ElementsInEditor \${i.nameOfElement}" >
-								<div class="innerOfElement">
-									<div class="my-handle" onclick="showBtnElement(event);"><span></span></div>
-									<div class="btn-in-element">
-										<div class="btn-delete" onclick="deleteElement(event);">
-											<svg class="icon-delete-editor">
-												<use xlink:href="#icon-delete"></use>
-											</svg>
-										</div>
-									</div>
-									<span style="color:\${ListOfElements[i.id].color}" class="elementText" data-id="\${i.id}" data-paramaters='\${JSON.stringify(i.parameter)}'>
-									\${i.text}
-									</span>
-								</div>
-								<span class="EditParameterBtn" onclick="changeparams(event);">
+			function addBlock(element) {
+				let nameOfElement = "A" + Date.now() + Math.random().toString(32).slice(4)
+				ListInEditor.innerHTML += \`
+					<li class="ElementsInEditor \${nameOfElement} \${ListOfElements[element].secondArgument ? "start" : ""}"
+					style="\${ListOfElements[element].isfunction ? "margin-top: 15px;" : ""}">
+						<div class="innerOfElement">
+							<div class="my-handle" onclick="showBtnElement(event);"><span></span></div>
+							<div class="btn-in-element">
+								<div class="btn-delete" onclick="deleteElement(event);">
 									<svg class="icon-delete-editor">
-										<use xlink:href="#icon-edit"></use>
+										<use xlink:href="#icon-delete"></use>
 									</svg>
+								</div>
+							</div>
+						<span style="color:\${ListOfElements[element].color}" class="elementText" data-id="\${element}" data-paramaters='\${JSON.stringify(ListOfElements[element].standartParameter)}'>
+							\${ListOfElements[element].text}
 						</span>
+						</div >
+						<span class="EditParameterBtn" onclick="changeparams(event);">
+							<svg class="icon-delete-editor">
+								<use xlink:href="#icon-edit"></use>
+							</svg>
+						</span>
+					</li >\`
+				if (ListOfElements[element].secondArgument) {
+					ListOfElements[element].secondArgument.forEach((i, index) => {
+						ListInEditor.innerHTML += \`
+							<li class="ElementsInEditor \${nameOfElement} \${index + 1 == ListOfElements[element].secondArgument.length ? "finish" : ""}">
+								<div class="innerOfElement">
+									<span style="margin-left: 38px; color:\${ListOfElements[element].color};" class="elementText" data-id="\${index + 1 == ListOfElements[element].secondArgument.length ? "AMain" : "CONTI"}\${element}" data-paramaters='"\${i.code}"'>
+										\${i.text}
+									</span>
+								</div >
 							</li >\`
 					})
-				},
-
-				set: function (sortable) {
-					/* Save Data */
-					saveData()
+				}
+				saveData()
+				addblocks.classList.remove("active")
+				body.classList.remove("no-scroll")
+			}
+	
+			function closeAddBlockParams() {
+				ListAddBlock.innerHTML = ""
+				addblocks.classList.remove("active")
+				body.classList.remove("no-scroll")
+			}
+	
+			function deleteElement(event) {
+				if (event.target.closest('li').classList.contains("start")) {
+					let firstElement = Array.from(ListInEditor.children).findIndex((i) => i == event.target.closest('li'))
+					let listDelete = []
+					for (let i = firstElement + 1; i < getTheListOfChangeElem(firstElement, 0) + 1; i++) {
+						listDelete.push(ListInEditor.children[i])
+					}
+					listDelete.forEach((i) => i.remove())
+				}
+				event.target.closest('li').remove()
+				saveData()
+			}
+	
+			function showBtnElement(event) {
+				let element = event.target.closest(".innerOfElement").querySelector(".btn-in-element")
+				if (element) {
+					element.classList.toggle("active")
 				}
 			}
-      })
+	
+			function saveData() {
+				let a = []
+				a.push({
+					data: [...listOfData],
+					functions: [...listOfFunct]
+				})
+				let attachment = 0
+				Array.from(ListInEditor.children).forEach((i, index) => {
+					if (i.classList.contains("finish")) {
+						attachment--
+					}
+					a.push({
+						text: i.querySelector(".elementText").innerText,
+						id: i.querySelector(".elementText").dataset.id,
+						parameter: JSON.parse(i.querySelector(".elementText").dataset.paramaters),
+						nameOfElement: i.classList[1],
+						padding: attachment * 20
+					})
+					i.style.paddingLeft = a[index + 1].padding + "px"
+					if (i.classList.contains("start")) {
+						attachment++
+					}
+				})
+				if (ListOfElements[ListInEditor.children[0].querySelector(".elementText").dataset.id].isfunction) {
+					ListInEditor.children[0].style.marginTop = "0px"
+				}
+				window.ReactNativeWebView.postMessage(JSON.stringify(a))
+			}
+	
+	
+			/* Function that create code "The B(second in reduce) string" */
+			function StringB(element, chenger) {
+				let result = String(element.code)
+				for (let i = 0; i < element.listChengers.length; i++) {
+					let realChenge = chenger[i].reduce((a, b) => a + b)
+					result = result.replaceAll(element.listChengers[i], realChenge)
+				}
+				return result
+			}
+	
+			function codeCreator() {
+				let fisrtStrCode = ""
+				if (listOfData.length > 0) {
+					fisrtStrCode = "let " + String(listOfData.reduce((a, b) => a + ", " + b))
+				}
+				let createdCode = "element.innerHTML=\`<h1>Made by Gafum</h1>\`"
+				if (ListInEditor.children.length > 0 && ListInEditor.children) {
+					createdCode = Array.from(ListInEditor.children).reduce((a, b) => {
+						let element = b.querySelector(".elementText").dataset
+						let thisStrb = element.id.startsWith('AMain') || element.id.startsWith('CONTI')
+							? JSON.parse(element.paramaters)
+							: StringB(ListOfElements[element.id], JSON.parse(element.paramaters))
+						return (
+							String(a) +
+							\`
+\`+ thisStrb
+						)
+					}, String(fisrtStrCode))
+				} // create code
+	
+				window.ReactNativeWebView.postMessage(JSON.stringify(createdCode))
+			}
+	
+	
+			function getTheListOfChangeElem(index, attachment) {
+				if (ListInEditor.children[index].classList.contains("finish")) {
+					attachment--
+					if (attachment == 0) {
+						return index
+					}
+				}
+				if (ListInEditor.children[index].classList.contains("start")) {
+					attachment++
+				}
+				index++
+				return getTheListOfChangeElem(index, attachment)
+			}
+			
+			let listOfchangeElemnents = []
+			let sortable = Sortable.create(ListInEditor, {
+				handle: '.my-handle',
+				animation: 150,
+				filter: '.filtered',
+				fallbackTolerance: 5,
+				delay: 15,
+				onStart: (evt) => {
+					if (evt.item.classList.contains("start")) {
+						listOfchangeElemnents = []
+						for (let i = evt.oldIndex + 1; i < getTheListOfChangeElem(evt.oldIndex, 0) + 1; i++) {
+							listOfchangeElemnents.push(ListInEditor.children[i])
+							ListInEditor.children[i].style.display = "none"
+						}
+					}
+				},
+				onEnd: (evt) => {
+					if(evt.newIndex==0 && ListOfElements[ListInEditor.children[1].querySelector(".elementText").dataset.id].isfunction){
+						ListInEditor.children[1].style.marginTop = "15px"
+					}
+					if (evt.item.classList.contains("start")) {
+						if (ListOfElements[evt.item.querySelector(".elementText").dataset.id].isfunction) {
+							evt.item.style.marginTop = "15px"
+						}
+						listOfchangeElemnents.reverse()
+						listOfchangeElemnents.forEach((i) => {
+							evt.item.after(i)
+							i.style.display = "flex"
+						})
+						listOfchangeElemnents = []
+					}
+				},
+				store: {
+					get: function (sortable) {
+						let result = ${data}	
+						if (!result) return
+						if (result[0]) {
+							listOfData = [...result[0].data]
+							listOfFunct = [...result[0].functions]
+						}
+						result.shift()
+						result.forEach((i, index) => {
+							if (i.id.startsWith('AMain') || i.id.startsWith('CONTI')) {
+								ListInEditor.innerHTML += \`
+									<li class="ElementsInEditor \${i.nameOfElement} \${i.id.startsWith('AMain') ? 'finish' : ''}" style="padding-left: \${i.padding}px">
+										<div class="innerOfElement">
+											<span style="margin-left: 38px; color:\${ListOfElements[i.id.slice(5)].color};" class="elementText" data-id="\${i.id}" data-paramaters='"\${i.parameter}"'>
+												\${i.text}
+											</span>
+										</div >
+									</li >\`
+								return
+							}
+							ListInEditor.innerHTML += \`
+					<li class="ElementsInEditor \${i.nameOfElement} \${ListOfElements[i.id].secondArgument ? "start" : ""}" style="padding-left: \${i.padding}px; \${
+            ListOfElements[i.id].isfunction && index != 0
+              ? "margin-top: 15px;"
+              : ""
+          }">
+									<div class="innerOfElement">
+										<div class="my-handle" onclick="showBtnElement(event);"><span></span></div>
+										<div class="btn-in-element">
+											<div class="btn-delete" onclick="deleteElement(event);">
+												<svg class="icon-delete-editor">
+													<use xlink:href="#icon-delete"></use>
+												</svg>
+											</div>
+										</div>
+										<span style="color:\${ListOfElements[i.id].color}" class="elementText" data-id="\${i.id}" data-paramaters='\${JSON.stringify(i.parameter)}'>
+										\${i.text}
+										</span>
+									</div>
+									<span class="EditParameterBtn" onclick="changeparams(event);">
+										<svg class="icon-delete-editor">
+											<use xlink:href="#icon-edit"></use>
+										</svg>
+							</span>
+								</li >\`
+						})
+					},
+	
+					set: function (sortable) {
+						/* Save Data */
+						saveData()
+					}
+				}
+			})
     </script>
 
 
