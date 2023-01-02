@@ -7,7 +7,7 @@ import { View, ActivityIndicator } from "react-native"
 export default function Editor({ navigation, route }) {
   const [html, setHtml] = useState("sd")
   const [isLoading, setIsLoading] = useState(true)
-  let { idOfProject } = route.params
+  let { idOfProject, nameOfproject } = route.params
 
   const storeData = async (value) => {
     if (typeof JSON.parse(value) === "string") {
@@ -27,7 +27,7 @@ export default function Editor({ navigation, route }) {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem(idOfProject)
-      setHtml(Html(jsonValue))
+      setHtml(Html(jsonValue, nameOfproject))
       setIsLoading(false)
     } catch (e) {
       console.error(e)

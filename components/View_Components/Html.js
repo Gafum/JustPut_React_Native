@@ -146,6 +146,10 @@ export default function Html(a) {
 		return false
 	}
 
+	function CreateFradionAddPoints(myName, list, points){
+		list.forEach((i, index)=>myName.addColorStop(points[index], i))
+	}
+
 	function joinStrings(a,b){
 		return String(a)+String(b)
 	}

@@ -1,6 +1,6 @@
 import React from "react"
 
-export default function Html(data) {
+export default function Html(data, name) {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -41,11 +41,15 @@ export default function Html(data) {
         align-items: center;
         height: 40px;
         padding: 10px 10px 13px 5px;
+				max-width: 100vw;
+				white-space: nowrap;
+				overflow: hidden;
       }
 
       .EditParameterBtn {
         height: 25px;
-        width: 25px;
+        min-width: 24px;
+				width: 25px;
         border-radius: 10px;
         display: flex;
         justify-content: center;
@@ -62,6 +66,7 @@ export default function Html(data) {
         justify-content: center;
         align-items: center;
         gap: 3px;
+				max-width: 89%;
       }
 
       .my-handle {
@@ -138,6 +143,8 @@ export default function Html(data) {
         position: relative;
         left: -25px;
         transition: all 0.2s;
+				white-space: nowrap;
+				overflow: hidden;
       }
 
       .btn-in-element.active ~ .elementText {
@@ -260,7 +267,7 @@ export default function Html(data) {
       }
 
       .no-scroll {
-        overflow: hidden;
+				overflow: hidden;
       }
 
       .icon-fab {
@@ -1113,13 +1120,12 @@ if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}\`,
         },
 				{
           id: 14, // CONTROL
-          code: \`document.onclick=(event)=>{
-						\`,
+          code: \`function myName(event){\`,
           text: "Tap(Get event)",
           color: controlColor,
-          listChengers: ["event"],
-          standartParameter: [['event']],
-					secondArgument: [{ code: "}", text: "End of Click" }],
+          listChengers: ["event", "myName"],
+          standartParameter: [['event'], []],
+					secondArgument: [{ code: "}", text: "End of Tap" }],
 					isfunction: true
         },
 				{
@@ -1135,12 +1141,12 @@ ctx.fillText(text, myX, myY)\`,
         },
 				{
           id: 16, // CONTROL
-          code: \`canva.onclick=(event)=>{
+          code: \`function myName(event){
 						if(objectClick({object: //Object, pX: event.offsetX, pY: event.offsetY})){\`,
           text: "//Object.onClick",
           color: controlColor,
-          listChengers: ["//Object"],
-          standartParameter: [["myName"]],
+          listChengers: ["//Object", "myName"],
+          standartParameter: [["myName"], []],
 					secondArgument: [{ code: "}}", text: "End of Click" }],
 					isfunction: true
         },
@@ -1191,11 +1197,32 @@ ctx.fillText(text, myX, myY)\`,
           color: propertiesColor,
           listChengers: ["//Object", "myColor"],
           standartParameter: [[" //myName"], ['"#000"']]
+        },
+				{
+          id: 23, // PROPERTIES
+          code: \`myName = ctx.createLinearGradient(myX, myY, myfX, myfY)
+CreateFradionAddPoints(myName, myColor, points)\`,
+          text: 'createLinearGradient myName',
+          color: propertiesColor,
+          listChengers: ["myName",'myX', 'myY', 'myfX', 'myfY', 'myColor', 'points'],
+          standartParameter: [["myName"],["0"],["0"],["200"],["0"],['[','"#fff"',',','"red"',']'], ['[','0',',','1',']']],
+					textInWhere: 'myName:<span style="font-size:10px;">(position is absolute)</span> Start X<span style="font-size:10px;">(coordinate of the start point)</span>: myX, Start Y: myY, Finish X<span style="font-size:10px;">(coordinate of the end point)</span>: myfX, Finish Y: myfY, List of Color: myColor, List of Points: points'
+        },
+				{
+          id: 24, // PROPERTIES
+          code: \`myName = ctx.createRadialGradient(myX, myY, myR1, myfX, myfY, myR2)
+CreateFradionAddPoints(myName, myColor, points)\`,
+          text: 'createRadialGradient myName',
+          color: propertiesColor,
+          listChengers: ["myName",'myX', 'myY', 'myR1', 'myfX', 'myfY', 'myR2', 'myColor', 'points'],
+          standartParameter: [["myName"],["5","0"],["5","0"],["4"],["8","0"],["6","0"],["8","0"],['[','"#fff"',',','"red"',']'], ['[','0',',','1',']']],
+					textInWhere: 'myName:<span style="font-size:10px;">(position is absolute)</span> First circle X<span style="font-size:10px;">(coordinate of the start point)</span>: myX, First circle Y: myY, First circle radius: myR1,  Second circle X<span style="font-size:10px;">(coordinate of the end point)</span>: myfX, Second circle Y: myfY, Second circle radius: myR2, List of Color: myColor, List of Points: points'
         }
       ]
 
       let listOfData = []
       let listOfFunct = []
+			let listOfTaps = []
     </script>
 
 
@@ -3976,7 +4003,7 @@ ctx.fillText(text, myX, myY)\`,
       const body = document.querySelector("body")
 
       mainBtnLabel.onclick = () => {
-			mainBtnLabel.classList.toggle("active")
+				mainBtnLabel.classList.toggle("active")
       }
 
       document.querySelectorAll('.btn-label').forEach((i, index) => {
@@ -3989,7 +4016,7 @@ ctx.fillText(text, myX, myY)\`,
 				resultList.forEach((j) => {
 					ListAddBlock.innerHTML += \`
 						<li class="ElementsInEditor" onclick="addBlock(\${j.id});">
-							<span style="color:\${j.id}">
+							<span style="color:\${ListOfElements[j.id].color}">
 							\${j.text}
 							</span>
 						</li>\`
@@ -4004,6 +4031,10 @@ ctx.fillText(text, myX, myY)\`,
 
 			function addBlock(element) {
 				let nameOfElement = "A" + Date.now() + Math.random().toString(32).slice(4)
+				if(element==14||element==16){
+					ListOfElements[element].standartParameter[1] = [nameOfElement]
+					listOfTaps.push(nameOfElement)
+				}
 				ListInEditor.innerHTML += \`
 					<li class="ElementsInEditor \${nameOfElement} \${ListOfElements[element].secondArgument ? "start" : ""}"
 					style="\${ListOfElements[element].isfunction ? "margin-top: 15px;" : ""}">
@@ -4057,6 +4088,10 @@ ctx.fillText(text, myX, myY)\`,
 						listDelete.push(ListInEditor.children[i])
 					}
 					listDelete.forEach((i) => i.remove())
+					let dataListSet = event.target.closest('li').querySelector(".elementText")
+					if (dataListSet.dataset.id == 14 || dataListSet.dataset.id == 16) {
+						listOfTaps.splice(listOfTaps.indexOf(event.target.closest('li').classList[1]), 1)
+					}
 				}
 				event.target.closest('li').remove()
 				saveData()
@@ -4073,7 +4108,9 @@ ctx.fillText(text, myX, myY)\`,
 				let a = []
 				a.push({
 					data: [...listOfData],
-					functions: [...listOfFunct]
+					functions: [...listOfFunct],
+					taps: [...listOfTaps],
+					name: "${name}"
 				})
 				let attachment = 0
 				Array.from(ListInEditor.children).forEach((i, index) => {
@@ -4085,14 +4122,14 @@ ctx.fillText(text, myX, myY)\`,
 						id: i.querySelector(".elementText").dataset.id,
 						parameter: JSON.parse(i.querySelector(".elementText").dataset.paramaters),
 						nameOfElement: i.classList[1],
-						padding: attachment * 20
+						padding: attachment<6?attachment * 20:120
 					})
 					i.style.paddingLeft = a[index + 1].padding + "px"
 					if (i.classList.contains("start")) {
 						attachment++
 					}
 				})
-				if (ListOfElements[ListInEditor.children[0].querySelector(".elementText").dataset.id].isfunction) {
+				if (ListInEditor.children[0] > 0 && ListOfElements[ListInEditor.children[0].querySelector(".elementText").dataset.id].isfunction) {
 					ListInEditor.children[0].style.marginTop = "0px"
 				}
 				window.ReactNativeWebView.postMessage(JSON.stringify(a))
@@ -4114,6 +4151,10 @@ ctx.fillText(text, myX, myY)\`,
 				if (listOfData.length > 0) {
 					fisrtStrCode = "let " + String(listOfData.reduce((a, b) => a + ", " + b))
 				}
+				if (listOfTaps.length > 0) {
+					fisrtStrCode += \`
+canva.onclick = (event)=> {\` + String(listOfTaps.reduce((a, b) => a +	\`
+\`+ b + "(event)","")) + "}"}
 				let createdCode = "element.innerHTML=\`<h1>Made by Gafum</h1>\`"
 				if (ListInEditor.children.length > 0 && ListInEditor.children) {
 					createdCode = Array.from(ListInEditor.children).reduce((a, b) => {
@@ -4186,6 +4227,7 @@ ctx.fillText(text, myX, myY)\`,
 						if (result[0]) {
 							listOfData = [...result[0].data]
 							listOfFunct = [...result[0].functions]
+							listOfTaps = [...result[0].taps]
 						}
 						result.shift()
 						result.forEach((i, index) => {
@@ -4468,11 +4510,11 @@ ctx.fillText(text, myX, myY)\`,
       }
 
       function onStart() {
-			listOfParams = List[whichPosition]
-			position = listOfParams.length
-			chengeDataList(true)
-			chengeDataList(false)
-			changeText()
+				listOfParams = List[whichPosition]
+				position = listOfParams.length
+				chengeDataList(true)
+				chengeDataList(false)
+				changeText()
       }
     </script>
   </body>
