@@ -2,29 +2,43 @@ import React from "react"
 import { FloatingAction } from "react-native-floating-action"
 import * as FileSystem from "expo-file-system" //Save file in device
 import * as DocumentPicker from "expo-document-picker"
+import {
+  getPermissionsAsync,
+  requestPermissionsAsync
+} from "expo-media-library"
 
 export default function BtnPlus({ setVisible, addProjext }) {
   const readFile = async () => {
-    try {
-      DocumentPicker.getDocumentAsync().then((data) => {
-        console.log(data.uri)
-        FileSystem.readAsStringAsync(data.uri, {
-          encoding: FileSystem.EncodingType.UTF8
+    let { status, canAskAgain } = await getPermissionsAsync()
+    if (status !== "granted" && canAskAgain) {
+      status = await requestPermissionsAsync()
+      return
+    }
+    if (status !== "granted" && !canAskAgain) {
+      Alert.alert("Give permission!!!", "We can't use Storage 0(")
+      return
+    }
+    if (status === "granted") {
+      try {
+        DocumentPicker.getDocumentAsync().then((data) => {
+          FileSystem.readAsStringAsync(data.uri, {
+            encoding: FileSystem.EncodingType.UTF8
+          })
+            .then((jsonValue) => {
+              const data = JSON.parse(jsonValue)
+              if (data[0].name) {
+                addProjext({ myName: data[0].name, addOldProject: jsonValue })
+              } else {
+                alert("Is not JustPut")
+              }
+            })
+            .catch((err) => {
+              alert("We don'n know where file 0( " + err)
+            })
         })
-          .then((jsonValue) => {
-            const data = JSON.parse(jsonValue)
-            if (data[0].name) {
-              addProjext({ myName: data[0].name, addOldProject: jsonValue })
-            } else {
-              console.log("Is not JustPut")
-            }
-          })
-          .catch((err) => {
-            console.log("getFile -> err", err)
-          })
-      })
-    } catch (e) {
-      console.log(e)
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
   return (
@@ -59,7 +73,7 @@ export default function BtnPlus({ setVisible, addProjext }) {
         },
         {
           text: "Import",
-          icon: require("../../assets/settings-btn.png"),
+          icon: require("../../assets/save.png"),
           name: "import",
           position: 1,
           color: "#eb4464",

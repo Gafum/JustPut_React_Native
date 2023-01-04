@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage" // save / r
 import { WebView } from "react-native-webview"
 import Html from "./Editor_Components/HTMLforEditor"
 import { View, ActivityIndicator } from "react-native"
+import codeCreator from "./Editor_Components/CodeCreator"
 
 export default function Editor({ navigation, route }) {
   const [html, setHtml] = useState("sd")
@@ -10,8 +11,9 @@ export default function Editor({ navigation, route }) {
   let { idOfProject, nameOfproject } = route.params
 
   const storeData = async (value) => {
-    if (typeof JSON.parse(value) === "string") {
-      navigation.navigate("Result", { code: JSON.parse(value) })
+    if (value.endsWith("createCode")) {
+      let code = codeCreator(JSON.parse(value.slice(0, -10)))
+      navigation.navigate("Result", { code })
       return
     }
     try {

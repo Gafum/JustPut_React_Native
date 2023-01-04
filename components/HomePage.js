@@ -14,46 +14,80 @@ import AsyncStorage from "@react-native-async-storage/async-storage" // Save/rea
 import { FlashList } from "@shopify/flash-list"
 import * as FileSystem from "expo-file-system" //Save file in device
 const { StorageAccessFramework } = FileSystem
+import {
+  getPermissionsAsync,
+  requestPermissionsAsync
+} from "expo-media-library"
+import codeCreator from "./Editor_Components/CodeCreator"
 
 const Colors = ["#96b38e", "#f59073", "#913e5f", "#eb4464"]
 
-const saveFile = async ({ idOfProject = "Bye World", myName = "test" }) => {
-  try {
-    const permissions =
-      await StorageAccessFramework.requestDirectoryPermissionsAsync()
-    let data = await AsyncStorage.getItem(idOfProject)
-    if (permissions.granted && data) {
-      // Get the directory uri that was approved
-      let directoryUri = permissions.directoryUri
-      // Create file and pass it's SAF URI
-      await StorageAccessFramework.createFileAsync(
-        directoryUri,
-        myName +
-          String(Date.now() + Math.random().toString(32).slice(4)) +
-          ".justput",
-        ".justput"
-      )
-        .then(async (fileUri) => {
-          // Save data to newly created file
-          await FileSystem.writeAsStringAsync(fileUri, data, {
-            encoding: FileSystem.EncodingType.UTF8
+const saveFile = async ({
+  idOfProject = undefined,
+  myName = "test",
+  myType = "html"
+}) => {
+  let { status, canAskAgain } = await getPermissionsAsync()
+  if (status !== "granted" && canAskAgain) {
+    status = await requestPermissionsAsync()
+    return
+  }
+  if (status !== "granted" && !canAskAgain) {
+    Alert.alert("Give permission!!!", "We can't use Storage 0(")
+    return
+  }
+  if (status === "granted") {
+    try {
+      let data = ""
+      if (idOfProject) {
+        let jsonValue = await AsyncStorage.getItem(idOfProject)
+        if (myType == "html") {
+          data = await codeCreator(JSON.parse(jsonValue))
+        } else if (myType == "justput") {
+          data = jsonValue
+        }
+      } else {
+        return
+      }
+      const permissions =
+        await StorageAccessFramework.requestDirectoryPermissionsAsync()
+      if (permissions.granted && data) {
+        // Get the directory uri that was approved
+        let directoryUri = permissions.directoryUri
+        // Create file and pass it's SAF URI
+        await StorageAccessFramework.createFileAsync(
+          directoryUri,
+          myName +
+            String(Date.now() + Math.random().toString(32).slice(4)) +
+            "." +
+            myType,
+          myType == "html" ? "text/html" : "application/json"
+        )
+          .then(async (fileUri) => {
+            // Save data to newly created file
+            await FileSystem.writeAsStringAsync(fileUri, data, {
+              encoding: FileSystem.EncodingType.UTF8
+            })
+            ToastAndroid.showWithGravityAndOffset(
+              "File save)))",
+              ToastAndroid.SHORT,
+              ToastAndroid.BOTTOM,
+              25,
+              50
+            )
           })
-          ToastAndroid.showWithGravityAndOffset(
-            "File save)))",
-            ToastAndroid.SHORT,
-            ToastAndroid.BOTTOM,
-            25,
-            50
-          )
-        })
-        .catch((e) => {
-          console.log(e)
-        })
-    } else {
-      alert("You must allow permission to save.")
+          .catch((e) => {
+            console.log(e)
+          })
+      } else {
+        Alert.alert(
+          "Directory is " + permissions.directoryUri,
+          "We don'n know where to put file 0("
+        )
+      }
+    } catch (err) {
+      console.warn(err)
     }
-  } catch (err) {
-    console.warn(err)
   }
 }
 
@@ -157,10 +191,32 @@ export default function HomePage({ navigation }) {
             flexDirection: "row"
           }}
         >
+          <TouchableOpacity //createcode of the project
+            style={{ marginRight: 12 }}
+            onPress={() => {
+              saveFile({
+                idOfProject: item.id,
+                myName: item.name,
+                myType: "html"
+              })
+            }}
+          >
+            <Image
+              style={{
+                height: 25,
+                width: 25
+              }}
+              source={require("../assets/createCode.png")}
+            />
+          </TouchableOpacity>
           <TouchableOpacity //save project
             style={{ marginRight: 12 }}
             onPress={() => {
-              saveFile({ idOfProject: item.id, myName: item.name })
+              saveFile({
+                idOfProject: item.id,
+                myName: item.name,
+                myType: "justput"
+              })
             }}
           >
             <Image

@@ -163,7 +163,7 @@ export default function Html(a) {
 		return Math.floor(rand)
 	}
 
-	function getDistanceBetween(first, second){
+	function distanceBetween(first, second){
 		return Math.floor(Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2)))
 	}
 
