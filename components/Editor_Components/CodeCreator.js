@@ -1,5 +1,5 @@
 //listOfData    listOfTaps   ListInEditor
-import { ListOfElements } from "./ListOfElements"
+import { ListOfElements, tapElements} from "./ListOfElements"
 import Html from "../View_Components/Html" // open Html file
 
 /* Function that create code "The B(second in reduce) string" */
@@ -14,11 +14,14 @@ function StringB(element, chenger) {
 
 export default function codeCreator(data) {
   let listOfData = data[0].data
-  let listOfTaps = data[0].taps
+
+  let listOfTaps = []
   let fisrtStrCode = ""
   if (listOfData.length > 0) {
     fisrtStrCode = "let " + String(listOfData.reduce((a, b) => a + ", " + b))
   }
+  data.shift()
+  listOfTaps = data.filter(({ id }) => tapElements.includes(String(id)))
   if (listOfTaps.length > 0) {
     fisrtStrCode +=
       `
@@ -29,14 +32,13 @@ canva.onclick = (event)=> {` +
             a +
             `
 ` +
-            b +
+            b.nameOfElement +
             "(event)",
           ""
         )
       ) +
       "}"
   }
-  data.shift()
   let createdCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
   if (data.length > 0 && data) {
     createdCode = data.reduce((a, b) => {

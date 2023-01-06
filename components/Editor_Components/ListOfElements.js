@@ -3,14 +3,16 @@ const controlColor = "#f59073"
 const propertiesColor = "#96b38e"
 const dataColor = "#eb4464"
 
+export const tapElements = ["14", "16"]
+
 export const ListOfElements = [
   {
     id: 0, // OBJECT
-    code: "element.innerHTML=element.innerHTML+`<p>${Text}</p>`",
+    code: 'element.innerHTML=element.innerHTML+`<p>${"Text"}</p>`',
     text: "Create Text by HTML",
     color: objectColor,
-    listChengers: ["Text"],
-    standartParameter: [["Text"]]
+    listChengers: ['"Text"'],
+    standartParameter: [['"Text"']]
   },
   {
     id: 1, // CONTROL
