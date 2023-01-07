@@ -367,7 +367,7 @@ export default function Html(data, name) {
 						}
 				saveData()
 				li.querySelector(".elementText").style.color = ListOfElements[element].color
-				li.style.backgroundColor = "none"
+				li.style.backgroundColor = "transparent"
 				addblocks.classList.remove("active")
 				body.classList.remove("no-scroll")
 			}
@@ -546,8 +546,8 @@ export default function Html(data, name) {
       const editparams = document.querySelector('#editparams')
       const where = editparams.querySelector('#inner-where')
       const result = editparams.querySelector('#result')
-      const dataList = editparams.querySelector('#dataList')
-      const functList = editparams.querySelector('#functList')
+      const dataList = editparams.querySelector('#dataList') //data List In formuls
+      const functList = editparams.querySelector('#functList') //function List in formuls
 
 
       document.querySelector('#tree').onclick = (event) => {
@@ -565,34 +565,57 @@ export default function Html(data, name) {
       let listOfParams = []
       let position = 0
       let whichPosition = 0 //which Parameter
-      let editingElement = 0 //Element that editing now
-			let idOfElement = 0//Id of editing element
+      let editingElement = 0 //Element that editing now in html
+			let idOfElement = 0 //Id of editing element
 
 
       function changeparams(event) {
 				whichPosition = 0
 				editingElement = event.target.closest(".ElementsInEditor").querySelector('.elementText')
-				idOfElement = event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.id
+				idOfElement = editingElement.dataset.id
 				TextInWhereOnStart = ListOfElements[idOfElement].text
 				if(ListOfElements[idOfElement].textInWhere) {
 					TextInWhereOnStart = ListOfElements[idOfElement].textInWhere
 				}
 				listOfChageParams = ListOfElements[idOfElement].listChengers
-				List = JSON.parse(event.target.closest(".ElementsInEditor").querySelector('.elementText').dataset.paramaters)
+				List = JSON.parse(editingElement.dataset.paramaters)
 				onStart()
-				history.pushState(null, null, window.location)
 				document.querySelectorAll(".LiAfterTap").forEach((i) => i.classList.remove("LiAfterTap"))
 				editparams.querySelector('#where').style.backgroundColor = ListOfElements[idOfElement].color
+				if (editparams.querySelector('#eventList')) { editparams.querySelector('#eventList').remove() }
+				if (event.target.closest(".ElementsInEditor").style.paddingLeft !== "0px") {
+					if (getFirstElement(Array.from(ListInEditor.children).indexOf(event.target.closest(".ElementsInEditor")) - 1)) {
+						let li = document.createElement("li")
+						li.classList.add("mainLi")
+						li.id = "eventList"
+						li.innerHTML = \`MouseEvent
+						<ul>
+							<li onclick="tapofbtn('event.offsetX');">mouse X</li>
+							<li onclick="tapofbtn('event.offsetY');">mouse Y</li>
+							<li onclick="tapofbtn('event.type');;">TypeOfClick</li>
+							<li onclick="tapofbtn('tappedElement');">tappedElement</li>
+						</ul>\`
+					editparams.querySelector('#tree').prepend(li)
+				}
+			}
 				editparams.classList.add("active")
 				body.classList.add("no-scroll")
       }
 
       // Different Function ===================>
 
+			function getFirstElement(index) {
+				if (ListInEditor.children[index].style.paddingLeft == "0px") {
+					let element = ListInEditor.children[index].querySelector('.elementText').dataset.id
+					return element == 14 || element == 16 ? true : false
+				} else {
+					return getFirstElement(index - 1)
+				}
+			}
+
       function closeEditParams() {
 				editparams.classList.remove("active")
 				body.classList.remove("no-scroll")
-				history.back()
       }
 
       function createVarieble(isData) {

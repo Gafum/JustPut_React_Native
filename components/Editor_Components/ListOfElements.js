@@ -9,7 +9,7 @@ export const ListOfElements = [
   {
     id: 0, // OBJECT
     code: 'element.innerHTML=element.innerHTML+`<p>${"Text"}</p>`',
-    text: "Create Text by HTML",
+    text: 'Create "Text" by HTML',
     color: objectColor,
     listChengers: ['"Text"'],
     standartParameter: [['"Text"']]
@@ -168,14 +168,17 @@ if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}`,
     standartParameter: [["//Object"], ["true"]]
   },
   {
-    id: 14, // CONTROL
-    code: `function myName(event){`,
-    text: "Tap(Get event)",
+    id: 14, // CONTROL Click
+    code: `function myName(event){
+			let tappedElement = //Object`,
+    text: "Tap the canvas",
     color: controlColor,
-    listChengers: ["event", "myName"],
-    standartParameter: [["event"], []],
+    listChengers: ["//Object", "myName"],
+    standartParameter: [["undefined"], []],
     secondArgument: [{ code: "}", text: "End of Tap" }],
-    isfunction: true
+    isfunction: true,
+    textInWhere:
+      "Tap <span style='font-size:10px;'>(only the canvas)</span> tappedElement://Object"
   },
   {
     id: 15, // OBJECT
@@ -197,7 +200,8 @@ ctx.fillText(text, myX, myY)`,
   {
     id: 16, // CONTROL
     code: `function myName(event){
-						if(objectClick({object: //Object, pX: event.offsetX, pY: event.offsetY})){`,
+						if(objectClick({object: //Object, pX: event.offsetX, pY: event.offsetY})){
+							let tappedElement = //Object`,
     text: "//Object.onClick",
     color: controlColor,
     listChengers: ["//Object", "myName"],
