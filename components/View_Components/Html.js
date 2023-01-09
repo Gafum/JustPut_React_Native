@@ -167,6 +167,15 @@ export default function Html(a) {
 		return Math.floor(Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2)))
 	}
 
+	function getpositionOfMouse(e){
+		if(e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel'){
+			let touch = e.touches[0] || e.changedTouches[0];
+			return {x: touch.pageX, y:touch.pageY}
+		} else if (e.type == 'mousedown' || e.type == 'mouseup' || e.type == 'mousemove' || e.type == 'mouseover'|| e.type=='mouseout' || e.type=='mouseenter' || e.type=='mouseleave') {
+			return { x: e.offsetX, y: e.offsetY }
+		}
+	}
+
 	try{
 		${a}
 	}catch(e){

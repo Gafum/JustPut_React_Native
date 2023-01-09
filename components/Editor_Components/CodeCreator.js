@@ -1,6 +1,8 @@
 //listOfData    listOfTaps   ListInEditor
-import { ListOfElements, tapElements} from "./ListOfElements"
+import { ListOfElements } from "./ListOfElements"
 import Html from "../View_Components/Html" // open Html file
+
+const tapElements = ["14", "16"]
 
 /* Function that create code "The B(second in reduce) string" */
 function StringB(element, chenger) {
@@ -21,11 +23,31 @@ export default function codeCreator(data) {
     fisrtStrCode = "let " + String(listOfData.reduce((a, b) => a + ", " + b))
   }
   data.shift()
-  listOfTaps = data.filter(({ id }) => tapElements.includes(String(id)))
+  listOfTaps = data.filter(({ id }) => tapElements.includes(String(id))) // Click =>
   if (listOfTaps.length > 0) {
     fisrtStrCode +=
       `
 canva.onclick = (event)=> {` +
+      String(
+        listOfTaps.reduce(
+          (a, b) =>
+            a +
+            `
+` +
+            b.nameOfElement +
+            "(event)",
+          ""
+        )
+      ) +
+      "}"
+  }
+  listOfTaps = data.filter(({ id }) => id == "25") // MouseMove =>
+  if (listOfTaps.length > 0) {
+    fisrtStrCode +=
+      `
+document.addEventListener('mousemove', MouseNowIsMove);
+document.addEventListener('touchmove', MouseNowIsMove);
+function MouseNowIsMove (event) {` +
       String(
         listOfTaps.reduce(
           (a, b) =>

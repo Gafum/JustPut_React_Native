@@ -1,4 +1,3 @@
-import React from "react"
 import { ListOfElements, tapElements } from "./ListOfElements"
 import Style from "./style"
 import SortableJS from "./sortable"
@@ -590,9 +589,10 @@ export default function Html(data, name) {
 						li.id = "eventList"
 						li.innerHTML = \`MouseEvent
 						<ul>
-							<li onclick="tapofbtn('event.offsetX');">mouse X</li>
-							<li onclick="tapofbtn('event.offsetY');">mouse Y</li>
-							<li onclick="tapofbtn('event.type');;">TypeOfClick</li>
+							<li onclick="tapOfFunctionBtn(0,'MousePosition','.x');">mouse X</li>
+							<li onclick="tapOfFunctionBtn(0, 'MousePosition','.y');">mouse Y</li>
+							<li onclick="tapofbtn('event.type');">TypeOfClick</li>
+							<li onclick="tapofbtn('event.target');">Target</li>
 							<li onclick="tapofbtn('tappedElement');">tappedElement</li>
 						</ul>\`
 					editparams.querySelector('#tree').prepend(li)
@@ -607,7 +607,7 @@ export default function Html(data, name) {
 			function getFirstElement(index) {
 				if (ListInEditor.children[index].style.paddingLeft == "0px") {
 					let element = ListInEditor.children[index].querySelector('.elementText').dataset.id
-					return element == 14 || element == 16 ? true : false
+					return tapElements.includes(String(element)) ? true : false
 				} else {
 					return getFirstElement(index - 1)
 				}

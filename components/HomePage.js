@@ -12,12 +12,15 @@ import BtnPlus from "./HomePage_Components/FloatAction" // float Action
 import CreateProject from "./HomePage_Components/CreateProject" //Dialog
 import AsyncStorage from "@react-native-async-storage/async-storage" // Save/read Data
 import { FlashList } from "@shopify/flash-list"
-import * as FileSystem from "expo-file-system" //Save file in device
-const { StorageAccessFramework } = FileSystem
+import {
+  StorageAccessFramework,
+  writeAsStringAsync,
+  EncodingType
+} from "expo-file-system" //Save file in device
 import {
   getPermissionsAsync,
   requestPermissionsAsync
-} from "expo-media-library"
+} from "expo-media-library"// get permission to use storage
 import codeCreator from "./Editor_Components/CodeCreator"
 
 const Colors = ["#96b38e", "#f59073", "#913e5f", "#eb4464"]
@@ -65,8 +68,8 @@ const saveFile = async ({
         )
           .then(async (fileUri) => {
             // Save data to newly created file
-            await FileSystem.writeAsStringAsync(fileUri, data, {
-              encoding: FileSystem.EncodingType.UTF8
+            await writeAsStringAsync(fileUri, data, {
+              encoding: EncodingType.UTF8
             })
             ToastAndroid.showWithGravityAndOffset(
               "File save)))",

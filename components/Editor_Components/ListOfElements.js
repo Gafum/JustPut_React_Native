@@ -3,7 +3,7 @@ const controlColor = "#f59073"
 const propertiesColor = "#96b38e"
 const dataColor = "#eb4464"
 
-export const tapElements = ["14", "16"]
+export const tapElements = ["14", "16", "25"]
 
 export const ListOfElements = [
   {
@@ -161,7 +161,7 @@ if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}`,
   },
   {
     id: 13, // OBJECT
-    code: "//Object.draw(true)",
+    code: `(Array.isArray(//Object) ? //Object : [//Object]).forEach((iser) => iser.draw(true));`,
     text: "Draw //Object Fill: true",
     color: objectColor,
     listChengers: ["//Object", "true"],
@@ -178,7 +178,7 @@ if (toClean){ctx.clearRect(0, 0, canva.width, canva.height)}`,
     secondArgument: [{ code: "}", text: "End of Tap" }],
     isfunction: true,
     textInWhere:
-      "Tap <span style='font-size:10px;'>(only the canvas)</span> tappedElement://Object"
+      "Tap <span style='font-size:10px;'>(only the canvas)</span> tappedElement://Object <span style='font-size:10px;'>(not necessarily)</span>"
   },
   {
     id: 15, // OBJECT
@@ -199,14 +199,15 @@ ctx.fillText(text, myX, myY)`,
   },
   {
     id: 16, // CONTROL
-    code: `function myName(event){
-						if(objectClick({object: //Object, pX: event.offsetX, pY: event.offsetY})){
-							let tappedElement = //Object`,
+    code: `function myName(event) {
+(Array.isArray(//Object) ? //Object : [//Object]).forEach((iser) => {
+	if (objectClick({ object: iser, pX: event.offsetX, pY: event.offsetY })) {
+		let tappedElement = iser`,
     text: "//Object.onClick",
     color: controlColor,
     listChengers: ["//Object", "myName"],
     standartParameter: [["myName"], []],
-    secondArgument: [{ code: "}}", text: "End of Click" }],
+    secondArgument: [{ code: "}})}", text: "End of Click" }],
     isfunction: true
   },
   {
@@ -306,5 +307,19 @@ CreateFradionAddPoints(myName, myColor, points)`,
     ],
     textInWhere:
       'myName:<span style="font-size:10px;">(position is absolute)</span> First circle X<span style="font-size:10px;">(coordinate of the start point)</span>: myX, First circle Y: myY, First circle radius: myR1,  Second circle X<span style="font-size:10px;">(coordinate of the end point)</span>: myfX, Second circle Y: myfY, Second circle radius: myR2, List of Color: myColor, List of Points: points'
+  },
+  {
+    id: 25, // CONTROL Click
+    code: `function myName(event){
+			let tappedElement = //Object
+			let MousePosition = getpositionOfMouse(event)`,
+    text: "MouseMove",
+    color: controlColor,
+    listChengers: ["//Object", "myName"],
+    standartParameter: [["undefined"], []],
+    secondArgument: [{ code: "}", text: "End of Tap" }],
+    isfunction: true,
+    textInWhere:
+      "MouseMove, tappedElement://Object<span style='font-size:10px;'>(not necessarily)</span>"
   }
 ]
