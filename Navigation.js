@@ -8,6 +8,7 @@ import {
 import ViewResult from "./components/ViewResult"
 import Editor from "./components/Editor"
 import HomePage from "./components/HomePage"
+import Settings from "./components/Settings"
 
 const Stack = createStackNavigator()
 
@@ -38,6 +39,12 @@ export default function MyStack() {
         name="Result"
         component={ViewResult}
         options={{ title: "View", headerShown: false }}
+      />
+
+      <Stack.Screen /* create View for Result */
+        name="Settings"
+        component={Settings}
+        options={{ title: "Settings" }}
       />
     </Stack.Navigator>
   )

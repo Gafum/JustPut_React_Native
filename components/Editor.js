@@ -8,7 +8,7 @@ import codeCreator from "./Editor_Components/CodeCreator"
 export default function Editor({ navigation, route }) {
   const [html, setHtml] = useState("sd")
   const [isLoading, setIsLoading] = useState(true)
-  let { idOfProject, nameOfproject } = route.params
+  let { idOfProject, nameOfproject, theme } = route.params
 
   const storeData = async (value) => {
     if (value.endsWith("createCode")) {
@@ -29,7 +29,7 @@ export default function Editor({ navigation, route }) {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem(idOfProject)
-      setHtml(Html(jsonValue, nameOfproject))
+      setHtml(Html(jsonValue, nameOfproject, theme))
       setIsLoading(false)
     } catch (e) {
       console.error(e)

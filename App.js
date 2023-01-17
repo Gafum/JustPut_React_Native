@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { StatusBar, View } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import * as Font from "expo-font"
+import AsyncStorage from "@react-native-async-storage/async-storage" // save / read data
 
 import Navigation from "./Navigation"
 
@@ -22,6 +23,8 @@ export default function App() {
       "calibri-regular": require("./assets/fonts/Calibri.ttf"),
       "calibri-bold": require("./assets/fonts/Calibri_Bold.ttf")
     })
+    let theme = await AsyncStorage.getItem("@Theme")
+    MyTheme.colors.background = JSON.parse(theme) ? "#333366" : "#fff"
     setIsLoading(false)
   }
 
@@ -32,7 +35,7 @@ export default function App() {
     return (
       <NavigationContainer theme={MyTheme}>
         <Navigation />
-        <StatusBar StatusBarStyle={"light-content"} />
+        <StatusBar hidden={true} />
       </NavigationContainer>
     )
   }

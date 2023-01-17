@@ -7,7 +7,7 @@ import {
   requestPermissionsAsync
 } from "expo-media-library"
 
-export default function BtnPlus({ setVisible, addProjext }) {
+export default function BtnPlus({ setVisible, addProjext, navigation }) {
   const readFile = async () => {
     let { status, canAskAgain } = await getPermissionsAsync()
     if (status !== "granted" && canAskAgain) {
@@ -93,7 +93,7 @@ export default function BtnPlus({ setVisible, addProjext }) {
           ? setVisible(true)
           : name == "import"
           ? readFile()
-          : alert("not now")
+          : navigation.navigate("Settings")
       }
     />
   )

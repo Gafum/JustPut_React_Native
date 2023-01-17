@@ -1,6 +1,5 @@
-export default function svgs() {
+export default function svgs(theme) {
   return `
-	
 	<svg display="none">
 	<symbol viewBox="0 0 266 338" id="icon-copy">
 		<path
@@ -95,7 +94,7 @@ c10.9,0,19.7,8.8,19.7,19.7v208.1C248.9,313.7,240,322.5,229.1,322.5z"
 		<style type="text/css">
 			.et0 {
 				fill: none;
-				stroke: #000000;
+				stroke: ${theme ? "white" : "#000"};
 				stroke-width: 60;
 				stroke-linecap: round;
 				stroke-miterlimit: 10;
@@ -103,7 +102,7 @@ c10.9,0,19.7,8.8,19.7,19.7v208.1C248.9,313.7,240,322.5,229.1,322.5z"
 
 			.et1 {
 				fill: none;
-				stroke: #000000;
+				stroke: ${theme ? "white" : "#000"};
 				stroke-width: 50;
 				stroke-linecap: round;
 				stroke-miterlimit: 10;

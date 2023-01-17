@@ -3,7 +3,7 @@ import Style from "./style"
 import SortableJS from "./sortable"
 import svgs from "./svg-icons"
 
-export default function Html(data, name) {
+export default function Html(data, name, theme) {
   return `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,13 +18,13 @@ export default function Html(data, name) {
       rel="stylesheet"
     />
     <style>
-      ${Style()}
+      ${Style(theme)}
     </style>
   </head>
 
   <body>
     <!-- ASSETS -->
-		${svgs()}		<!-- get svg icons -->
+		${svgs(theme)}		<!-- get svg icons -->
 
     <ul id="listEditor">
       <!-- content -->
@@ -90,9 +90,12 @@ export default function Html(data, name) {
 
     <!-- ADD BLOCK -->
     <div id="addblocks">
-      <div id="where-addblock">
-        <span>Add block </span
-        ><button onclick="closeAddBlockParams();">x</button>
+      <div class="fix where-addblock">
+        <span>Add block </span>
+				<button onclick="closeAddBlockParams();">x</button>
+      </div>
+			<div class="where-addblock">
+        <span>Add block </span>
       </div>
       <ul id="listAddBlock">
         <!-- content -->
@@ -203,6 +206,8 @@ export default function Html(data, name) {
 							<li onclick="tapofbtn('.radius');">radius</li>
 							<li onclick="tapofbtn('.startAngle');">startAngle</li>
 							<li onclick="tapofbtn('.endAngle');">endAngle</li>
+							<li onclick="tapofbtn('DisplayWidth');">DisplayWidth</li>
+							<li onclick="tapofbtn('DisplayHeight');">DisplayHeight</li>
             </ul>
           </li>
           <li class="mainLi">
@@ -221,6 +226,7 @@ export default function Html(data, name) {
               <li onclick="tapofbtn('!');">no</li>
               <li onclick="tapofbtn('true');">true</li>
               <li onclick="tapofbtn('false');">false</li>
+              <li onclick="tapofbtn('undefined');">undefined</li>
             </ul>
           </li>
           <li class="mainLi">Function
@@ -232,6 +238,12 @@ export default function Html(data, name) {
 							<li onclick="tapOfFunctionBtn(2,'randomInteger(',',',')');">randomInteger</li>
 							<li onclick="tapOfFunctionBtn(2,'colisionBetween(',',',')');">colisionBetween</li>
 							<li onclick="tapOfFunctionBtn(2,'distanceBetween(',',',')');">distanceBetween</li>
+							<li onclick="tapofbtn('.length');">length</li>
+							<li onclick="tapOfFunctionBtn(1,'.indexOf(',')');">indexOf</li>
+							<li onclick="tapOfFunctionBtn(1,'.lastIndexOf(',')');">lastIndexOf</li>
+							<li onclick="tapOfFunctionBtn(1,'.includes(',')');">includes</li>
+							<li onclick="tapOfFunctionBtn(1,'.isArray(',')');">isArray</li>
+							<li onclick="tapOfFunctionBtn(1,'Object.keys(',')');">Object.keys</li>
 						</ul>
 					</li>
           <li class="mainLi">
@@ -248,6 +260,7 @@ export default function Html(data, name) {
               <li onclick="tapOfFunctionBtn(1,'\${','}');">CodeInHTML</li>
               <li onclick="tapOfFunctionBtn(1,' ? ',' : ');">ternary</li>
               <li onclick="tapOfFunctionBtn(0, '%');">module</li>
+							<li><input type="color" id="color-picker" value="#30c731"></li>
               <li onclick="tapofbtn('[');">[</li>
               <li onclick="tapofbtn(']');">]</li>
               <li onclick="tapofbtn('{');">{</li>
@@ -268,6 +281,7 @@ export default function Html(data, name) {
 			const tapElements = ${JSON.stringify(tapElements)}
       let listOfData = []
       let listOfFunct = []
+			let copyList = []
     </script>
 
     <script>${SortableJS()}</script>
@@ -304,15 +318,14 @@ export default function Html(data, name) {
 				})
 				addblocks.classList.add("active")
 				body.classList.add("no-scroll")
-				addblocks.querySelector("#where-addblock").style.backgroundColor = i.dataset.mycolor
+				addblocks.querySelector(".where-addblock").style.backgroundColor = i.dataset.mycolor
 				mainBtnLabel.classList.remove("active")
 			}
       })
 
 			function addBlock(element) {
-				let nameOfElement = "A" + Date.now() + Math.random().toString(32).slice(4)
 				if (tapElements.includes(String(element))) {
-					ListOfElements[element].standartParameter[1] = [nameOfElement]
+					ListOfElements[element].standartParameter[1] = ["A" + Date.now() + Math.random().toString(32).slice(4)]
 				}
 				let adderElement = Math.floor((document.documentElement.scrollTop + window.innerHeight / 2) / (40 + listOfFunct.length * 2)) - 2
 				if (ListInEditor.children.length * 40 < window.innerHeight * 0.7) {
@@ -327,19 +340,35 @@ export default function Html(data, name) {
 					li = document.querySelector(".newElement")
 					adderElement = -1
 				}
-				li.classList.add("ElementsInEditor", nameOfElement)
+				li.classList.add("ElementsInEditor")
 				li.style.marginTop = ListOfElements[element].isfunction ? "15px" : "0px"
 				li.style.backgroundColor = ListOfElements[element].color
-				li.innerHTML = \`<div class="innerOfElement">
-							<div class="my-handle" onclick="showBtnElement(event);"><span></span></div>
+				li.innerHTML = \`<div class="innerOfElement" ${
+          theme &&
+          'style="background-color: ${ListOfElements[element].color}; border-radius:8px;"'
+        }>
+							<div class="my-handle" onclick="showBtnElement(event);">
+								<span></span>
+								<div class="my-handle-inner"></div>
+							</div>
 							<div class="btn-in-element">
 								<div class="btn-delete" onclick="deleteElement(event);">
 									<svg class="icon-delete-editor">
 										<use xlink:href="#icon-delete"></use>
 									</svg>
 								</div>
+								<div class="btn-delete" onclick="copyElement(event);">
+									<svg class="icon-delete-editor">
+										<use xlink:href="#icon-copy"></use>
+									</svg>
+								</div>
+								<div class="btn-delete" onclick="pasteElement(event);">
+									<svg class="icon-delete-editor">
+										<use xlink:href="#icon-paste"></use>
+									</svg>
+								</div>
 							</div>
-						<span style="color: black" class="elementText" data-id="\${element}" data-paramaters='\${JSON.stringify(ListOfElements[element].standartParameter)}'>
+						<span style="color: black" class="elementText" data-id="\${element}" data-parameter='\${JSON.stringify(ListOfElements[element].standartParameter)}'>
 							\${ListOfElements[element].text}
 						</span>
 					</div>
@@ -353,19 +382,26 @@ export default function Html(data, name) {
 					ListOfElements[element].secondArgument.forEach((i, index) => {
 						adderElement++
 						let addLi = document.createElement("li")
-						addLi.classList.add("ElementsInEditor", nameOfElement)
+						addLi.classList.add("ElementsInEditor")
 						index + 1 == ListOfElements[element].secondArgument.length && addLi.classList.add("finish")
 						ListInEditor.children[adderElement].after(addLi)
 						ListInEditor.children[adderElement + 1].innerHTML = \`
-									<div class="innerOfElement">
-										<span style="margin-left: 38px; color:\${ListOfElements[element].color};" class="elementText" data-id="\${index + 1 == ListOfElements[element].secondArgument.length ? "AMain" : "CONTI"}\${element}" data-paramaters='"\${i.code}"'>
+									<div class="innerOfElement" ${
+                    theme &&
+                    'style="background-color: ${ListOfElements[element].color}; border-radius:8px;"'
+                  }>
+										<span style="margin-left: 38px; color:${
+                      theme ? "black" : "${ListOfElements[element].color}"
+                    };" class="elementText" data-id="\${(index + 1 == ListOfElements[element].secondArgument.length ? "AMain" : "CONTI") + index + element}" data-parameter='"\${i.code}"'>
 											\${i.text}
 										</span>
 									</div>\`
 							})
 						}
 				saveData()
-				li.querySelector(".elementText").style.color = ListOfElements[element].color
+				if(${!theme}){
+					li.querySelector(".elementText").style.color = ListOfElements[element].color
+				}
 				li.style.backgroundColor = "transparent"
 				addblocks.classList.remove("active")
 				body.classList.remove("no-scroll")
@@ -389,11 +425,56 @@ export default function Html(data, name) {
 				event.target.closest('li').remove()
 				saveData()
 			}
+
+			function copyElement(event) {
+				let element = event.target.closest('li')
+				copyList = []
+				if (element.classList.contains("start")) {
+					let firstElement = Array.from(ListInEditor.children).findIndex((i) => i == element)
+					for (let i = firstElement + 1; i < getTheListOfChangeElem(firstElement, 0) + 1; i++) {
+						copyList.push(ListInEditor.children[i])
+					}
+				}
+				copyList.unshift(element)
+			}
+	
+			function pasteElement(event) {
+				if (copyList.length > 0) {
+					copyList.forEach((i, index) => {
+						const cloneOfElement = i.cloneNode(true)
+						const textOfNewElement = cloneOfElement.querySelector('.elementText')
+	
+						if (index === 0) {
+							cloneOfElement.style.backgroundColor = ListOfElements[textOfNewElement.dataset.id].color
+							textOfNewElement.style.color = "black"
+							setTimeout(() => {
+								textOfNewElement.style.color = ListOfElements[textOfNewElement.dataset.id].color
+								cloneOfElement.style.backgroundColor = "transparent"
+							}, 0)
+						}
+
+						if(cloneOfElement.querySelector(".active")){
+							cloneOfElement.querySelectorAll(".active").forEach((i)=>i.classList.remove("active"))
+						}
+
+						event.target.closest('li').before(cloneOfElement)
+
+						if (tapElements.includes(String(textOfNewElement.dataset.id))) {
+							let parameter = textOfNewElement.dataset.parameter
+							let newParameter = JSON.parse(parameter)
+							newParameter[1] = ["A" + Date.now() + Math.random().toString(32).slice(4)]
+							parameter = JSON.stringify(newParameter)
+						}
+					})
+					saveData()
+				}
+			}
 	
 			function showBtnElement(event) {
-				let element = event.target.closest(".innerOfElement").querySelector(".btn-in-element")
+				let element = event.target.closest('li')
 				if (element) {
-					element.classList.toggle("active")
+					element.querySelector(".btn-in-element").classList.toggle("active")
+					element.querySelector(".my-handle-inner").classList.toggle("active")
 				}
 			}
 	
@@ -412,8 +493,7 @@ export default function Html(data, name) {
 					a.push({
 						text: i.querySelector(".elementText").innerText,
 						id: i.querySelector(".elementText").dataset.id,
-						parameter: JSON.parse(i.querySelector(".elementText").dataset.paramaters),
-						nameOfElement: i.classList[1],
+						parameter: JSON.parse(i.querySelector(".elementText").dataset.parameter),
 						padding: attachment<6?attachment * 20:120
 					})
 					i.style.paddingLeft = a[index + 1].padding + "px"
@@ -448,11 +528,11 @@ export default function Html(data, name) {
 			
 			let listOfchangeElemnents = []
 			let sortable = Sortable.create(ListInEditor, {
-				handle: '.my-handle',
+				handle: '.my-handle-inner',
 				animation: 150,
 				filter: '.filtered',
 				fallbackTolerance: 5,
-				delay: 15,
+				touchStartThreshold: 4,
 				onStart: (evt) => {
 					if (evt.item.classList.contains("start")) {
 						listOfchangeElemnents = []
@@ -480,7 +560,7 @@ export default function Html(data, name) {
 				},
 				store: {
 					get: function (sortable) {
-						let result = ${data}	
+						let result = ${data}
 						if (!result) return
 						if (result[0]) {
 							listOfData = [...result[0].data]
@@ -490,9 +570,16 @@ export default function Html(data, name) {
 						result.forEach((i, index) => {
 							if (i.id.startsWith('AMain') || i.id.startsWith('CONTI')) {
 								ListInEditor.innerHTML += \`
-									<li class="ElementsInEditor \${i.nameOfElement} \${i.id.startsWith('AMain') ? 'finish' : ''}" style="padding-left: \${i.padding}px">
-										<div class="innerOfElement">
-											<span style="margin-left: 38px; color:\${ListOfElements[i.id.slice(5)].color};" class="elementText" data-id="\${i.id}" data-paramaters='"\${i.parameter}"'>
+									<li class="ElementsInEditor \${i.id.startsWith('AMain') ? 'finish' : ''}" style="padding-left: \${i.padding}px;">
+										<div class="innerOfElement" ${
+                      theme &&
+                      'style="background-color: ${ListOfElements[i.id.slice(6)].color}; border-radius:8px;"'
+                    }>
+											<span style="margin-left: 38px; color: ${
+                        theme
+                          ? "black"
+                          : "${ListOfElements[i.id.slice(6)].color}"
+                      };" class="elementText" data-id="\${i.id}" data-parameter='"\${i.parameter}"'>
 												\${i.text}
 											</span>
 										</div >
@@ -500,21 +587,39 @@ export default function Html(data, name) {
 								return
 							}
 							ListInEditor.innerHTML += \`
-					<li class="ElementsInEditor \${i.nameOfElement} \${ListOfElements[i.id].secondArgument ? "start" : ""}" style="padding-left: \${i.padding}px; \${
+					<li class="ElementsInEditor \${ListOfElements[i.id].secondArgument ? "start" : ""}" style="padding-left: \${i.padding}px; \${
             ListOfElements[i.id].isfunction && index != 0
               ? "margin-top: 15px;"
               : ""
           }">
-									<div class="innerOfElement">
-										<div class="my-handle" onclick="showBtnElement(event);"><span></span></div>
+									<div class="innerOfElement" ${
+                    theme &&
+                    'style="background-color: ${ListOfElements[i.id].color}; border-radius:8px;"'
+                  }>
+										<div class="my-handle" onclick="showBtnElement(event);">
+											<span></span>
+											<div class="my-handle-inner"></div>
+										</div>
 										<div class="btn-in-element">
 											<div class="btn-delete" onclick="deleteElement(event);">
 												<svg class="icon-delete-editor">
 													<use xlink:href="#icon-delete"></use>
 												</svg>
 											</div>
+											<div class="btn-delete" onclick="copyElement(event);">
+												<svg class="icon-delete-editor">
+													<use xlink:href="#icon-copy"></use>
+												</svg>
+											</div>
+											<div class="btn-delete" onclick="pasteElement(event);">
+												<svg class="icon-delete-editor">
+													<use xlink:href="#icon-paste"></use>
+												</svg>
+											</div>
 										</div>
-										<span style="color:\${ListOfElements[i.id].color}" class="elementText" data-id="\${i.id}" data-paramaters='\${JSON.stringify(i.parameter)}'>
+										<span style="color:${
+                      theme ? "black" : "${ListOfElements[i.id].color}"
+                    };" class="elementText" data-id="\${i.id}" data-parameter='\${JSON.stringify(i.parameter)}'>
 										\${i.text}
 										</span>
 									</div>
@@ -547,6 +652,7 @@ export default function Html(data, name) {
       const result = editparams.querySelector('#result')
       const dataList = editparams.querySelector('#dataList') //data List In formuls
       const functList = editparams.querySelector('#functList') //function List in formuls
+      const colorPicker = editparams.querySelector('#color-picker') //input with color Picker
 
 
       document.querySelector('#tree').onclick = (event) => {
@@ -572,17 +678,28 @@ export default function Html(data, name) {
 				whichPosition = 0
 				editingElement = event.target.closest(".ElementsInEditor").querySelector('.elementText')
 				idOfElement = editingElement.dataset.id
+				if(!ListOfElements[idOfElement].standartParameter){
+					return
+				}
 				TextInWhereOnStart = ListOfElements[idOfElement].text
 				if(ListOfElements[idOfElement].textInWhere) {
 					TextInWhereOnStart = ListOfElements[idOfElement].textInWhere
 				}
 				listOfChageParams = ListOfElements[idOfElement].listChengers
-				List = JSON.parse(editingElement.dataset.paramaters)
+				List = JSON.parse(editingElement.dataset.parameter)
+				if (listOfChageParams.length > List.length) {
+					if (!List) {
+						List = []
+					}
+					for (let i = 0; i < listOfChageParams.length - List.length; i++) {
+						List.push(ListOfElements[idOfElement].standartParameter[List.length+i])
+					}
+				}
 				onStart()
 				document.querySelectorAll(".LiAfterTap").forEach((i) => i.classList.remove("LiAfterTap"))
 				editparams.querySelector('#where').style.backgroundColor = ListOfElements[idOfElement].color
 				if (editparams.querySelector('#eventList')) { editparams.querySelector('#eventList').remove() }
-				if (event.target.closest(".ElementsInEditor").style.paddingLeft !== "0px") {
+				if (event.target.closest(".ElementsInEditor").style.paddincolisionWithTouchgLeft !== "0px") {
 					if (getFirstElement(Array.from(ListInEditor.children).indexOf(event.target.closest(".ElementsInEditor")) - 1)) {
 						let li = document.createElement("li")
 						li.classList.add("mainLi")
@@ -591,6 +708,8 @@ export default function Html(data, name) {
 						<ul>
 							<li onclick="tapOfFunctionBtn(0,'MousePosition','.x');">mouse X</li>
 							<li onclick="tapOfFunctionBtn(0, 'MousePosition','.y');">mouse Y</li>
+							<li onclick="tapOfFunctionBtn(1, 'colisionWithTouch({ MousePosition, object: ', '})');">
+							colisionWithTouch</li>
 							<li onclick="tapofbtn('event.type');">TypeOfClick</li>
 							<li onclick="tapofbtn('event.target');">Target</li>
 							<li onclick="tapofbtn('tappedElement');">tappedElement</li>
@@ -603,8 +722,12 @@ export default function Html(data, name) {
       }
 
       // Different Function ===================>
+			colorPicker.addEventListener("change", (e)=>tapofbtn('"' + e.target.value + '"'), false);
 
 			function getFirstElement(index) {
+				if(index < 0){
+					return false
+				}
 				if (ListInEditor.children[index].style.paddingLeft == "0px") {
 					let element = ListInEditor.children[index].querySelector('.elementText').dataset.id
 					return tapElements.includes(String(element)) ? true : false
@@ -774,10 +897,13 @@ export default function Html(data, name) {
 					let textInEditor = ListOfElements[idOfElement].text
 					let maxTextWidth = Math.floor((window.screen.availWidth - ListOfElements[idOfElement].text.length * 10) / 17)
 					for (let i = 0; i < listOfChageParams.length; i++) {
+						if (List[i].length <= 0) {
+							List[i] = ListOfElements[idOfElement].standartParameter[i]
+						}
 						let realChenge = List[i].reduce((a, b) => a + b).slice(0, maxTextWidth)
 						textInEditor = textInEditor.replace(listOfChageParams[i], realChenge)
 					}
-					editingElement.dataset.paramaters = JSON.stringify(List)
+					editingElement.dataset.parameter = JSON.stringify(List)
 					editingElement.textContent = textInEditor
 					saveData()
 					closeEditParams()

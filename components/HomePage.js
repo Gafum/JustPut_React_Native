@@ -6,7 +6,8 @@ import {
   ActivityIndicator,
   Image,
   Alert,
-  ToastAndroid
+  ToastAndroid,
+  Animated
 } from "react-native"
 import BtnPlus from "./HomePage_Components/FloatAction" // float Action
 import CreateProject from "./HomePage_Components/CreateProject" //Dialog
@@ -20,7 +21,7 @@ import {
 import {
   getPermissionsAsync,
   requestPermissionsAsync
-} from "expo-media-library"// get permission to use storage
+} from "expo-media-library" // get permission to use storage
 import codeCreator from "./Editor_Components/CodeCreator"
 
 const Colors = ["#96b38e", "#f59073", "#913e5f", "#eb4464"]
@@ -98,6 +99,7 @@ export default function HomePage({ navigation }) {
   const [visible, setVisible] = useState(false)
   const [listOfProjects, setListOfProjects] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [theme, setTheme] = useState(undefined)
 
   useEffect(() => {
     getData()
@@ -105,8 +107,10 @@ export default function HomePage({ navigation }) {
 
   const getData = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem("@List_Projects")
+      let jsonValue = await AsyncStorage.getItem("@List_Projects")
       setListOfProjects(jsonValue ? JSON.parse(jsonValue) : [])
+      jsonValue = await AsyncStorage.getItem("@Theme")
+      setTheme(JSON.parse(jsonValue))
       setIsLoading(false)
     } catch (e) {
       console.error(e)
@@ -173,20 +177,21 @@ export default function HomePage({ navigation }) {
         onPress={() => {
           navigation.navigate("Editor", {
             idOfProject: item.id,
-            nameOfproject: item.name
+            nameOfproject: item.name,
+            theme: theme
           })
         }}
       >
-        <Text
+        <Animated.Text
           style={{
-            fontFamily: "calibri-bold",
+            fontFamily: theme ? "calibri-regular" : "calibri-bold",
             textAlign: "center",
-            color: "black",
+            color: theme ? "white" : "black",
             fontSize: 19
           }}
         >
           {item.name}
-        </Text>
+        </Animated.Text>
         <View
           style={{
             justifyContent: "space-between",
@@ -269,20 +274,28 @@ export default function HomePage({ navigation }) {
       </View>
     )
   }
-
   return (
-    <View style={{ flex: 1 }}>
+    <Animated.View
+      style={{
+        flex: 1,
+        backgroundColor: theme ? "#333366" : "#fff"
+      }}
+    >
       <FlashList
         data={listOfProjects}
         estimatedItemSize={15}
         renderItem={Item}
       />
-      <BtnPlus setVisible={setVisible} addProjext={addProjext} />
+      <BtnPlus
+        setVisible={setVisible}
+        addProjext={addProjext}
+        navigation={navigation}
+      />
       <CreateProject
         visible={visible}
         setVisible={setVisible}
         addProjext={addProjext}
       />
-    </View>
+    </Animated.View>
   )
 }

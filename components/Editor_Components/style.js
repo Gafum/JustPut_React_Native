@@ -1,5 +1,5 @@
-export default function Style() {
-	return `
+export default function Style(theme) {
+  return `
 	* {
 		margin: 0%;
 		padding: 0%;
@@ -8,9 +8,10 @@ export default function Style() {
 		user-select: none;
 	}
 
-	body {
+	html, body {
 		height: 100%;
 		width: 100%;
+		background-color: ${theme ? "#333366" : "white"};
 	}
 
 	/* ===============================================   Editor */
@@ -57,10 +58,11 @@ export default function Style() {
 
 	.my-handle {
 		width: 30px;
-		height: 100%;
+		height: 30px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		position: relative;
 	}
 
 	.my-handle > span {
@@ -73,6 +75,20 @@ export default function Style() {
 		display: inline-block;
 	}
 
+	.my-handle-inner {
+		position: absolute;
+		width: 80px;
+		height: 35px;
+		left: 0;
+		top: 0;
+		z-index: 20;
+		background-color: transparent;
+	}
+
+	.my-handle-inner.active {
+		width: 30px;
+	}
+
 	.my-handle > span::before,
 	.my-handle > span::after {
 		content: "";
@@ -80,8 +96,8 @@ export default function Style() {
 		height: 100%;
 		width: 100%;
 		border-radius: 100%;
-		background-color: black;
 		display: inline-block;
+		background-color: black;
 	}
 
 	.my-handle > span::before {
@@ -95,11 +111,15 @@ export default function Style() {
 	.btn-in-element {
 		transform-origin: left;
 		transform: scaleX(0);
-		transition: all 0.2s;
+		transition: transform 0.2s;
+		display: flex;
+		width: 30px;
+		gap: 3px;
 	}
 
 	.btn-in-element.active {
 		transform: scaleX(1);
+		width: max-content;
 	}
 
 	.btn-delete {
@@ -110,6 +130,16 @@ export default function Style() {
 		justify-content: center;
 		align-items: center;
 		border-radius: 5px;
+		transition: filter .4s;
+	}
+
+	.btn-delete:hover{
+		filter: brightness(175%);
+	}
+
+	.btn-delete:active{
+		filter: brightness(175%);
+		box-shadow: 2px 2px 5px #888;
 	}
 
 	.mainLi .btn-delete {
@@ -266,11 +296,15 @@ export default function Style() {
 	#addblocks {
 		z-index: 100;
 		position: fixed;
-		background-color: white;
+		background-color: ${theme ? "#333366" : "white"};
 		top: 100%;
 		width: 100vw;
 		transition: all 0.4s;
 		height: 100vh;
+	}
+	
+	#addblocks{
+		overflow-y: scroll;
 	}
 
 	#editparams.active,
@@ -357,7 +391,7 @@ export default function Style() {
 		overflow-x: scroll;
 	}
 
-	#where-addblock {
+	.where-addblock {
 		height: fit-content;
 		padding: 15px;
 		display: flex;
@@ -366,15 +400,19 @@ export default function Style() {
 		align-items: center;
 		width: 100%;
 	}
+	
+	.where-addblock.fix{
+		position: fixed;
+	}
 
 	#where button,
-	#where-addblock > button {
+	.where-addblock > button {
 		padding: 3px;
 		border: none;
 		outline: none;
 		border-radius: 5px;
 		max-width: 60px;
-		min-width: 27px;
+		min-width: 40px;
 		background-color: #e3e3e3;
 		overflow-x: scroll;
 		scroll-behavior: smooth;
@@ -382,12 +420,12 @@ export default function Style() {
 		height: fit-content;
 	}
 
-	#where-addblock > span {
+	.where-addblock > span {
 		font-size: 20px;
 	}
 
 	#where > button,
-	#where-addblock > button {
+	.where-addblock > button {
 		position: absolute;
 		right: 0;
 		padding: 3px 20px;
