@@ -1,8 +1,7 @@
 //listOfData    listOfTaps   ListInEditor
 import { ListOfElements } from "./ListOfElements"
 import Html from "../View_Components/Html" // open Html file
-
-const tapElements = ["13", "15"]
+import { tapElements } from "./ListOfElements" // 0,1 - Clicks; 2 - MouseMove; 3 - EndOfTheTouching
 
 /* Function that create code "The B(second in reduce) string" */
 function StringB(element, chenger) {
@@ -24,12 +23,16 @@ export default function codeCreator(data) {
   let listOfData = data[0].data
 
   let listOfTaps = []
-  let fisrtStrCode = ""
+  let fisrtStrCode = "document.title = '" + data[0].name + "'"
   if (listOfData.length > 0) {
-    fisrtStrCode = "let " + String(listOfData.reduce((a, b) => a + ", " + b))
+    fisrtStrCode +=
+      `
+let ` + String(listOfData.reduce((a, b) => a + ", " + b))
   }
   data.shift()
-  listOfTaps = data.filter(({ id }) => tapElements.includes(String(id))) // Click =>
+  listOfTaps = data.filter(
+    ({ id }) => id == tapElements[0] || id == tapElements[1]
+  ) // Click =>
   if (listOfTaps.length > 0) {
     fisrtStrCode +=
       `
@@ -47,7 +50,7 @@ canva.onclick = (event)=> {` +
       ) +
       "}"
   }
-  listOfTaps = data.filter(({ id }) => id == "24") // MouseMove =>
+  listOfTaps = data.filter(({ id }) => id == tapElements[2]) // MouseMove =>
   if (listOfTaps.length > 0) {
     fisrtStrCode +=
       `
@@ -67,7 +70,7 @@ function MouseNowIsMove (event) {` +
       ) +
       "}"
   }
-  listOfTaps = data.filter(({ id }) => id == "25") // EndOfTheTouching (Mouse up) =>
+  listOfTaps = data.filter(({ id }) => id == tapElements[3]) // EndOfTheTouching (Mouse up) =>
   if (listOfTaps.length > 0) {
     fisrtStrCode +=
       `

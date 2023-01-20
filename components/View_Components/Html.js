@@ -39,7 +39,8 @@ export default function Html(a) {
 		startAngle = 0,
 		endAngle = 2 * Math.PI,
 		counterclockwise = false,
-		texture = undefined}) {
+		texture = undefined,
+		direction = 0}) {
 			this.color = color
 			this.x = x
 			this.y = y
@@ -51,16 +52,31 @@ export default function Html(a) {
 			this.endAngle = endAngle
 			this.counterclockwise = counterclockwise
 			this.texture = texture
+			this.direction = direction
+
+			this.go = (steps = 0) => {
+				this.x += Math.sin(this.direction)* steps
+				this.y -= Math.cos(this.direction)* steps
+			}
+
 			this.draw = (isfill=true)=>{
 				ctx.fillStyle = this.color
 				ctx.strokeStyle = this.color
 				ctx.beginPath()
 				if(shape=="cub"){
+					ctx.save();
+					ctx.translate(this.x, this.y);
+
 					if(this.texture&&this.texture.a){
-						ctx.drawImage(this.texture.a, this.texture.sx, this.texture.sy, this.texture.swidth, this.texture.sheight, this.x, this.y, this.width, this.height);
+						ctx.rotate(this.direction + this.texture.standartDirection);
+						ctx.drawImage(this.texture.a, this.texture.sx, this.texture.sy, this.texture.swidth, this.texture.sheight, -this.width/2, -this.height/2, this.width, this.height);
+						ctx.restore();
 						return
 					}
-					ctx.roundRect(this.x, this.y, this.width, this.height, [this.radius]);
+
+					ctx.rotate(this.direction);
+					ctx.roundRect( -this.width/2, -this.height/2, this.width, this.height, [this.radius] );
+					ctx.restore();
 				}else	if(shape=="circle"){
 					ctx.arc( this.x, this.y, this.radius, this.startAngle, this.endAngle, this.counterclockwise);
 				}
@@ -187,6 +203,15 @@ export default function Html(a) {
 	function shuffle(array) {
 		array.sort(() => Math.random() - 0.5);
 	}	
+
+	function smoothAnimation({object = {x:0, y:0}, toThatPosition = {x:0, y:0}}){
+		let dist = distanceBetween(toThatPosition, object)/2;
+		let angle = Math.atan2(toThatPosition.y-object.y, toThatPosition.x-object.x) * 180 / Math.PI;
+		let pixelsX =  dist * Math.cos(angle);
+  	let pixelsY = dist * Math.sin(angle);
+		object.x += pixelsX;
+		object.y += pixelsY;
+	}
 
 	setTimeout(()=>{	
 		canva.width =  window.innerWidth*2

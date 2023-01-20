@@ -87,7 +87,7 @@ export const ListOfElements = [
   },
   {
     id: 9, // OBJECT
-    code: 'myName = new rect({ x: myX, y: myY, width: myW, height: myH, color: myColor, radius: myR, shape: "cub", texture: myIMG });',
+    code: 'myName = new rect({ x: myX, y: myY, width: myW, height: myH, direction: myDir, color: myColor, radius: myR, texture: myIMG, shape: "cub" });',
     text: "Create Square myName",
     color: objectColor,
     listChengers: [
@@ -96,8 +96,9 @@ export const ListOfElements = [
       "myY",
       "myW",
       "myH",
-      "myR",
+      "myDir",
       "myColor",
+      "myR",
       "myIMG"
     ],
     standartParameter: [
@@ -106,12 +107,13 @@ export const ListOfElements = [
       ["5", "0", "0"],
       ["2", "0", "0"],
       ["7", "0"],
-      ["0"],
+      ["degToRadian(", "0", ")"],
       ['"#000"'],
+      ["0"],
       ["undefined"]
     ],
     textInWhere:
-      "myName: x: myX, y: myY, width: myW, height: myH, radius: myR, color: myColor, texture: myIMG "
+      "myName: x: myX, y: myY, width: myW, height: myH, direction: myDir, color: myColor, radius: myR, texture: myIMG "
   },
   {
     id: 10, // OBJECT
@@ -213,7 +215,7 @@ let MousePosition = getpositionOfMouse(event);
   {
     id: 16, // PROPERTIES
     code: "//Object.x = 100;",
-    text: "Set X of //Object 100",
+    text: "Set //Object X to 100",
     color: propertiesColor,
     listChengers: ["//Object", "100"],
     standartParameter: [[" //myName"], ["1", "0", "0"]]
@@ -221,7 +223,7 @@ let MousePosition = getpositionOfMouse(event);
   {
     id: 17, // PROPERTIES
     code: "//Object.y = 101;",
-    text: "Set Y of //Object 101",
+    text: "Set //Object Y to 101",
     color: propertiesColor,
     listChengers: ["//Object", "101"],
     standartParameter: [[" //myName"], ["1", "0", "1"]]
@@ -229,7 +231,7 @@ let MousePosition = getpositionOfMouse(event);
   {
     id: 18, // PROPERTIES
     code: "//Object.width = 50;",
-    text: "Set Width of //Object 50",
+    text: "Set //Object Width to 50",
     color: propertiesColor,
     listChengers: ["//Object", "50"],
     standartParameter: [[" //myName"], ["5", "0"]]
@@ -237,7 +239,7 @@ let MousePosition = getpositionOfMouse(event);
   {
     id: 19, // PROPERTIES
     code: "//Object.height = 60;",
-    text: "Set Height of //Object 60",
+    text: "Set //Object Height to 60",
     color: propertiesColor,
     listChengers: ["//Object", "60"],
     standartParameter: [[" //myName"], ["6", "0"]]
@@ -245,7 +247,7 @@ let MousePosition = getpositionOfMouse(event);
   {
     id: 20, // PROPERTIES
     code: "//Object.radius = 30;",
-    text: "Set Radius of //Object 30",
+    text: "Set //Object Radius to  30",
     color: propertiesColor,
     listChengers: ["//Object", "30"],
     standartParameter: [["//myName"], ["3", "0"]]
@@ -253,7 +255,7 @@ let MousePosition = getpositionOfMouse(event);
   {
     id: 21, // PROPERTIES
     code: "//Object.color = myColor;",
-    text: "Set Color of //Object myColor",
+    text: "Set //Object Color to myColor",
     color: propertiesColor,
     listChengers: ["//Object", "myColor"],
     standartParameter: [[" //myName"], ['"#000"']]
@@ -372,26 +374,29 @@ function myIntervalTimeMs(){`,
     code: `myName = {}
 myName.a = new Image()
 try {
-	myName.a.onload = () => {
+	myName.a.onload = function () {
 		myName.swidth = this.width
 		myName.sheight = this.height
 	}
 	myName.a.src = mySourse
 	myName.sx = 0
 	myName.sy = 0
+	myName.standartDirection = myDir
 } catch (e) {
 	alert('Image not found 0(')
 };`,
     text: "Create Texture myName",
     color: objectColor,
-    listChengers: ["myName", "mySourse"],
+    listChengers: ["myName", "mySourse", "myDir"],
     standartParameter: [
       ["//myName"],
       [
         '"https://yt3.ggpht.com/ytc/AMLnZu9y3rmdvECWk3AWSxCiZmDDROoqSXEvFkozxBi0=s900-c-k-c0x00ffffff-no-rj"'
-      ]
+      ],
+      ["0"]
     ],
-    textInWhere: "Create Texture myName, Sourse: mySourse"
+    textInWhere:
+      "Create Texture myName, Sourse: mySourse, standartDirection: myDir"
   },
   {
     id: 30, // PROPERTIES
@@ -406,20 +411,43 @@ texture.sheight = myHeight;`,
     textInWhere:
       "Clip texture: StartX: myStartX, StartY: myStartY, Width of the Clip: myWidth, Height of the Clip: myHeight"
   },
-  /* Array Method */
   {
-    id: 31, // CONTROL
-    code: "for (let index = 0begin; index <= 54; index = index action) {",
-    text: "If index less 54, do action",
+    id: 31, // DATA
+    code: "//a += 2;",
+    text: "//a add 2 ",
     color: dataColor,
-    listChengers: ["index", "less", "54", "action", "0begin"],
-    standartParameter: [["index"], ["<"], ["5", "4"], ["+", "1"], ["0"]],
-    secondArgument: [{ code: "};", text: "End of the repeats" }],
-    textInWhere:
-      "If index less 54, do action, <span style='font-size:14px;'>value at start:</span> 0begin"
+    listChengers: [["//a"], ["2"]],
+    standartParameter: [[" //a"], ["2"]]
   },
   {
-    id: 32, // CONTROL
+    id: 32, // DATA
+    code: "//a *= 2;",
+    text: "//a multiply by 2 ",
+    color: dataColor,
+    listChengers: [["//a"], ["2"]],
+    standartParameter: [[" //a"], ["2"]]
+  },
+  {
+    id: 33, // DATA
+    code: "//a /= 2;",
+    text: "//a divide by 2 ",
+    color: dataColor,
+    listChengers: [["//a"], ["2"]],
+    standartParameter: [[" //a"], ["2"]]
+  },
+  /* Array Method */
+  {
+    id: 34, // DATA
+    code: "for (var index = 0; index < 10; index++) {",
+    text: "Repeat 10 times",
+    color: dataColor,
+    listChengers: ["10", "index"],
+    standartParameter: [["1", "0"], ["index"]],
+    secondArgument: [{ code: "};", text: "End of the repeats" }],
+    textInWhere: "Repeat 10 times Number of current value: index"
+  },
+  {
+    id: 35, // DATA
     code: "array.push(newElement);",
     text: "In array add newElement",
     color: dataColor,
@@ -427,7 +455,7 @@ texture.sheight = myHeight;`,
     standartParameter: [["array"], ['"newElement"']]
   },
   {
-    id: 33, // CONTROL
+    id: 36, // DATA
     code: "array.pop();",
     text: "Delete last element in array",
     color: dataColor,
@@ -435,7 +463,7 @@ texture.sheight = myHeight;`,
     standartParameter: [["array"]]
   },
   {
-    id: 34, // CONTROL
+    id: 37, // DATA
     code: "array.unshift(element);",
     text: "New first element in array",
     color: dataColor,
@@ -443,7 +471,7 @@ texture.sheight = myHeight;`,
     standartParameter: [['"element"'], ["array"]]
   },
   {
-    id: 35, // CONTROL
+    id: 38, // DATA
     code: "array.shift();",
     text: "Delete first element in array",
     color: dataColor,
@@ -451,7 +479,7 @@ texture.sheight = myHeight;`,
     standartParameter: [["array"]]
   },
   {
-    id: 36, // CONTROL
+    id: 39, // DATA
     code: "array.forEach((element, index)=>{",
     text: "array.forEach(element, index)",
     color: dataColor,
@@ -460,7 +488,7 @@ texture.sheight = myHeight;`,
     secondArgument: [{ code: "});", text: "End of the forEach" }]
   },
   {
-    id: 37, // CONTROL
+    id: 40, // DATA
     code: "array1 = array2.map((element, index)=>{",
     text: "In array1 map array2",
     color: dataColor,
@@ -471,7 +499,7 @@ texture.sheight = myHeight;`,
       "New array: array1, array2.map(element, index) <span style='font-size:14px;'>use with return</span>"
   },
   {
-    id: 38, // CONTROL
+    id: 41, // DATA
     code: "array1 = array2.filter((element, index)=>{",
     text: "In array1 filter array2",
     color: dataColor,
@@ -482,7 +510,7 @@ texture.sheight = myHeight;`,
       "New array: array1, array2.reduce(element, index) <span style='font-size:14px;'>use with return</span>"
   },
   {
-    id: 39, // CONTROL
+    id: 42, // DATA
     code: "array1 = array2.reduce((previousResult, currentValue, index)=>{",
     text: "In array1 reduce array2",
     color: dataColor,
@@ -505,7 +533,7 @@ texture.sheight = myHeight;`,
       "New array: array1, array2.reduce(previousResult , currentValue, index) <span style='font-size:14px;'>use with return</span>"
   },
   {
-    id: 40, // CONTROL
+    id: 43, // DATA
     code: "array.splice(5, some);",
     text: "delete some elements",
     color: dataColor,
@@ -514,7 +542,7 @@ texture.sheight = myHeight;`,
     textInWhere: "In position 5 in array delete some elements"
   },
   {
-    id: 41, // CONTROL
+    id: 44, // DATA
     code: "array.splice(5, 0, newElements);",
     text: "Add some elements in array",
     color: dataColor,
@@ -523,7 +551,7 @@ texture.sheight = myHeight;`,
     textInWhere: "In position 5 in array add newElements"
   },
   {
-    id: 42, // CONTROL
+    id: 45, // DATA
     code: "array1 = array2.find((element, index)=>{",
     text: "array.find(element, index)",
     color: dataColor,
@@ -534,7 +562,7 @@ texture.sheight = myHeight;`,
       "Variable: array1, array2.find(element, index) <span style='font-size:14px;'>use with return</span>"
   },
   {
-    id: 43, // CONTROL
+    id: 46, // DATA
     code: "array1 = array2.findIndex((element, index)=>{",
     text: "array.findIndex(element, index)",
     color: dataColor,
@@ -545,7 +573,7 @@ texture.sheight = myHeight;`,
       "Variable: array1, array2.findIndex(element, index) <span style='font-size:14px;'>use with return</span>"
   },
   {
-    id: 44, // CONTROL
+    id: 47, // DATA
     code: "array.sort((a, b)=>+(a-b));",
     text: "array.sort(+)",
     color: dataColor,
@@ -553,7 +581,7 @@ texture.sheight = myHeight;`,
     standartParameter: [["array"], ["+"]]
   },
   {
-    id: 45, // CONTROL
+    id: 48, // DATA
     code: "array.reverse();",
     text: "array.reverse",
     color: dataColor,
@@ -561,7 +589,7 @@ texture.sheight = myHeight;`,
     standartParameter: [["array"]]
   },
   {
-    id: 46, // CONTROL
+    id: 49, // DATA
     code: "shuffle(array);",
     text: "array.shuffle",
     color: dataColor,
@@ -569,7 +597,7 @@ texture.sheight = myHeight;`,
     standartParameter: [["array"]]
   },
   {
-    id: 47, // CONTROL
+    id: 50, // DATA
     code: "array1 = array1.concat(array2);",
     text: "array1 connect with array2",
     color: dataColor,
@@ -577,7 +605,7 @@ texture.sheight = myHeight;`,
     standartParameter: [["array1"], ["[", "1", ",", "2", "]"]]
   },
   {
-    id: 48, // CONTROL
+    id: 51, // DATA
     code: "return{",
     text: "return",
     color: controlColor,
@@ -585,10 +613,84 @@ texture.sheight = myHeight;`,
     secondArgument: [{ code: "};", text: "End of the return" }]
   },
   {
-    id: 49, // CONTROL
+    id: 52, // DATA
     code: "continue;",
     text: "continue",
     color: controlColor,
     standartParameter: ["Hi GAfum"]
+  },
+  {
+    id: 53, // PROPERTIES
+    code: "//Object.direction = myDirection;",
+    text: "Set //Object Direction to myDirection",
+    color: propertiesColor,
+    listChengers: ["//Object", "myDirection"],
+    standartParameter: [[" //myName"], ["degToRadian(", "5", "0", ")"]]
+  },
+  {
+    id: 54, // PROPERTIES
+    code: "//Object.go(HowSteps)",
+    text: "Move //Object HowSteps steps",
+    color: propertiesColor,
+    listChengers: ["//Object", "HowSteps"],
+    standartParameter: [[" //myName"], ["1", "0"]]
+  },
+  {
+    id: 55, // PROPERTIES
+    code: "ctx.scale(x, y);",
+    text: "scale scene x, y",
+    color: propertiesColor,
+    listChengers: ["x", "y"],
+    standartParameter: [["2"], ["1"]]
+  },
+  {
+    id: 56, // PROPERTIES
+    code: "ctx.transform(a, b, c, d, x, y);",
+    text: "transform scene x y",
+    color: propertiesColor,
+    listChengers: ["a", "b", "c", "d", "x", "y"],
+    standartParameter: [["1"], ["0.2"], ["0.8"], ["1"], ["0"], ["0"]],
+    textInWhere:
+      "transform <span style='font-size:14px;'>Horizontal scaling:</span>a, <span style='font-size:14px;'>Vertical skewing:</span>b, <span style='font-size:14px;'>Horizontal skewing: </span>c, <span style='font-size:14px;'>Vertical scaling:</span>d, X: x, Y: y"
+  },
+  {
+    id: 57, // PROPERTIES
+    code: "rotate(angle);",
+    text: "rotate(angle)",
+    color: propertiesColor,
+    listChengers: ["angle"],
+    standartParameter: [["degToRadian(", "2", "0", ")"]]
+  },
+  {
+    id: 58, // PROPERTIES
+    code: "//Object.x += 10;",
+    text: "Add to //Object X 10",
+    color: propertiesColor,
+    listChengers: ["//Object", "10"],
+    standartParameter: [[" //myName"], ["1", "0"]]
+  },
+  {
+    id: 59, // PROPERTIES
+    code: "//Object.y += 10;",
+    text: "Add to //Object Y 10",
+    color: propertiesColor,
+    listChengers: ["//Object", "10"],
+    standartParameter: [[" //myName"], ["1", "1"]]
+  },
+  {
+    id: 60, // PROPERTIES
+    code: "//Object.width += 20;",
+    text: "Add to //Object Width  20",
+    color: propertiesColor,
+    listChengers: ["//Object", "20"],
+    standartParameter: [[" //myName"], ["2", "0"]]
+  },
+  {
+    id: 61, // PROPERTIES
+    code: "//Object.height += 20;",
+    text: "Add to //Object Height 20",
+    color: propertiesColor,
+    listChengers: ["//Object", "20"],
+    standartParameter: [[" //myName"], ["2", "0"]]
   }
 ]
