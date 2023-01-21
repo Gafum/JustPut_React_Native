@@ -637,26 +637,26 @@ texture.sheight = myHeight;`,
   },
   {
     id: 55, // PROPERTIES
-    code: "ctx.scale(x, y);",
-    text: "scale scene x, y",
+    code: "ctx.scale(X, Y);",
+    text: "scale scene X, Y",
     color: propertiesColor,
-    listChengers: ["x", "y"],
+    listChengers: ["X", "Y"],
     standartParameter: [["2"], ["1"]]
   },
   {
     id: 56, // PROPERTIES
-    code: "ctx.transform(a, b, c, d, x, y);",
-    text: "transform scene x y",
+    code: "ctx.transform(HSc, VSk, HSk, VSc, X, Y);",
+    text: "transform scene X, Y",
     color: propertiesColor,
-    listChengers: ["a", "b", "c", "d", "x", "y"],
+    listChengers: ["HSc", "VSk", "HSk", "VSc", "X", "Y"],
     standartParameter: [["1"], ["0.2"], ["0.8"], ["1"], ["0"], ["0"]],
     textInWhere:
-      "transform <span style='font-size:14px;'>Horizontal scaling:</span>a, <span style='font-size:14px;'>Vertical skewing:</span>b, <span style='font-size:14px;'>Horizontal skewing: </span>c, <span style='font-size:14px;'>Vertical scaling:</span>d, X: x, Y: y"
+      "transform <span style='font-size:14px;'>Horizontal scaling:</span>HSc, <span style='font-size:14px;'>Vertical skewing:</span>VSk, <span style='font-size:14px;'>Horizontal skewing: </span>HSk, <span style='font-size:14px;'>Vertical scaling:</span>VSc, x: X, y: Y"
   },
   {
     id: 57, // PROPERTIES
-    code: "rotate(angle);",
-    text: "rotate(angle)",
+    code: "ctx.rotate(angle);",
+    text: "rotate scene angle",
     color: propertiesColor,
     listChengers: ["angle"],
     standartParameter: [["degToRadian(", "2", "0", ")"]]
@@ -689,6 +689,14 @@ texture.sheight = myHeight;`,
     id: 61, // PROPERTIES
     code: "//Object.height += 20;",
     text: "Add to //Object Height 20",
+    color: propertiesColor,
+    listChengers: ["//Object", "20"],
+    standartParameter: [[" //myName"], ["2", "0"]]
+  },
+  {
+    id: 62, // PROPERTIES
+    code: "//Object.direction += 20;",
+    text: "Add to //Object Direction 20",
     color: propertiesColor,
     listChengers: ["//Object", "20"],
     standartParameter: [[" //myName"], ["2", "0"]]

@@ -204,6 +204,7 @@ export default function Html(data, name, theme) {
 							<li onclick="tapofbtn('.height');">height</li>
 							<li onclick="tapofbtn('.color');">color</li>
 							<li onclick="tapofbtn('.radius');">radius</li>
+							<li onclick="tapofbtn('.direction');">direction</li>
 							<li onclick="tapofbtn('.startAngle');">startAngle</li>
 							<li onclick="tapofbtn('.endAngle');">endAngle</li>
 							<li onclick="tapofbtn('DisplayWidth');">DisplayWidth</li>
@@ -432,10 +433,10 @@ export default function Html(data, name, theme) {
 				if (element.classList.contains("start")) {
 					let firstElement = Array.from(ListInEditor.children).findIndex((i) => i == element)
 					for (let i = firstElement + 1; i < getTheListOfChangeElem(firstElement, 0) + 1; i++) {
-						copyList.push(ListInEditor.children[i])
+						copyList.push(ListInEditor.children[i].cloneNode(true))
 					}
 				}
-				copyList.unshift(element)
+				copyList.unshift(element.cloneNode(true))
 			}
 	
 			function pasteElement(event) {
@@ -463,7 +464,7 @@ export default function Html(data, name, theme) {
 							let parameter = textOfNewElement.dataset.parameter
 							let newParameter = JSON.parse(parameter)
 							newParameter[1] = ["A" + Date.now() + Math.random().toString(32).slice(4)]
-							parameter = JSON.stringify(newParameter)
+							textOfNewElement.dataset.parameter = JSON.stringify(newParameter)
 						}
 					})
 					saveData()
@@ -896,6 +897,9 @@ export default function Html(data, name, theme) {
 				case "@0Ok**":
 					let textInEditor = ListOfElements[idOfElement].text
 					let maxTextWidth = Math.floor((window.screen.availWidth - ListOfElements[idOfElement].text.length * 10) / 17)
+					if(!maxTextWidth|| maxTextWidth<2){
+						maxTextWidth = 2
+					}
 					for (let i = 0; i < listOfChageParams.length; i++) {
 						if (List[i].length <= 0) {
 							List[i] = ListOfElements[idOfElement].standartParameter[i]
