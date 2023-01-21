@@ -17,15 +17,30 @@ export default function CreateProject({ visible, setVisible, addProjext }) {
   }
 
   return (
-    <Dialog.Container visible={visible}>
-      <Dialog.Title>Create Project</Dialog.Title>
+    <Dialog.Container visible={visible} onBackdropPress={handleCancel}>
+      <Dialog.Title style={{ color: "black", fontFamily: "calibri-bold" }}>
+        Create Project
+      </Dialog.Title>
       <Dialog.Input
+        style={{ color: "black", fontFamily: "calibri-regular" }}
         placeholder="name"
         onChangeText={setNameOfProjectfirst}
         value={nameOfProject}
       ></Dialog.Input>
-      <Dialog.Button label="Cancel" onPress={handleCancel} />
-      <Dialog.Button label="Ok" onPress={pressOk} />
+      <Dialog.Button
+        style={{ color: "#eb4464", fontFamily: "calibri-bold" }}
+        label="Cancel"
+        onPress={handleCancel}
+      />
+      <Dialog.Button
+        style={{
+          color: nameOfProject.length ? "#3db05a" : "#777",
+          fontFamily: "calibri-bold"
+        }}
+        label="Ok"
+        onPress={pressOk}
+        disabled={!nameOfProject.length}
+      />
     </Dialog.Container>
   )
 }

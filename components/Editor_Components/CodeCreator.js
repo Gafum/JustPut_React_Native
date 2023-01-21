@@ -21,7 +21,6 @@ function StringB(element, chenger) {
 
 export default function codeCreator(data) {
   let listOfData = data[0].data
-  console.log(data)
   let listOfTaps = []
   let fisrtStrCode = "document.title = '" + data[0].name + "'"
   if (listOfData.length > 0) {

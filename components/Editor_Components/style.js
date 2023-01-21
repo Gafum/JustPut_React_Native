@@ -58,6 +58,8 @@ export default function Style(theme) {
 
 	.my-handle {
 		width: 30px;
+		min-width: 30px;
+		max-width: 32px;
 		height: 30px;
 		display: flex;
 		justify-content: center;
