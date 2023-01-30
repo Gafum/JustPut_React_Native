@@ -12,8 +12,9 @@ export default function Editor({ navigation, route }) {
 
   const storeData = async (value) => {
     if (value.endsWith("createCode")) {
-      let code = codeCreator(JSON.parse(value.slice(0, -10)))
-      navigation.navigate("Result", { code })
+      let savedData = await AsyncStorage.getItem(idOfProject + "savedValue")
+      let code = codeCreator(JSON.parse(value.slice(0, -10)), savedData)
+      navigation.navigate("Result", { code, idOfProject })
       return
     }
     try {
@@ -29,6 +30,8 @@ export default function Editor({ navigation, route }) {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem(idOfProject)
+      let theme = await AsyncStorage.getItem("@Theme")
+      theme = JSON.parse(theme)
       setHtml(Html(jsonValue, nameOfproject, theme))
       setIsLoading(false)
     } catch (e) {

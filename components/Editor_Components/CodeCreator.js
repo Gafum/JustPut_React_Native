@@ -19,10 +19,21 @@ function StringB(element, chenger) {
   return result
 }
 
-export default function codeCreator(data) {
+export default function codeCreator(data, inApp = false) {
   let listOfData = data[0].data
   let listOfTaps = []
+
   let fisrtStrCode = "document.title = '" + data[0].name + "'"
+  if (inApp) {
+    console.log(inApp)
+    fisrtStrCode +=
+      `
+let StoredData = ` + inApp
+  } else {
+    fisrtStrCode += `
+let StoredData = {}`
+  }
+
   if (listOfData.length > 0) {
     fisrtStrCode +=
       `
@@ -74,8 +85,6 @@ function MouseNowIsMove (event) {` +
     fisrtStrCode +=
       `
 document.addEventListener('mouseup', EndOfTheTouching);
-document.addEventListener('touchend', EndOfTheTouching);
-document.addEventListener('touchcancel', EndOfTheTouching);
 function EndOfTheTouching(event) {` +
       String(
         listOfTaps.reduce(

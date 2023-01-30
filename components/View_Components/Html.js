@@ -21,10 +21,12 @@ export default function Html(a) {
 </head>
 <body>
 	<!-- MADE BY GAFUM -->
-	<div id="main"></div>
+	<div id="main" style="position: relative;"></div>
 	<canvas style="display: block;" width="640" height="1440">Error</canvas>
-	<p class="loadTips">Loading</p>
-	<p class="loadTips">will restart the game if you see this text for a long time</p>
+	<div class="loadTips">
+		<h1>Loading...</h1>
+		<p>will restart the game if you see this text for a long time</p>
+	</div>
 	<script>
 	const mainElementInHTML = document.querySelector('#main')
 	class rect {
@@ -202,21 +204,25 @@ export default function Html(a) {
 
 	function shuffle(array) {
 		array.sort(() => Math.random() - 0.5);
-	}	
+	}
 
-	function smoothAnimation({object = {x:0, y:0}, toThatPosition = {x:0, y:0}}){
-		let dist = distanceBetween(toThatPosition, object)/2;
-		let angle = Math.atan2(toThatPosition.y-object.y, toThatPosition.x-object.x) * 180 / Math.PI;
-		let pixelsX =  dist * Math.cos(angle);
-  	let pixelsY = dist * Math.sin(angle);
-		object.x += pixelsX;
-		object.y += pixelsY;
+	const SmothMove = async ({ movedObject = { x: 0, y: 0 }, X = 0, Y = 0, MyTime = 0 }) => {
+		let cycleTimes = Math.floor(MyTime / 40);
+		let distX = (X - movedObject.x) / cycleTimes;
+		let distY = (Y - movedObject.y) / cycleTimes;
+		for (let index = 0; index < cycleTimes; index++) {
+			await delay(40);
+			movedObject.x += distX;
+			movedObject.y += distY;
+		}
+		movedObject.x = X;
+		movedObject.y = Y;
 	}
 
 	setTimeout(()=>{	
 		canva.width =  window.innerWidth*2
 		canva.height = window.innerHeight*2
-		document.querySelectorAll(".loadTips").forEach((i)=>i.style.display = "none")
+		document.querySelector(".loadTips").style.display = "none"
 		const DisplayWidth = canva.width
 		const DisplayHeight = canva.height
 		try{

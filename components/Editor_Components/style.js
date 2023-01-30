@@ -185,7 +185,7 @@ export default function Style(theme) {
 	.iconbutton {
 		border-radius: 100%;
 		background: #3db05a;
-		box-shadow: 3px 3px 4px #888;
+		${theme ? "border: 1px solid #000;" : "box-shadow: 3px 3px 4px #888;"}
 	}
 
 	.iconbutton span {
@@ -251,7 +251,7 @@ export default function Style(theme) {
 	.options .iconbutton {
 		width: 36px;
 		height: 36px;
-		box-shadow: 1px 1px 3px #888;
+		${theme ? "border: 1px solid #000;" : "box-shadow: 1px 1px 3px #888;"}
 	}
 
 	.options .iconbutton span {
@@ -350,8 +350,13 @@ export default function Style(theme) {
 		font-size: 16px;
 		border-radius: 17px;
 		border: none;
-		background-color: #191919;
-		color: white;
+		background-color: ${
+      theme
+        ? `#e0e5ec;
+border: 2px solid #000;`
+        : "#191919;"
+    }
+		color: ${theme ? "black" : "white"};
 		text-align: center;
 		overflow: hidden;
 		aspect-ratio: 1 / 1;
@@ -457,8 +462,13 @@ export default function Style(theme) {
 		font-size: 16px;
 		border-radius: 17px;
 		border: none;
-		background-color: #191919;
-		color: white;
+		background-color: ${
+      theme
+        ? `#e0e5ec;
+border: 2px solid #000;`
+        : "#191919;"
+    }
+		color: ${theme ? "black" : "white"};
 		height: 100%;
 		list-style: none;
 		text-align: center;
@@ -471,7 +481,7 @@ export default function Style(theme) {
 
 	.mainLi > ul {
 		pointer-events: none;
-		background-color: #e3e3e3;
+		background-color: #e0e5ec;
 		border-bottom-left-radius: 17px;
 		border-bottom-right-radius: 17px;
 		margin-top: 15px;

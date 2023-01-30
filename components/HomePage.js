@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import {
   Text,
   TouchableOpacity,
@@ -6,13 +6,9 @@ import {
   ActivityIndicator,
   Image,
   Alert,
-  ToastAndroid,
-  Animated
+  ToastAndroid
 } from "react-native"
-import BtnPlus from "./HomePage_Components/FloatAction" // float Action
-import CreateProject from "./HomePage_Components/CreateProject" //Dialog
-import AsyncStorage from "@react-native-async-storage/async-storage" // Save/read Data
-import { FlashList } from "@shopify/flash-list"
+import { FlashList } from "@shopify/flash-list" // View List
 import {
   StorageAccessFramework,
   writeAsStringAsync,
@@ -22,7 +18,13 @@ import {
   getPermissionsAsync,
   requestPermissionsAsync
 } from "expo-media-library" // get permission to use storage
-import codeCreator from "./Editor_Components/CodeCreator"
+import AsyncStorage from "@react-native-async-storage/async-storage" // Save/read Data
+
+import BtnPlus from "./HomePage_Components/FloatAction" // Float Action
+import CreateProject from "./HomePage_Components/CreateProject" // Dialog (input text name)
+import GeneralSettings from "./HomePage_Components/GeneralSetting" // Dialog (settings)
+import SettingOfProject from "./HomePage_Components/SettingOfProjects"
+import codeCreator from "./Editor_Components/CodeCreator" // Create html file
 
 const Colors = ["#96b38e", "#f59073", "#913e5f", "#eb4464"]
 
@@ -96,7 +98,9 @@ const saveFile = async ({
 }
 
 export default function HomePage({ navigation }) {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false) // Dialog Create Project
+  const [visibleGS, setVisibleGS] = useState(false) // Dialog General Setiings
+  const [visibleSP, setVisibleSP] = useState(false) // Dialog Setting of the Project
   const [listOfProjects, setListOfProjects] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [theme, setTheme] = useState(undefined)
@@ -177,92 +181,34 @@ export default function HomePage({ navigation }) {
         onPress={() => {
           navigation.navigate("Editor", {
             idOfProject: item.id,
-            nameOfproject: item.name,
-            theme: theme
+            nameOfproject: item.name
           })
         }}
       >
-        <Animated.Text
+        <Text
           style={{
-            fontFamily: theme ? "calibri-regular" : "calibri-bold",
+            fontFamily: "calibri-bold",
             textAlign: "center",
-            color: theme ? "white" : "black",
-            fontSize: 19
+            color: "black",
+            fontSize: 23,
+            lineHeight: 25
           }}
         >
           {item.name}
-        </Animated.Text>
-        <View
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexDirection: "row"
+        </Text>
+        <TouchableOpacity //dalete project
+          onPress={() => {
+            setVisibleSP(item)
           }}
         >
-          <TouchableOpacity //createcode of the project
-            style={{ marginRight: 12 }}
-            onPress={() => {
-              saveFile({
-                idOfProject: item.id,
-                myName: item.name,
-                myType: "html"
-              })
+          <Image
+            style={{
+              height: 34,
+              width: 34
             }}
-          >
-            <Image
-              style={{
-                height: 25,
-                width: 25
-              }}
-              source={require("../assets/createCode.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity //save project
-            style={{ marginRight: 12 }}
-            onPress={() => {
-              saveFile({
-                idOfProject: item.id,
-                myName: item.name,
-                myType: "justput"
-              })
-            }}
-          >
-            <Image
-              style={{
-                height: 25,
-                width: 25
-              }}
-              source={require("../assets/save.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity //dalete project
-            onPress={() => {
-              Alert.alert(
-                "Delete!!!",
-                item.name,
-                [
-                  {
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                  },
-                  { text: "OK", onPress: () => removeItemValue(item.id) }
-                ],
-                {
-                  cancelable: true
-                }
-              )
-            }}
-          >
-            <Image
-              style={{
-                height: 30,
-                width: 30
-              }}
-              source={require("../assets/delete.png")}
-            />
-          </TouchableOpacity>
-        </View>
+            source={require("../assets/settings-btn.png")}
+          />
+        </TouchableOpacity>
       </TouchableOpacity>
     )
   }
@@ -275,7 +221,7 @@ export default function HomePage({ navigation }) {
     )
   }
   return (
-    <Animated.View
+    <View
       style={{
         flex: 1,
         backgroundColor: theme ? "#333366" : "#fff"
@@ -288,14 +234,29 @@ export default function HomePage({ navigation }) {
       />
       <BtnPlus
         setVisible={setVisible}
+        setVisibleGS={setVisibleGS}
         addProjext={addProjext}
-        navigation={navigation}
       />
       <CreateProject
         visible={visible}
         setVisible={setVisible}
         addProjext={addProjext}
       />
-    </Animated.View>
+      <GeneralSettings
+        visible={visibleGS}
+        setVisible={setVisibleGS}
+        setTheme={setTheme}
+        theme={theme}
+      />
+      <SettingOfProject
+        visible={visibleSP}
+        setVisible={setVisibleSP}
+        listOfProjects={listOfProjects}
+        setListOfProjects={setListOfProjects}
+        storeData={storeData}
+        removeItemValue={removeItemValue}
+        saveFile={saveFile}
+      />
+    </View>
   )
 }

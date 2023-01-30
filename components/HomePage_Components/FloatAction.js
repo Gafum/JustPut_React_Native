@@ -7,7 +7,7 @@ import {
   requestPermissionsAsync
 } from "expo-media-library"
 
-export default function BtnPlus({ setVisible, addProjext, navigation }) {
+export default function BtnPlus({ setVisible, setVisibleGS, addProjext }) {
   const readFile = async () => {
     let { status, canAskAgain } = await getPermissionsAsync()
     if (status !== "granted" && canAskAgain) {
@@ -41,6 +41,7 @@ export default function BtnPlus({ setVisible, addProjext, navigation }) {
       }
     }
   }
+
   return (
     <FloatingAction
       color={"#3db05a"}
@@ -93,7 +94,7 @@ export default function BtnPlus({ setVisible, addProjext, navigation }) {
           ? setVisible(true)
           : name == "import"
           ? readFile()
-          : navigation.navigate("Settings")
+          : setVisibleGS(true)
       }
     />
   )

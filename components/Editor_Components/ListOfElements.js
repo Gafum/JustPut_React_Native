@@ -8,11 +8,12 @@ export const tapElements = ["13", "15", "24", "25"]
 export const ListOfElements = [
   {
     id: 0, // OBJECT
-    code: 'mainElementInHTML.innerHTML=mainElementInHTML.innerHTML+`<p>${"Text"}</p>`;',
+    code: 'mainElementInHTML.innerHTML=mainElementInHTML.innerHTML+`<p style="position: absolute; left: myXpx; top: myYpx">${"Text"}</p>`;',
     text: 'Create "Text" by HTML',
     color: objectColor,
-    listChengers: ['"Text"'],
-    standartParameter: [['"Text"']]
+    listChengers: ['"Text"', "myX", "myY"],
+    standartParameter: [['"Text"'], ["2", "0"], ["5", "0"]],
+    textInWhere: 'Create "Text" by HTML, absolute position x: myX y: myY'
   },
   {
     id: 1, // CONTROL
@@ -113,7 +114,7 @@ export const ListOfElements = [
       ["undefined"]
     ],
     textInWhere:
-      "myName: x: myX, y: myY, width: myW, height: myH, direction: myDir, color: myColor, radius: myR, texture: myIMG "
+      "myName: x: myX, y: myY, width: myW, height: myH, direction: myDir, color: myColor, radius: myR, texture: myIMG"
   },
   {
     id: 10, // OBJECT
@@ -700,5 +701,83 @@ texture.sheight = myHeight;`,
     color: propertiesColor,
     listChengers: ["//Object", "20"],
     standartParameter: [[" //myName"], ["2", "0"]]
+  },
+  {
+    id: 63, // PROPERTIES
+    code: `SmothMove({movedObject: object, X: Math.floor(newX), Y: Math.floor(newY), MyTime: speed});`,
+    text: "object smoothMove to newX, newY",
+    color: propertiesColor,
+    listChengers: ["object", "newX", "newY", "speed", "cycleSpeed"],
+    standartParameter: [
+      ["myName"],
+      ["1", "0", "0"],
+      ["2", "5", "0"],
+      ["3", "0", "0", "0"],
+      ["1", "0", "0"]
+    ],
+    textInWhere: "object move smoothly to x: newX, y: newY in speed ms"
+  },
+  {
+    id: 64, // PROPERTIES
+    code: "canva.style.backgroundColor = myColor",
+    text: "Background-color: myColor",
+    color: propertiesColor,
+    listChengers: ["myColor"],
+    standartParameter: [['"#30c731"']]
+  },
+  {
+    id: 65, // PROPERTIES
+    code: `try{
+	localStorage.setItem('@variable', variable)
+}catch(e){
+	try{
+		StoredData['variable'] = variable
+		window.ReactNativeWebView.postMessage(JSON.stringify(StoredData))
+	}catch(e){
+		alert(e)
+	};
+};`,
+    text: "Save variable",
+    color: dataColor,
+    listChengers: ["variable"],
+    standartParameter: [[" myName"]],
+    textInWhere: "Save variable *works only in browser"
+  },
+  {
+    id: 66, // PROPERTIES
+    code: `try{
+	variable = localStorage.getItem('@variable')
+}catch(e){
+	try{
+		variable = StoredData['variable']
+	}catch(e){
+		alert(e)
+	}
+};`,
+    text: "Read variable",
+    color: dataColor,
+    listChengers: ["variable"],
+    standartParameter: [[" myName"]],
+    textInWhere: "Read variable *works only in browser"
+  },
+  {
+    id: 67, // PROPERTIES
+    code: `try{
+	localStorage.removeItem('@Variable')
+}catch(e){
+	try{
+		if(StoredData['Variable']){
+			delete StoredData['Variable']
+			window.ReactNativeWebView.postMessage(JSON.stringify(StoredData))
+		}
+	}catch(e){
+		alert(e)
+	};
+};`,
+    text: "Variable delete from Storege",
+    color: dataColor,
+    listChengers: ["Variable"],
+    standartParameter: [[" myName"]],
+    textInWhere: "Variable delete from Storege *works only in browser"
   }
 ]

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import Dialog from "react-native-dialog"
 
 export default function CreateProject({ visible, setVisible, addProjext }) {
@@ -18,7 +18,13 @@ export default function CreateProject({ visible, setVisible, addProjext }) {
 
   return (
     <Dialog.Container visible={visible} onBackdropPress={handleCancel}>
-      <Dialog.Title style={{ color: "black", fontFamily: "calibri-bold" }}>
+      <Dialog.Title
+        style={{
+          color: "black",
+          fontFamily: "calibri-bold",
+          textAlign: "center"
+        }}
+      >
         Create Project
       </Dialog.Title>
       <Dialog.Input
@@ -26,7 +32,7 @@ export default function CreateProject({ visible, setVisible, addProjext }) {
         placeholder="name"
         onChangeText={setNameOfProjectfirst}
         value={nameOfProject}
-      ></Dialog.Input>
+      />
       <Dialog.Button
         style={{ color: "#eb4464", fontFamily: "calibri-bold" }}
         label="Cancel"
