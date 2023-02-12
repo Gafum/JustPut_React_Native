@@ -1,4 +1,7 @@
-export default function Html(a) {
+export default function Html({
+  fisrtStrCodeValues,
+  mainCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
+}) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,19 +17,171 @@ export default function Html(a) {
 			border: 0;
 		}
 		html, body, canvas{
-			height: 100vh;
-			width: 100vw;
+			height: 100%;
+			width: 100%;
 		}
+
+		.input-text-container{
+			margin-top: 10px;
+			position: relative;
+			background: white;
+		}
+		.input-text-container label{
+			position:absolute;
+			top: 0px;
+			left: 0px;
+			display: block;
+			font-size: 16px;
+			color: gray;	
+			pointer-events: none;
+			cursor: text;
+			padding: 8px 0 5px 4px;
+			transition: all 0.2s ease-in-out;
+		}
+		.input-text-container input{ 
+			border:0;
+			border-bottom:1px solid black;  
+			background: transparent;
+			width:100%;
+			padding: 8px 0 5px 4px;
+			font-size:16px;
+			color:black;
+		}
+		.input-text-container input:focus{ 
+			border:none;	
+			outline:none;
+			border-bottom: 2px solid black;	
+		}
+
+		.input-text-container input:focus ~ label,
+		.input-text-container input:valid ~ label{
+			top: -50%;
+			font-size:12px;
+		}
+
+		.input-radio-container input {
+			appearance: none;
+
+			border-radius: 50%;
+			width: 20px;
+			height: 20px;
+
+			border: 2px solid #999;
+			transition: 0.1s all linear;
+			margin-right: 5px;
+
+			top: 4px;
+			position: relative;
+		}
+
+		.input-radio-container input:checked {
+			border: 6px solid black;
+		}
+
+		.input-checkbox-conteiner {
+			display: flex;
+			justify-content: center;
+			gap: 3px;
+		}
+
+		.input-checkbox{
+			display: none;
+		}
+
+		.input-checkbox:checked~label .checkbox-bipolar:after {
+			left: 18px;
+			right: 2px;
+		}
+
+		.checkbox-bipolar {
+			width: 36px;
+			height: 20px;
+			border-radius: 10px;
+			border: 1px solid #000;
+			display: inline-block;
+			position: relative;
+		}
+
+		.checkbox-bipolar:after {
+			content: '';
+			display: block;
+			position: absolute;
+			background: #000;
+			left: 2px;
+			top: 2px;
+			bottom: 2px;
+			right: 18px;
+			border-radius: 8px;
+			transition: all 0.2s;
+		}
+
+		dialog{
+			border-radius: 17px;
+			border: none;
+			transform: translate(-50%, -50%);
+			top: 50%;
+			left: 50%;
+			position: fixed;
+			z-index: 100;
+			width: 60vw;
+			max-height: 70vh;
+			overflow: hidden;
+			padding: 8px 7px 10px;
+		}
+
+		#inner-modal-window{
+			max-height: calc(68vh - 50px);
+			max-width: 100%;
+			overflow-wrap: break-word;
+			overflow-y: scroll;
+			text-align: center;
+			margin-bottom: 6px;
+		}
+
+		dialog::backdrop{
+			background: rgba(0, 0, 0, 0.2);
+		}
+
+		dialog>form{
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		dialog button{
+			padding: 4px 7px;
+			font-size: 16px; 
+			border-radius: 7px;
+			border: none;
+			background-color: #191919;
+			color: #fff;
+			text-align: center;
+			outline: none;
+		}
+
 	</style>
 </head>
 <body>
 	<!-- MADE BY GAFUM -->
 	<div id="main" style="position: relative;"></div>
+
 	<canvas style="display: block;" width="640" height="1440">Error</canvas>
+
 	<div class="loadTips">
 		<h1>Loading...</h1>
 		<p>will restart the game if you see this text for a long time</p>
 	</div>
+
+	<dialog id="modal-window">
+		<div id="inner-modal-window"> Is it me? </div>
+		<form method="dialog">
+			<button>
+				OK
+			</button>
+		</form>
+	</dialog>
+
 	<script>
 	const mainElementInHTML = document.querySelector('#main')
 	class rect {
@@ -100,14 +255,16 @@ export default function Html(a) {
 
 	function colisionWithTouch({object, MousePosition}){
 		if(object.shape == "circle"){
-			if (Math.floor(Math.sqrt(Math.pow(MousePosition.x - object.x,2)+Math.pow(MousePosition.y - object.y,2))) <= object.radius) {
+			if (distanceBetween(MousePosition, object) <= object.radius) {
 				return true
 			}
 		}else if(object.shape == "cub"){
-			if (MousePosition.x >= object.x &&
-				MousePosition.x <= object.x + object.width &&   
-				MousePosition.y >= object.y &&        
-				MousePosition.y <= object.y + object.height) {  
+			myX = object.x-object.width/2
+			myY = object.y-object.height/2
+			if (MousePosition.x >= myX &&
+				MousePosition.x <= myX + object.width &&   
+				MousePosition.y >= myY &&        
+				MousePosition.y <= myY + object.height) {  
 					return true
 			}
 		}
@@ -115,10 +272,10 @@ export default function Html(a) {
 
 	function getCoordinatOfObjects(first, second){
 		if (first.shape == "cub" && second.shape == "circle") {
-			return { whatcolision: "cubCir", cx: second.x, cy: second.y, radius: second.radius, rx: first.x, ry: first.y, rw: first.width, rh: first.height }
+			return { whatcolision: "cubCir", cx: second.x, cy: second.y, radius: second.radius, rx: first.x-first.width/2, ry: first.y-first.height/2, rw: first.width, rh: first.height }
 		}
 		if (first.shape == "circle" && second.shape == "cub") {
-			return { whatcolision: "cubCir", cx: first.x, cy: first.y, radius: first.radius, rx: second.x, ry: second.y, rw: second.width, rh: second.height }
+			return { whatcolision: "cubCir", cx: first.x, cy: first.y, radius: first.radius, rx: second.x-second.width/2, ry: second.y-second.height/2, rw: second.width, rh: second.height }
 		}
 		return undefined
 	}
@@ -127,19 +284,20 @@ export default function Html(a) {
 	function colisionBetween(first, second) {
 		if(first.shape == second.shape){
 			if(first.shape == "cub"){
+				firstX = first.x-first.width/2
+				firstY = first.y-first.height/2
+				secondX = second.x-second.width/2
+				secondY = second.y-second.height/2
 				if (
-					first.x + first.width >= second.x &&
-					second.x + second.width >= first.x &&
-					first.y + first.height >= second.y &&
-					second.y + second.height >= first.y
+					firstX + first.width >= secondX &&
+					secondX + second.width >= firstX &&
+					firstY + first.height >= secondY &&
+					secondY + second.height >= firstY
 				) {
 					return true
 				}
 			}else if(first.shape == "circle"){
-
-				let distance = Math.floor(Math.sqrt(Math.pow(first.x - second.x,2)+Math.pow(first.y - second.y,2)))
-
-				if (distance <= first.radius+second.radius) {
+				if (distanceBetween(first, second) <= first.radius+second.radius) {
 					return true;
 				}
 			}
@@ -154,9 +312,7 @@ export default function Html(a) {
 				if (cy < ry)         testY = ry    	 // top edge
 				else if (cy > ry+rh) testY = ry+rh   // bottom edge
 
-				let distance =Math.floor(Math.sqrt(Math.pow(cx-testX,2)+Math.pow(cy-testY,2)))
-
-				if (distance <= radius) {
+				if (Math.floor(Math.sqrt(Math.pow(cx-testX,2)+Math.pow(cy-testY,2))) <= radius) {
 					return true
 				}
 			}
@@ -164,7 +320,7 @@ export default function Html(a) {
 		return false
 	}
 
-	function CreateFradionAddPoints(myName, list, points){
+	function CreateFradionAddPoints(myName, list, points){//use in gradient (Point)
 		list.forEach((i, index)=>myName.addColorStop(points[index], i))
 	}
 
@@ -219,6 +375,21 @@ export default function Html(a) {
 		movedObject.y = Y;
 	}
 
+	function addElementByHtml(code, myid){
+		let newElement = document.querySelector("#"+myid+"conteiner")
+		if(!newElement){
+			newElement = document.createElement("div");
+			newElement.id = myid+"conteiner";
+			mainElementInHTML.append(newElement);
+		}
+		newElement.innerHTML = code;
+	}
+
+	/* Different variables and function */
+	${fisrtStrCodeValues}
+
+
+	/* Main Script */
 	setTimeout(()=>{	
 		canva.width =  window.innerWidth*2
 		canva.height = window.innerHeight*2
@@ -226,7 +397,7 @@ export default function Html(a) {
 		const DisplayWidth = canva.width
 		const DisplayHeight = canva.height
 		try{
-			${a}
+			${mainCode}
 		}catch(e){
 			alert(e)
 		}

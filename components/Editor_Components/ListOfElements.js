@@ -8,12 +8,12 @@ export const tapElements = ["13", "15", "24", "25"]
 export const ListOfElements = [
   {
     id: 0, // OBJECT
-    code: 'mainElementInHTML.innerHTML=mainElementInHTML.innerHTML+`<p style="position: absolute; left: myXpx; top: myYpx">${"Text"}</p>`;',
+    code: 'addElementByHtml(`<p style="position: absolute; left: ${myX}px; top: ${myY}px">${"Text"}</p>`, myId);',
     text: 'Create "Text" by HTML',
     color: objectColor,
-    listChengers: ['"Text"', "myX", "myY"],
-    standartParameter: [['"Text"'], ["2", "0"], ["5", "0"]],
-    textInWhere: 'Create "Text" by HTML, absolute position x: myX y: myY'
+    listChengers: ['"Text"', "myId", "myX", "myY"],
+    standartParameter: [['"Text"'], ['"textId"'], ["2", "0"], ["5", "0"]],
+    textInWhere: 'Create "Text" by HTML(myId), absolute position x: myX y: myY'
   },
   {
     id: 1, // CONTROL
@@ -80,10 +80,11 @@ export const ListOfElements = [
   },
   {
     id: 8, // OBJECT
-    code: 'alert("Text");',
-    text: 'messege("Text")',
+    code: `document.querySelector("#modal-window").showModal();
+document.querySelector("#inner-modal-window").innerHTML = Text;`,
+    text: "messege(Text)",
     color: objectColor,
-    listChengers: ['"Text"'],
+    listChengers: ["Text"],
     standartParameter: [['"Text"']]
   },
   {
@@ -414,11 +415,11 @@ texture.sheight = myHeight;`,
   },
   {
     id: 31, // DATA
-    code: "//a += 2;",
-    text: "//a add 2 ",
+    code: "//a += 1;",
+    text: "//a add 1 ",
     color: dataColor,
-    listChengers: [["//a"], ["2"]],
-    standartParameter: [[" //a"], ["2"]]
+    listChengers: [["//a"], ["1"]],
+    standartParameter: [[" //a"], ["1"]]
   },
   {
     id: 32, // DATA
@@ -606,7 +607,7 @@ texture.sheight = myHeight;`,
     standartParameter: [["array1"], ["[", "1", ",", "2", "]"]]
   },
   {
-    id: 51, // DATA
+    id: 51, // CONTROL
     code: "return{",
     text: "return",
     color: controlColor,
@@ -614,12 +615,14 @@ texture.sheight = myHeight;`,
     secondArgument: [{ code: "};", text: "End of the return" }]
   },
   {
-    id: 52, // DATA
+    id: 52, // CONTROL
     code: "continue;",
     text: "continue",
     color: controlColor,
     standartParameter: ["Hi GAfum"]
   },
+
+  /* PROPERTIES */
   {
     id: 53, // PROPERTIES
     code: "//Object.direction = myDirection;",
@@ -726,10 +729,10 @@ texture.sheight = myHeight;`,
     standartParameter: [['"#30c731"']]
   },
   {
-    id: 65, // PROPERTIES
+    id: 65, // DATA
     code: `try{
 	localStorage.setItem('@variable', variable)
-}catch(e){
+}catch{
 	try{
 		StoredData['variable'] = variable
 		window.ReactNativeWebView.postMessage(JSON.stringify(StoredData))
@@ -744,10 +747,10 @@ texture.sheight = myHeight;`,
     textInWhere: "Save variable *works only in browser"
   },
   {
-    id: 66, // PROPERTIES
+    id: 66, // DATA
     code: `try{
 	variable = localStorage.getItem('@variable')
-}catch(e){
+}catch{
 	try{
 		variable = StoredData['variable']
 	}catch(e){
@@ -761,10 +764,10 @@ texture.sheight = myHeight;`,
     textInWhere: "Read variable *works only in browser"
   },
   {
-    id: 67, // PROPERTIES
+    id: 67, // DATA
     code: `try{
 	localStorage.removeItem('@Variable')
-}catch(e){
+}catch{
 	try{
 		if(StoredData['Variable']){
 			delete StoredData['Variable']
@@ -779,5 +782,308 @@ texture.sheight = myHeight;`,
     listChengers: ["Variable"],
     standartParameter: [[" myName"]],
     textInWhere: "Variable delete from Storege *works only in browser"
+  },
+
+  /* Internet===================================== */
+
+  {
+    id: 68, // DATA
+    code: `try{
+fetch(url)
+	.then((response) => {
+		if (response.ok) {
+			return response.text();
+		}
+		return "Error"
+	})
+	.then((data) => {
+		variable = data;
+	})
+	.catch((e) => {
+		variable = e;
+		console.log(e);
+	});
+}catch(e){
+	myName = "Error:" + e;
+};`,
+    text: "GET in variable url",
+    color: dataColor,
+    listChengers: ["variable", "url"],
+    standartParameter: [
+      [" //myName"],
+      ['"https://jsonplaceholder.typicode.com/users?id=1"']
+    ]
+  },
+  {
+    id: 69, // DATA
+    code: `try {
+fetch(url, {
+	method: 'POST',
+	body: JSON.stringify(myBODY),
+	headers: {
+		myHEADERS
+	}
+})
+	.then((response) => {
+		if (response.ok) {
+			return response.text();
+		}
+		return "Error"
+	})
+	.then((data) => {
+		variable = data;
+	})
+	.catch((e) => {
+		variable = e;
+		console.log(e);
+	});
+}catch(e){
+	variable = "Error:" + e;
+};`,
+    text: "POST in variable url",
+    color: dataColor,
+    listChengers: ["variable", "url", "myBODY", "myHEADERS"],
+    standartParameter: [
+      [" //myName"],
+      ['"https://jsonplaceholder.typicode.com/posts"'],
+      [' { title: "foo", body: "bar", userId: 1 }'],
+      ['"Content-type": "application/json; charset=UTF-8"']
+    ],
+    textInWhere: "POST in variable url body: myBODY, headers: myHEADERS"
+  },
+  {
+    id: 70, // DATA
+    code: `try {
+fetch(url, {
+	method: 'PUT',
+	body: JSON.stringify(myBODY),
+	headers: {
+		myHEADERS
+	}
+})
+	.then((response) => {
+		if (response.ok) {
+			return response.text();
+		}
+		return "Error"
+	})
+	.then((data) => {
+		variable = data;
+	})
+	.catch((e) => {
+		variable = e;
+		console.log(e);
+	});
+}catch(e){
+	variable = "Error:" + e;
+};`,
+    text: "PUT in variable url",
+    color: dataColor,
+    listChengers: ["variable", "url", "myBODY", "myHEADERS"],
+    standartParameter: [
+      [" //myName"],
+      ['"https://jsonplaceholder.typicode.com/posts/1"'],
+      [' { id: 1, title: "foo", body: "bar", userId: 1 }'],
+      ['"Content-type": "application/json; charset=UTF-8"']
+    ],
+    textInWhere: "PUT in variable url body: myBODY, headers: myHEADERS"
+  },
+  {
+    id: 71, // DATA
+    code: `try {
+fetch(url, {
+	method: 'PATCH',
+	body: JSON.stringify(myBODY),
+	headers: {
+		myHEADERS
+	}
+})
+	.then((response) => {
+		if (response.ok) {
+			return response.text();
+		}
+		return "Error"
+	})
+	.then((data) => {
+		variable = data;
+	})
+	.catch((e) => {
+		variable = e;
+		console.log(e);
+	});
+}catch(e){
+	variable = "Error:" + e;
+};`,
+    text: "PATCH in variable url",
+    color: dataColor,
+    listChengers: ["variable", "url", "myBODY", "myHEADERS"],
+    standartParameter: [
+      [" //myName"],
+      ['"https://jsonplaceholder.typicode.com/posts/1"'],
+      [' { title: "foo" }'],
+      ['"Content-type": "application/json; charset=UTF-8"']
+    ],
+    textInWhere: "PATCH in variable url body: myBODY, headers: myHEADERS"
+  },
+  {
+    id: 72, // DATA
+    code: `try {
+	fetch(url, {
+		method: 'DELETE',
+	});
+}catch(e){
+	console.log(e);
+};`,
+    text: "DELETE url",
+    color: dataColor,
+    listChengers: ["url"],
+    standartParameter: [['"https://jsonplaceholder.typicode.com/posts/1"']]
+  },
+  {
+    id: 73, // OBJECT
+    code: `addElementByHtml(\`<div class="input-text-container" style="position: absolute; left: \${myX}px; top: \${myY}px;">
+		<input required="" type="\${isPassword?"password":"text"}" id="\${myId}main" name="\${myId}main" value="\${standartValue}" maxlength="myLenth" style="\${myStyle}">
+		<label for="\${myId}main" style="\${myStyle}">\${myPlaceholder}</label>		
+	</div>\`, myId);
+	document.getElementById(myId+"main").onchange = (event)=>{
+		myName = event.target.value
+	};`,
+    text: "Text input(myId)",
+    color: objectColor,
+    listChengers: [
+      "myId",
+      "standartValue",
+      "myPlaceholder",
+      "myLenth",
+      "myStyle",
+      "myName",
+      "isPassword",
+      "myX",
+      "myY"
+    ],
+    standartParameter: [
+      ['"InputId"'],
+      ['"Text..."'],
+      ['"Write text"'],
+      ["2", "2", "1", "2", "4", "4"],
+      ['"width: 200px;"'],
+      [" myName"],
+      ["false"],
+      ["4", "0"],
+      ["6", "0"]
+    ],
+    textInWhere:
+      "Create Text input(myId) with: standartValue, placeholder: myPlaceholder, maxlength: myLenth, style: myStyle, save data in myName, It is password: isPassword, absolute position x: myX y: myY"
+  },
+  {
+    id: 74, // OBJECT
+    code: `addElementByHtml(\`<input type="range" min="\${myMIN}" max="\${myMAX}" value="\${standartValue}" step="\${oneStep}" oninput="myName=this.value" style="position: absolute; left: \${myX}px; top: \${myY}px; \${myStyle}" />\`, myId);`,
+    text: "Slider(myId)",
+    color: objectColor,
+    listChengers: [
+      "myId",
+      "standartValue",
+      "myMIN",
+      "myMAX",
+      "oneStep",
+      "myName",
+      "myStyle",
+      "myX",
+      "myY"
+    ],
+    standartParameter: [
+      ['"SliderId"'],
+      ["5"],
+      ["0"],
+      ["10"],
+      ["1"],
+      ["myName"],
+      ['"width: 200px;"'],
+      ["5", "0"],
+      ["6", "0"]
+    ],
+    textInWhere:
+      "Create Slider(myId), value: standartValue, lowest value: myMIN, greatest value: myMAX, step: oneStep, save data in myName, style: myStyle, absolute position x: myX y: myY"
+  },
+  {
+    id: 75, // OBJECT
+    code: `addElementByHtml(\`<input type="color" value="\${standartValue}" onchange="myName = this.value" style="position: absolute; left: \${myX}px; top: \${myY}px;">\`, myId);`,
+    text: "Color picker(myId)",
+    color: objectColor,
+    listChengers: ["myId", "standartValue", "myName", "myX", "myY"],
+    standartParameter: [
+      ['"ColorId"'],
+      ['"#eb4464"'],
+      ["myName"],
+      ["2", "0"],
+      ["4", "0"]
+    ],
+    textInWhere:
+      "Color picker(myId), color: standartValue, save data in myName, absolute position x: myX y: myY"
+  },
+  {
+    id: 76, // OBJECT
+    code: `addElementByHtml(\`<div class="input-checkbox-conteiner" style="position: absolute; left: \${myX}px; top: \${myY}px;">
+		<input type="checkbox" class="input-checkbox" id="\${myId}ch" onchange='myName=this.checked;'
+			\${standartValue&&"checked"}>
+		<label for="\${myId}ch">
+			<span class="checkbox-bipolar">
+			</span>
+		</label>
+		<label for="\${myId}ch" style="\${myStyle}">\${myHint}</label>
+	</div>\`, myId);`,
+    text: "Checkbox(myId)",
+    color: objectColor,
+    listChengers: [
+      "myId",
+      "standartValue",
+      "myHint",
+      "myName",
+      "myStyle",
+      "myX",
+      "myY"
+    ],
+    standartParameter: [
+      ['"CheckId"'],
+      ["false"],
+      ['"isHappy"'],
+      ["myName"],
+      ['"width: 200px;"'],
+      ["5", "0"],
+      ["8", "0"]
+    ],
+    textInWhere:
+      "Checkbox(myId), value: standartValue, hint: myHint, save data in myName, style: myStyle, absolute position x: myX y: myY"
+  },
+  {
+    id: 77, // OBJECT
+    code: `addElementByHtml(\`<div class="input-radio-container" style="position: absolute; left: \${myX}px; top: \${myY}px;">
+		<input type="radio" id="\${myId}in" name="\${groupName}" onchange='myName=standartValue;' value="\${standartValue}">
+		<label for="\${myId}in" style="\${myStyle}">\${myHint}</label>		
+	</div>\`, myId);`,
+    text: "Radio input(myId)",
+    color: objectColor,
+    listChengers: [
+      "groupName",
+      "myId",
+      "standartValue",
+      "myHint",
+      "myName",
+      "myStyle",
+      "myX",
+      "myY"
+    ],
+    standartParameter: [
+      ['"group1"'],
+      ['"RadioId"'],
+      ['"option 1"'],
+      ['"Option 1"'],
+      ["myName"],
+      ['"width: 100px;"'],
+      ["8", "0"],
+      ["9", "0"]
+    ],
+    textInWhere:
+      "Create Radio input(groupName) id:myId, value: standartValue, hint: myHint, save data in myName, style: myStyle, absolute position x: myX y: myY"
   }
 ]

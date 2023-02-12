@@ -261,7 +261,12 @@ export default function Html(data, name, theme) {
               <li onclick="tapOfFunctionBtn(1,'\${','}');">CodeInHTML</li>
               <li onclick="tapOfFunctionBtn(1,' ? ',' : ');">ternary</li>
               <li onclick="tapOfFunctionBtn(0, '%');">module</li>
-							<li><input type="color" id="color-picker" value="#30c731"></li>
+							<li style="display: flex; justify-content: center; align-items:center; gap: 5px">
+								<button onclick="addColor();" style="padding: 4px 7px; font-size: 16px; border-radius: 7px;border: none; background-color: #191919; color: #fff; text-align: center; outline: none;">
+									Add
+								</button>
+								<input type="color" id="color-picker" value="#30c731">
+							</li>
               <li onclick="tapofbtn('[');">[</li>
               <li onclick="tapofbtn(']');">]</li>
               <li onclick="tapofbtn('{');">{</li>
@@ -302,26 +307,27 @@ export default function Html(data, name, theme) {
       }
 
       document.querySelectorAll('.btn-label').forEach((i, index) => {
-			if (index === document.querySelectorAll('.btn-label').length - 1) {
-				return
-			}
-			i.onclick = () => {
-				let resultList = ListOfElements.filter((element) => element.color == i.dataset.mycolor)
-				ListAddBlock.innerHTML = ""
-				resultList.forEach((j) => {
-					ListAddBlock.innerHTML += \`
-						<li class="ElementsInEditor" onclick="addBlock(\${j.id});">
-							<span style="color:\${ListOfElements[j.id].color}">
-							\${j.text}
-							</span>
-						</li>\`
+				if (index === document.querySelectorAll('.btn-label').length - 1) {
+					return
+				}
+				addblocks.scrollTo(0,0)
+				i.onclick = () => {
+					let resultList = ListOfElements.filter((element) => element.color == i.dataset.mycolor)
+					ListAddBlock.innerHTML = ""
+					resultList.forEach((j) => {
+						ListAddBlock.innerHTML += \`
+							<li class="ElementsInEditor" onclick="addBlock(\${j.id});">
+								<span style="color:\${ListOfElements[j.id].color}">
+								\${j.text}
+								</span>
+							</li>\`
 
-				})
-				addblocks.classList.add("active")
-				body.classList.add("no-scroll")
-				addblocks.querySelector(".where-addblock").style.backgroundColor = i.dataset.mycolor
-				mainBtnLabel.classList.remove("active")
-			}
+					})
+					addblocks.classList.add("active")
+					body.classList.add("no-scroll")
+					addblocks.querySelector(".where-addblock").style.backgroundColor = i.dataset.mycolor
+					mainBtnLabel.classList.remove("active")
+				}
       })
 
 			function addBlock(element) {
@@ -653,7 +659,6 @@ export default function Html(data, name, theme) {
       const result = editparams.querySelector('#result')
       const dataList = editparams.querySelector('#dataList') //data List In formuls
       const functList = editparams.querySelector('#functList') //function List in formuls
-      const colorPicker = editparams.querySelector('#color-picker') //input with color Picker
 
 
       document.querySelector('#tree').onclick = (event) => {
@@ -664,7 +669,7 @@ export default function Html(data, name, theme) {
 
       // Create variable =============================>
 
-      let TextInWhereOnStart = "hi"
+      let TextInWhereOnStart = "hi Gafum"
       let listOfChageParams = []
 
       let List = []
@@ -696,6 +701,7 @@ export default function Html(data, name, theme) {
 						List.push(ListOfElements[idOfElement].standartParameter[List.length+i])
 					}
 				}
+				where.scrollTo(0,0)
 				onStart()
 				document.querySelectorAll(".LiAfterTap").forEach((i) => i.classList.remove("LiAfterTap"))
 				editparams.querySelector('#where').style.backgroundColor = ListOfElements[idOfElement].color
@@ -723,7 +729,9 @@ export default function Html(data, name, theme) {
       }
 
       // Different Function ===================>
-			colorPicker.addEventListener("change", (e)=>tapofbtn('"' + e.target.value + '"'), false);
+			function addColor(){
+				tapofbtn('"' + editparams.querySelector('#color-picker').value + '"')
+			}
 
 			function getFirstElement(index) {
 				if(index < 0){
@@ -754,78 +762,78 @@ export default function Html(data, name, theme) {
       }
 
       function daleteVarOrFunc(isData, element) {
-			if (!confirm(\`Delete \${element}\`)) return
-			let listh = isData ? listOfData : listOfFunct
-			listh.splice(listh.indexOf(element), 1)
-			chengeDataList(isData)
-			saveData()
+				if (!confirm(\`Delete \${element}\`)) return
+				let listh = isData ? listOfData : listOfFunct
+				listh.splice(listh.indexOf(element), 1)
+				chengeDataList(isData)
+				saveData()
       }
 
       function chengeDataList(isData) {
-			let resultat = (isData ? listOfData : listOfFunct).reduce((a, b) => {
-				return a + \`<li>
-					<span class="nameOfvarieble" onclick="tapofbtn('\${b}'); event.stopPropagation();">\${b}</span>
-					<span class="btn-delete" onclick="daleteVarOrFunc(\${isData}, '\${b}'); event.stopPropagation();">
-							<svg class="icon-delete-editor">
-								<use xlink:href="#icon-delete"></use>
-							</svg>
-					</span>
-					</li>\`
-			}, '')
-			if (isData) {
-				resultat += '<li style="color: #777; display: block;" onclick="createVarieble(true)">+Create</li>'
-				dataList.innerHTML = resultat
-			} else {
-				resultat += '<li style="color: #777; display: block;" onclick="createVarieble(false)">+Create</li>'
-				functList.innerHTML = resultat
-			}
+				let resultat = (isData ? listOfData : listOfFunct).reduce((a, b) => {
+					return a + \`<li>
+						<span class="nameOfvarieble" onclick="tapofbtn('\${b}'); event.stopPropagation();">\${b}</span>
+						<span class="btn-delete" onclick="daleteVarOrFunc(\${isData}, '\${b}'); event.stopPropagation();">
+								<svg class="icon-delete-editor">
+									<use xlink:href="#icon-delete"></use>
+								</svg>
+						</span>
+						</li>\`
+				}, '')
+				if (isData) {
+					resultat += '<li style="color: #777; display: block;" onclick="createVarieble(true)">+Create</li>'
+					dataList.innerHTML = resultat
+				} else {
+					resultat += '<li style="color: #777; display: block;" onclick="createVarieble(false)">+Create</li>'
+					functList.innerHTML = resultat
+				}
       }
 
       function setTextInWhere() {
-			let resultat = TextInWhereOnStart
-			let realChenge = []
-			for (let i = 0; i < listOfChageParams.length; i++) {
-				resultat = resultat.replace(listOfChageParams[i], \`<button class='whereBtn' onClick = "newParameter(\${i});"> </button >\`)
-				if (List[i].length > 0) {
-					realChenge.push(List[i].reduce((a, b) => a + b))
-				} else {
-					realChenge.push(' ')
+				let resultat = TextInWhereOnStart
+				let realChenge = []
+				for (let i = 0; i < listOfChageParams.length; i++) {
+					resultat = resultat.replace(listOfChageParams[i], \`<button class='whereBtn' onClick = "newParameter(\${i});" \${i==whichPosition&&'style="background-color: #c5c5c580;"'} > </button >\`)
+					if (List[i].length > 0) {
+						realChenge.push(List[i].reduce((a, b) => a + b))
+					} else {
+						realChenge.push(' ')
+					}
 				}
-			}
-			where.innerHTML = resultat
-			let whereBtns = document.querySelectorAll('.whereBtn')
-			whereBtns.forEach((i, index) => i.textContent = realChenge[index])
+				where.innerHTML = resultat
+				let whereBtns = document.querySelectorAll('.whereBtn')
+				whereBtns.forEach((i, index) => i.textContent = realChenge[index])
       }
 
       function changeText() {
-			let textFromList = ""
-			if (listOfParams.length > 0) {
-				let textFromList = listOfParams.reduce((a, b, i) => {
-					let c = ""
-					if (i == 0 && position == 0) {
-						return c = "|" + String(b)
-					}
-					c = String(a) + String(b)
-					if (i + 1 == position) {
-						c += "|"
-					}
-					return c
-				}, '')
-				result.textContent = textFromList
-			} else {
-				result.textContent = '|'
+				let textFromList = ""
+				if (listOfParams.length > 0) {
+					let textFromList = listOfParams.reduce((a, b, i) => {
+						let c = ""
+						if (i == 0 && position == 0) {
+							return c = "|" + String(b)
+						}
+						c = String(a) + String(b)
+						if (i + 1 == position) {
+							c += "|"
+						}
+						return c
+					}, '')
+					result.textContent = textFromList
+				} else {
+					result.textContent = '|'
+				}
+
+				List[whichPosition] = listOfParams
+				setTextInWhere()
+				return textFromList
 			}
 
-			List[whichPosition] = listOfParams
-			setTextInWhere()
-			return textFromList
-      }
-
-      function newParameter(parameter) {
-			if (parameter !== whichPosition) {
-				whichPosition = parameter
-				onStart()
-			}
+			function newParameter(parameter) {
+				if (parameter !== whichPosition) {
+					whichPosition = parameter
+					onStart()
+				}
       }
 
       function addTextOrCode(isText) {

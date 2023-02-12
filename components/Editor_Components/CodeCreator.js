@@ -23,22 +23,24 @@ export default function codeCreator(data, inApp = false) {
   let listOfData = data[0].data
   let listOfTaps = []
 
-  let fisrtStrCode = "document.title = '" + data[0].name + "'"
+  let fisrtStrCodeValues = "document.title = '" + data[0].name + "'"
   if (inApp) {
-    console.log(inApp)
-    fisrtStrCode +=
+    fisrtStrCodeValues +=
       `
 let StoredData = ` + inApp
   } else {
-    fisrtStrCode += `
+    fisrtStrCodeValues += `
 let StoredData = {}`
   }
 
   if (listOfData.length > 0) {
-    fisrtStrCode +=
+    fisrtStrCodeValues +=
       `
 let ` + String(listOfData.reduce((a, b) => a + ", " + b))
   }
+
+  let fisrtStrCode = ""
+
   data.shift()
   listOfTaps = data.filter(
     ({ id }) => id == tapElements[0] || id == tapElements[1]
@@ -78,7 +80,8 @@ function MouseNowIsMove (event) {` +
           ""
         )
       ) +
-      "}"
+      `
+}`
   }
   listOfTaps = data.filter(({ id }) => id == tapElements[3]) // EndOfTheTouching (Mouse up) =>
   if (listOfTaps.length > 0) {
@@ -97,7 +100,8 @@ function EndOfTheTouching(event) {` +
           ""
         )
       ) +
-      "}"
+      `
+}`
   }
   let createdCode = "element.innerHTML=`<h1>Made by Gafum</h1>`"
   if (data.length > 0 && data) {
@@ -112,8 +116,8 @@ function EndOfTheTouching(event) {` +
 ` +
         thisStrb
       )
-    }, String(fisrtStrCode))
+    }, fisrtStrCode)
   } // create code
 
-  return Html(createdCode)
+  return Html({ fisrtStrCodeValues, mainCode: createdCode })
 }
