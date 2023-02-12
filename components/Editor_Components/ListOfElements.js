@@ -1085,5 +1085,13 @@ fetch(url, {
     ],
     textInWhere:
       "Create Radio input(groupName) id:myId, value: standartValue, hint: myHint, save data in myName, style: myStyle, absolute position x: myX y: myY"
+  },
+  {
+    id: 78, // OBJECT
+    code: `try{document.getElementById(myId+"conteiner").remove();}catch(e){console.log(e)}`,
+    text: "Delete element myId",
+    color: objectColor,
+    listChengers: ["myId"],
+    standartParameter: [['"myId"']]
   }
 ]
